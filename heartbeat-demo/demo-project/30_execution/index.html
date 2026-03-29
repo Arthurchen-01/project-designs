@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AP Calculus BC 练习</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>AP Calculus BC 选择题练习</h1>
+
+    <!-- 随机排序选项 -->
+    <label class="shuffle-option">
+      <input type="checkbox" id="shuffle-toggle"> 随机排序题目
+    </label>
+
+    <!-- 做题区域 -->
+    <div id="quiz-area">
+      <div id="progress">第 <span id="current-num">1</span>/<span id="total-num">10</span> 题</div>
+      <div id="question-text" class="question"></div>
+      <div id="choices" class="choices"></div>
+      <div id="feedback" class="feedback hidden"></div>
+      <button id="next-btn" class="hidden">下一题</button>
+    </div>
+
+    <!-- 结果区域（初始隐藏） -->
+    <div id="result-area" class="hidden">
+      <h2>练习完成！</h2>
+      <div id="score" class="score"></div>
+      <div id="summary"></div>
+      <button id="restart-btn">重新开始</button>
+    </div>
+  </div>
+
+  <script>
+    // 题库数据（内嵌，避免 file:// 协议的 CORS 问题）
+    const questions = [
+      {
+        "id": 1,
+        "question": "What is the derivative of sin(x)?",
+        "choices": ["cos(x)", "-cos(x)", "sin(x)", "-sin(x)"],
+        "answer": 0,
+        "explanation": "The derivative of sin(x) is cos(x)."
+      },
+      {
+        "id": 2,
+        "question": "What is the integral of 2x dx?",
+        "choices": ["x² + C", "2x² + C", "x²", "2 + C"],
+        "answer": 0,
+        "explanation": "The integral of 2x is x² + C."
+      },
+      {
+        "id": 3,
+        "question": "What is lim(x→0) sin(x)/x?",
+        "choices": ["0", "1", "∞", "undefined"],
+        "answer": 1,
+        "explanation": "This is a fundamental limit in calculus, equal to 1."
+      },
+      {
+        "id": 4,
+        "question": "What is the derivative of ln(x)?",
+        "choices": ["1/x", "x", "e^x", "ln(x²)"],
+        "answer": 0,
+        "explanation": "The derivative of ln(x) is 1/x."
+      },
+      {
+        "id": 5,
+        "question": "What is d/dx [e^(2x)]?",
+        "choices": ["e^(2x)", "2e^(2x)", "2xe^(2x)", "e^x"],
+        "answer": 1,
+        "explanation": "By chain rule: d/dx[e^(2x)] = e^(2x) · 2 = 2e^(2x)."
+      },
+      {
+        "id": 6,
+        "question": "What is the second derivative of x³?",
+        "choices": ["3x²", "6x", "x²", "3x"],
+        "answer": 1,
+        "explanation": "First derivative: 3x². Second derivative: 6x."
+      },
+      {
+        "id": 7,
+        "question": "What is ∫₀¹ x² dx?",
+        "choices": ["1/3", "1/2", "1", "2/3"],
+        "answer": 0,
+        "explanation": "∫₀¹ x² dx = [x³/3]₀¹ = 1/3 - 0 = 1/3."
+      },
+      {
+        "id": 8,
+        "question": "At what point does f(x) = x² - 4x + 3 have a local minimum?",
+        "choices": ["x = 1", "x = 2", "x = 3", "x = 0"],
+        "answer": 1,
+        "explanation": "f'(x) = 2x - 4 = 0, so x = 2. f''(2) = 2 > 0, confirming a minimum."
+      },
+      {
+        "id": 9,
+        "question": "What is the derivative of tan(x)?",
+        "choices": ["sec²(x)", "sec(x)", "cot(x)", "-csc²(x)"],
+        "answer": 0,
+        "explanation": "The derivative of tan(x) is sec²(x)."
+      },
+      {
+        "id": 10,
+        "question": "What is the Taylor series term for e^x at x=0, degree 3?",
+        "choices": ["1 + x + x²/2 + x³/6", "1 + x + x² + x³", "1 + x + x²/2", "x + x²/2 + x³/6"],
+        "answer": 0,
+        "explanation": "e^x = Σ(x^n/n!), so terms are 1 + x + x²/2! + x³/3! = 1 + x + x²/2 + x³/6."
+      }
+    ];
+
+    // 状态变量
+    let currentIndex = 0;    // 当前题号（从 0 开始）
+    let score = 0;           // 答对数量
+    let answered = false;    // 当前题是否已作答
+    let results = [];        // 记录每题结果 {id, correct}
+    let currentOrder = [];   // 当前显示顺序（indices into questions array）
+
+    // Fisher-Yates 洗牌算法
+    function shuffleArray(arr) {
+      const shuffled = [...arr]; // 不修改原数组
+      for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+      }
+      return shuffled;
+    }
+
+    // DOM 元素
+    const questionText = document.getElementById('question-text');
+    const choicesDiv = document.getElementById('choices');
+    const feedback = document.getElementById('feedback');
+    const nextBtn = document.getElementById('next-btn');
+    const currentNum = document.getElementById('current-num');
+    const totalNum = document.getElementById('total-num');
+    const quizArea = document.getElementById('quiz-area');
+    const resultArea = document.getElementById('result-area');
+    const scoreDiv = document.getElementById('score');
+    const summaryDiv = document.getElementById('summary');
+    const restartBtn = document.getElementById('restart-btn');
+
+    // 初始化
+    function init() {
+      totalNum.textContent = questions.length;
+      currentIndex = 0;
+      score = 0;
+      answered = false;
+      results = [];
+
+      // 根据随机排序复选框决定题目顺序
+      const shuffleToggle = document.getElementById('shuffle-toggle');
+      if (shuffleToggle.checked) {
+        currentOrder = shuffleArray(questions.map((_, i) => i));
+      } else {
+        currentOrder = questions.map((_, i) => i);
+      }
+
+      quizArea.classList.remove('hidden');
+      resultArea.classList.add('hidden');
+      showQuestion();
+    }
+
+    // 显示当前题目
+    function showQuestion() {
+      const q = questions[currentOrder[currentIndex]];
+      currentNum.textContent = currentIndex + 1;
+      questionText.textContent = q.question;
+
+      // 清空选项和反馈
+      choicesDiv.innerHTML = '';
+      feedback.classList.add('hidden');
+      nextBtn.classList.add('hidden');
+      answered = false;
+
+      // 生成选项按钮
+      q.choices.forEach((choice, index) => {
+        const btn = document.createElement('button');
+        btn.className = 'choice-btn';
+        btn.textContent = choice;
+        btn.addEventListener('click', () => selectAnswer(index));
+        choicesDiv.appendChild(btn);
+      });
+    }
+
+    // 用户选择答案
+    function selectAnswer(selectedIndex) {
+      if (answered) return;  // 防止重复点击
+      answered = true;
+
+      const q = questions[currentOrder[currentIndex]];
+      const isCorrect = selectedIndex === q.answer;
+
+      if (isCorrect) {
+        score++;
+        results.push({ id: q.id, correct: true });
+      } else {
+        results.push({ id: q.id, correct: false });
+      }
+
+      // 标记按钮状态
+      const buttons = choicesDiv.querySelectorAll('.choice-btn');
+      buttons.forEach((btn, i) => {
+        btn.disabled = true;
+        if (i === q.answer) {
+          btn.classList.add('correct');      // 正确答案标绿
+        }
+        if (i === selectedIndex && !isCorrect) {
+          btn.classList.add('wrong');        // 选错的标红
+        }
+      });
+
+      // 显示反馈
+      feedback.classList.remove('hidden');
+      if (isCorrect) {
+        feedback.innerHTML = `<span class="correct-text">✓ 正确！</span><br><span class="explanation">${q.explanation}</span>`;
+      } else {
+        feedback.innerHTML = `<span class="wrong-text">✗ 错误。正确答案是：${q.choices[q.answer]}</span><br><span class="explanation">${q.explanation}</span>`;
+      }
+
+      // 显示下一题按钮（或"查看结果"）
+      nextBtn.classList.remove('hidden');
+      if (currentIndex >= questions.length - 1) {
+        nextBtn.textContent = '查看结果';
+      } else {
+        nextBtn.textContent = '下一题';
+      }
+    }
+
+    // 下一题 / 查看结果
+    nextBtn.addEventListener('click', () => {
+      currentIndex++;
+      if (currentIndex < questions.length) {
+        showQuestion();
+      } else {
+        showResult();
+      }
+    });
+
+    // 显示最终结果
+    function showResult() {
+      quizArea.classList.add('hidden');
+      resultArea.classList.remove('hidden');
+      scoreDiv.textContent = `你答对了 ${score}/${questions.length} 题`;
+
+      // 生成每题结果摘要
+      let summaryHTML = '<h3>答题详情：</h3><ul>';
+      results.forEach(r => {
+        const q = questions.find(q => q.id === r.id);
+        const icon = r.correct ? '✓' : '✗';
+        const cls = r.correct ? 'correct-text' : 'wrong-text';
+        summaryHTML += `<li class="${cls}">${icon} 第${r.id}题：${q.question}</li>`;
+      });
+      summaryHTML += '</ul>';
+      summaryDiv.innerHTML = summaryHTML;
+    }
+
+    // 重新开始
+    restartBtn.addEventListener('click', init);
+
+    // 启动
+    init();
+  </script>
+</body>
+</html>

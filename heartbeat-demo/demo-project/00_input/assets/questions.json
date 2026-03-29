@@ -1,0 +1,72 @@
+[
+  {
+    "id": 1,
+    "question": "What is the derivative of sin(x)?",
+    "choices": ["cos(x)", "-cos(x)", "sin(x)", "-sin(x)"],
+    "answer": 0,
+    "explanation": "The derivative of sin(x) is cos(x)."
+  },
+  {
+    "id": 2,
+    "question": "What is the integral of 2x dx?",
+    "choices": ["x² + C", "2x² + C", "x²", "2 + C"],
+    "answer": 0,
+    "explanation": "The integral of 2x is x² + C."
+  },
+  {
+    "id": 3,
+    "question": "What is lim(x→0) sin(x)/x?",
+    "choices": ["0", "1", "∞", "undefined"],
+    "answer": 1,
+    "explanation": "This is a fundamental limit in calculus, equal to 1."
+  },
+  {
+    "id": 4,
+    "question": "What is the derivative of ln(x)?",
+    "choices": ["1/x", "x", "e^x", "ln(x²)"],
+    "answer": 0,
+    "explanation": "The derivative of ln(x) is 1/x."
+  },
+  {
+    "id": 5,
+    "question": "What is d/dx [e^(2x)]?",
+    "choices": ["e^(2x)", "2e^(2x)", "2xe^(2x)", "e^x"],
+    "answer": 1,
+    "explanation": "By chain rule: d/dx[e^(2x)] = e^(2x) · 2 = 2e^(2x)."
+  },
+  {
+    "id": 6,
+    "question": "What is the second derivative of x³?",
+    "choices": ["3x²", "6x", "x²", "3x"],
+    "answer": 1,
+    "explanation": "First derivative: 3x². Second derivative: 6x."
+  },
+  {
+    "id": 7,
+    "question": "What is ∫₀¹ x² dx?",
+    "choices": ["1/3", "1/2", "1", "2/3"],
+    "answer": 0,
+    "explanation": "∫₀¹ x² dx = [x³/3]₀¹ = 1/3 - 0 = 1/3."
+  },
+  {
+    "id": 8,
+    "question": "At what point does f(x) = x² - 4x + 3 have a local minimum?",
+    "choices": ["x = 1", "x = 2", "x = 3", "x = 0"],
+    "answer": 1,
+    "explanation": "f'(x) = 2x - 4 = 0, so x = 2. f''(2) = 2 > 0, confirming a minimum."
+  },
+  {
+    "id": 9,
+    "question": "What is the derivative of tan(x)?",
+    "choices": ["sec²(x)", "sec(x)", "cot(x)", "-csc²(x)"],
+    "answer": 0,
+    "explanation": "The derivative of tan(x) is sec²(x)."
+  },
+  {
+    "id": 10,
+    "question": "What is the Taylor series term for e^x at x=0, degree 3?",
+    "choices": ["1 + x + x²/2 + x³/6", "1 + x + x² + x³", "1 + x + x²/2", "x + x²/2 + x³/6"],
+    "answer": 0,
+    "explanation": "e^x = Σ(x^n/n!), so terms are 1 + x + x²/2! + x³/3! = 1 + x + x²/2 + x³/6."
+  }
+]
