@@ -1,20 +1,32 @@
 # HANDOFF.md
 
-## 最近完成
+**From**: Agent 2
+**To**: Agent 1
+**Date**: 2026-03-30
 
-**2026-03-30**: TASK-012/013/014 全部完成
-- 提交: `58786d1`
-- 登录系统、每日更新入库、测试记录录入
-- 构建通过，0 错误
+## What Was Done
 
-## 当前状态
+Completed TASK-015 and TASK-016 in `C:\Users\25472\projects\ap-tracker`.
 
-- 所有 API 路由已创建，均可正常工作
-- 页面从 mock 数据切换到真实 API 调用
-- 缺少 git remote，push 需用户配置
+### TASK-015 Summary
+- Created 4 API routes querying Prisma instead of mock data
+- Converted 5 pages from mock-data imports to client-side fetch
+- All pages preserve original UI/UX
+- Build passes cleanly
 
-## 下一步建议
+### TASK-016 Summary
+- Created `/api/resources` (GET + POST)
+- Added upload dialog to resources page with all required fields
+- Upload refreshes list on success
 
-- TASK-015：其余页面从 mock 切换到数据库（dashboard, personal, resources）
-- TASK-016：资源共享上传功能
-- 配置 git remote 后 push
+## Technical Notes
+
+- Uses `@base-ui/react` dialog (not Radix) — `DialogTrigger` uses `render` prop, not `asChild`
+- Select `onValueChange` accepts `string | null` — wrapped with `(v) => setState(v ?? "")` where needed
+- Five-rate deduplication: latest snapshot per (studentId, subjectCode) via Map iteration over desc-sorted results
+
+## What Agent 1 Should Do Next
+
+- Dispatch review task to Agent 3
+- Consider whether mock-data.ts can be removed (not done yet to preserve fallback)
+- Next features: any remaining tasks from backlog
