@@ -1,18 +1,14 @@
-# HANDOFF.md — TASK-002/008/009
+# HANDOFF.md — TASK-003/004
 
 ## What changed
 
-- `src/app/page.tsx` — 重写为班级选择器首页
-- `src/app/[classId]/layout.tsx` — 新建班级空间导航布局（4 tab）
-- `src/app/[classId]/dashboard/page.tsx` — 新建仪表盘占位页
-- `src/app/[classId]/personal/page.tsx` — 新建个人中心占位页
-- `src/app/[classId]/daily-update/page.tsx` — 新建每日更新表单
-- `src/app/[classId]/resources/page.tsx` — 新建资源共享页
-- 安装 shadcn/ui 组件：card, select, input, textarea, badge, label
+- `src/app/[classId]/dashboard/page.tsx` — 重写：占位页 → 4个指标卡片 + 考试日历
+- `src/components/exam-calendar.tsx` — 新建：5月考试日历独立组件
+- `src/components/ui/dialog.tsx` — 新建：shadcn/ui Dialog 组件（考试详情弹窗用）
 
 ## Context
 
-- Tasks: TASK-002 (首页), TASK-008 (每日更新), TASK-009 (资源共享), TASK-010 (导航布局)
+- Tasks: TASK-003 (核心指标卡片), TASK-004 (5月考试日历)
 - 项目路径: `C:\Users\25472\projects\ap-tracker`
 - 技术栈: Next.js 16.2.1 + React 19.2.4 + Tailwind CSS v4 + shadcn/ui
 
@@ -20,27 +16,28 @@
 
 | Test | Result |
 |---|---|
-| 首页渲染 | ✅ 班级卡片 + 学生人数 + 科目数 |
-| 导航切换 | ✅ 4 tab 之间可自由跳转 |
-| 每日更新表单 | ✅ 9 个字段，必填验证，alert 提交 |
-| 资源共享页 | ✅ 8 条资源 + 科目筛选 + 网格布局 |
+| 4 个指标卡片渲染 | ✅ 数据从 mock-data 实时计算 |
+| 卡片颜色区分 | ✅ 蓝/绿/橙/紫 |
+| 卡片 hover 效果 | ✅ shadow + scale |
+| 点击跳转 | ✅ → /[classId]/dashboard/[metric] |
+| 考试日历 5月1-31 | ✅ 周一~周日网格 |
+| 考试日期颜色 | ✅ 6档颜色规则 |
+| 考试详情弹窗 | ✅ Dialog 显示学生+风险标注 |
 | next build | ✅ 编译通过，0 错误 |
-| Git commit | ✅ commit b1817c7 |
+| Git commit | ✅ commit 7ef96ee |
 
 ## 已知问题
 
-- 无
+- dashboard/[metric] 路由页面尚未创建（TASK-005 范围）
 
 ## 下一步
 
 | 任务 | 说明 | 前置 |
 |---|---|---|
-| TASK-003 | 仪表盘核心指标卡片（4 个可点击） | TASK-002 ✅ |
-| TASK-004 | 5 月考试日历 | TASK-003 |
-| TASK-005 | 指标明细页 | TASK-003 |
+| TASK-005 | 指标明细页 dashboard/[metric] | TASK-003 ✅ |
 | TASK-006 | 个人中心详情 | TASK-005 |
 | TASK-007 | 单科详情页 | TASK-006 |
 
 ## Status
 
-TASK-002/008/009/010 complete. Ready for next dispatch.
+TASK-003/004 complete. Ready for next dispatch.
