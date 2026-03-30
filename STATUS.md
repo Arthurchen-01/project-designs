@@ -1,18 +1,30 @@
 # Runtime Status
 
-- current_state: PHASE_4_COMPLETE
-- active_project: AP追踪网站
-- active_batch: Phase 4
+- current_state: NIGHT_CONTINUOUS_ACTIVE
+- active_project: AP tracking site
+- active_batch: M05-S01-R01
+- branch_of_record: nightly/2026-03-31-confidence-fix
+- code_repo: https://github.com/Arthurchen-01/ap-tracker.git
 - last_updated_by: agent1
-- last_updated: 2026-03-31T00:11+08:00
-- agent3_state: IDLE
-- agent3_target: (none)
+- last_updated: 2026-03-31T02:03+08:00
+- agent2_state: DISPATCHED
+- agent2_target: TASK-027
+- agent3_state: PENDING
+- agent3_target: TASK-028
 - notes: |
-  Phase 4 全部完成，Agent 3 审查通过：
+  Phase 4 is complete and approved.
 
-  - TASK-023 ✅ AI模块初始化 + P1修复
-  - TASK-024 ✅ 评分引擎接入AI
-  - TASK-025 ✅ AI生成变化解释
-  - TASK-026 ✅ AI学习建议
+  A new overnight continuous-development cycle is now open.
 
-  下一步：Agent 1 规划 Phase 5（班级管理增强）或收尾清理
+  Agent 2 should:
+  - sync the nightly code branch
+  - implement one coherent high-impact batch
+  - verify build and API/config reality
+  - push to the nightly branch
+  - report in 30_execution
+
+  Agent 3 should:
+  - perform a baseline product/UX/risk review of the current nightly branch
+  - write the first review packet in 40_review
+
+  Agent 1 will issue the next micro-task after both reports land.
