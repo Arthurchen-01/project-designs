@@ -1,25 +1,34 @@
-# TASK-002 测试计划
+# TASK-003 测试计划
+
+## 测试数据
+- 模拟 `logs/2026-03-30.md` 包含完整学习对话
+- 初始 progress.md 有 5 条记录
+- 初始 diary.md 有 5 条记录
 
 ## 测试用例
 
-### TC1: 基本 CSV 生成
-- 命令：`python export_anki.py`
-- 期望：生成 CSV 文件，包含 Q&A 对
-- 验证：输出文件存在，至少包含 1 条记录
+### TC1: progress.md 更新
+- 运行脚本
+- 验证：progress.md 新增第 6 条记录
+- 验证：课次、日期、科目、学习内容正确
 
-### TC2: CSV 格式验证
-- 验证：tab 分隔、无多余引号、字段数一致
-- 验证：每行 3 列（正面\t背面\ttags）
+### TC2: diary.md 更新
+- 验证：diary.md 新增当天条目
+- 验证：格式与已有条目一致
 
-### TC3: 科目筛选
-- 命令：`python export_anki.py --subject "AP-Calculus-BC"`
-- 期望：只输出该科目的卡片
-- 验证：所有记录的 tag 包含 "AP-Calculus-BC"
+### TC3: 角色文件更新
+- 验证：如检测到关系变化，角色文件对应段落更新
+- 验证：无变化时不修改
 
-### TC4: tag 格式检查
-- 期望：tag 格式符合 Anki 规范（逗号分隔，无空格）
-- 验证：tag 包含课次编号和科目名
+### TC4: mid_term_memory.md 压缩
+- 验证：中期记忆包含最新学习摘要
+- 验证：不丢失长期记忆条目
 
-### TC5: 内容完整性
-- 验证：提取的 Q&A 对与 progress.md / diary.md 中的原始内容一致
-- 验证：无截断、无乱码
+### TC5: session_archive.md 归档
+- 验证：旧记录被正确归档
+- 验证：最近 N 天保留详细记录
+
+### TC6: Git 自动化
+- 验证：commit 消息格式正确
+- 验证：所有变更文件被提交
+- 验证：push 成功（或 graceful failure）

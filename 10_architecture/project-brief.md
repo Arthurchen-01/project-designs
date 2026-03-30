@@ -1,80 +1,98 @@
-# 架构方案：苏格拉底家教系统自动化与复习系统
+# 架构方案 v2：苏格拉底家教系统完整工作流
 
-## 项目概览
+## 整体架构
 
-在用户现有 `C:\Users\25472\Sakura - gemini版\` 家教系统基础上，构建两个核心能力：
-1. **自动化启动** — 消除每次手动喂设定的痛点
-2. **复习系统** — 基于 Q&A 法 + 角色驱动的苏格拉底复习
+```
+┌─────────────────────────────────────────────────────┐
+│                  Git Repository                      │
+│          (Sakura - gemini版 / 新仓库)                │
+│                                                      │
+│  system.md          learner_profile.md               │
+│  Mikasa.md          Asuka.md                         │
+│  Sakura.md          Kenshin.md                       │
+│  progress.md        diary.md                         │
+│  mid_term_memory.md session_archive.md               │
+│  wechat_group.md    wechat_unread.md                 │
+│  book_revision_notes.md                              │
+│  logs/  (每日对话记录)                                │
+│  tools/ (脚本工具)                                    │
+│    ├── generate_prompt.py                            │
+│    ├── export_anki.py                                │
+│    └── post_session_update.py                        │
+└─────────────────────────────────────────────────────┘
+```
 
-## 问题分析
+## 工作流
 
-### 现有系统的根本问题
-用户的家教系统本身设计非常成熟（5 节课记录完整、角色设定深入），但存在"手动粘贴"的工作流瓶颈：
-- 浏览器侧边栏（Gemini/GPT）每次新会话无记忆
-- 需要手动上传 `system.md`、`learner_profile.md`、角色设定等十余个文件
-- 学习后没有自动化的复习产出
+### 早上学习流程
+1. 运行 `python tools/generate_prompt.py --mode morning`
+2. 脚本读取所有设定文件 + 进度 + 中期记忆 + 最近日记
+3. 生成完整 prompt，复制到剪贴板
+4. 打开 Gemini/GPT 侧边栏，粘贴，开始学习
+5. 学习过程中，所有 Q&A 实时在对话中
 
-### 技术路线选择
+### 学习结束流程
+1. 把对话内容复制保存到 `logs/YYYY-MM-DD.md`
+2. 运行 `python tools/export_anki.py --date YYYY-MM-DD`
+   - 解析当天对话，提取所有 Q&A
+   - 生成符合排版规范的 DOCX
+3. 运行 `python tools/post_session_update.py --date YYYY-MM-DD`
+   - 更新 progress.md, diary.md, 角色文件, mid_term_memory.md 等
+   - 自动 git commit + push
 
-| 方案 | 优点 | 缺点 |
-|------|------|------|
-| A. Chrome Extension + 本地服务 | 真正自动化、一键启动 | 开发量大、需要维护 |
-| B. 本地 Web App (Gradio/Streamlit) | 快速搭建、可控 | 需要额外浏览器标签 |
-| C. 基于现有 OpenClaw 集成 | 直接利用飞书交互、天然记忆 | 学习体验需要定制 |
+### 晚上复习流程
+1. 运行 `python tools/generate_prompt.py --mode review --date YYYY-MM-DD`
+2. 生成精简 prompt（角色设定 + 当天详细记录）
+3. 粘贴到 Gemini/GPT，开始苏格拉底式复习
+4. 或者直接用 Anki 复习导出的卡片
 
-**推荐：分阶段推进**
-- Phase 1（快速见效）: 自动化 prompt 生成器 + Anki 导出脚本
-- Phase 2（中期）: 本地 Web App 复习系统
-- Phase 3（远期）: Chrome Extension 或完整产品化
+## Prompt 生成方案
 
-## Phase 1: 自动化 Prompt 生成器 + Anki 导出
+### 方案：GitHub Raw Link
+将 repository 放在 GitHub/Gitee 上，每个 md 文件都有一个 raw 链接。
+生成的 prompt 可以是：
 
-### 1.1 一键 Prompt 生成器
-一个 Python 脚本，运行后自动：
-- 读取 `Sakura - gemini版/` 下所有设定文件
-- 根据当前 `progress.md` 确定学习进度
-- 生成一个完整的"系统 prompt"，用户只需复制粘贴到 Gemini/GPT 侧边栏
-- 可选：根据学习阶段选择主讲老师
+```
+请先读取以下链接中的所有文件来了解你的角色和我的学习进度：
+[系统设定] https://raw.githubusercontent.com/.../system.md
+[你的角色] https://raw.githubusercontent.com/.../Mikasa.md
+[学习进度] https://raw.githubusercontent.com/.../progress.md
+...
+```
 
-### 1.2 学习记录解析器
-- 解析 `diary.md` 和 `progress.md`
-- 提取每次课的 Q&A 对（问题 → 答案映射）
-- 生成结构化的学习笔记
+**优点**：只需粘贴一次，AI 自动读取所有信息
+**注意**：需要 Gemini/GPT 支持访问 URL（目前两者都支持）
 
-### 1.3 Anki 导出工具
-- 从学习记录中提取 Q&A 对
-- 生成 Anki 可导入的 CSV 或 .apkg 文件
-- 卡片正面 = 问题（Q），卡片背面 = 答案（A）
-- 支持按科目/课次分类打 tag
+### 备选方案：纯文本 Prompt
+如果 AI 不能访问链接，就把所有内容拼成一个超长文本 prompt。
+缺点是太长，但最可靠。
 
-## Phase 2: 角色驱动的复习系统（本地 Web App）
+## Anki DOCX 生成方案
 
-### 2.1 核心设计
-- 本地运行的 Web App（Python + Gradio 或类似框架）
-- 内嵌对本地文件系统的读写能力
-- 复习流程：选课次 → 选角色 → 角色用苏格拉底式重新提问
+### 对话记录格式（logs/YYYY-MM-DD.md）
+```markdown
+# 2026-03-30 学习记录
 
-### 2.2 记忆层
-- 复习记录单独存储（`review_log.md`）
-- 与原有 `progress.md`、`diary.md` 不冲突
-- 复习时的角色互动自动更新原有角色设定文件
+## 对话
 
-### 2.3 复习模式
-- **Q&A 回忆模式**: 显示 Q，用户回忆 A，然后看答案
-- **苏格拉底复习模式**: 角色根据原课记录，重新用提问方式引导复习
-- **随机抽查模式**: 跨课次随机抽取知识点
+**[Q1]** 什么是极限？
+**[A1]** 极限是当 x 无限趋近于某个值时，f(x) 的趋近值...
 
-## Phase 3: Chrome Extension（远期）
+**[Q2]** 连续和可导有什么区别？
+**[A2]** 连续是函数图像不断开，可导是函数图像平滑无尖点...
+```
 
-### 3.1 自动加载设定
-- 打开 Gemini/GPT 侧边栏时自动注入系统 prompt
-- 从本地文件系统读取最新设定
+### DOCX 生成逻辑
+1. 解析 logs 中的 Q&A 对
+2. 根据内容判断题型（有选项 = 选择题，有"判断"关键词 = 判断题，否则 = 简答题）
+3. 按 word.docx 规范生成 DOCX：
+   - `# AP-Calculus-BC` 作为子牌组
+   - `TAG lesson-0005 limits` 作为标签
+   - `* 简答题` 作为题型
+   - 题目 + 答案格式
 
-### 3.2 对话记录捕获
-- 自动保存侧边栏对话
-- 解析提取 Q&A 对
-- 自动追加到学习记录
-
-### 3.3 一键复习
-- 在侧边栏中直接启动复习模式
-- 角色自动切换为复习状态
+## 依赖
+- Python 3.x
+- python-docx（生成 DOCX）
+- pyperclip（复制到剪贴板）
+- Git（版本管理）
