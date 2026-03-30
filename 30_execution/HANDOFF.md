@@ -1,47 +1,26 @@
-# HANDOFF.md — TASK-002
+# HANDOFF.md — 2026-03-30 13:30
 
-## What changed
+## TASK-001 + TASK-002 均已完成
 
-- Created `30_execution/tools/export_anki.py` — Anki 导出脚本
-- Created `30_execution/tools/anki_export.tsv` — 20-card sample output
+### TASK-001: generate_prompt.py
+- 位置: `30_execution/tools/generate_prompt.py`
+- 测试输出: `30_execution/tools/prompt_output.txt`
+- Windows 使用: `python generate_prompt.py --teacher asuka`
 
-## Context
+### TASK-002: export_anki.py
+- 位置: `30_execution/tools/export_anki.py`
+- 导出样本: `30_execution/tools/anki_export.tsv` (20张卡片)
+- Windows 使用: `python export_anki.py --subject "AP-Calculus-BC"`
 
-- Task: TASK-002 (学习记录解析器 + Anki 导出)
-- Architecture reference: `10_architecture/project-brief.md` Phase 1.3
+### 测试验证结果
+| Test | Result |
+|---|---|
+| TC1: 基本 prompt 生成 | ✅ |
+| TC2: --teacher 参数 | ✅ |
+| TC3: 课次自动递增 | ✅ |
+| TC4: 剪贴板（Linux降级） | ✅ |
+| Anki TSV 格式验证 | ✅ |
+| --subject 筛选 | ✅ |
+| tag 格式 | ✅ |
 
-## Verification results
-
-| Test | Command | Result |
-|---|---|---|
-| TC1 | `python3 export_anki.py --path sample_files` | ✅ 20张卡片，文件生成 |
-| TC2 | CSV列数验证 | ✅ 全部3列，无多余引号 |
-| TC3 | `--subject AP-Calculus-BC` 筛选 | ✅ 全部20张含目标tag |
-| TC4 | tag格式检查（逗号分隔，无空格） | ✅ 0格式错误行 |
-| TC5 | 内容完整性（课次/关键词覆盖） | ✅ 5课全覆盖，diary关键词均包含 |
-
-## 算法说明
-
-**从 progress.md 生成卡片：**
-- 每节课 → 1张"概念定义/核心思想"卡（问定义，答描述）
-- 每节课 → 1张"关键点"卡（问关键点，答第一句）
-
-**从 diary.md 生成卡片：**
-- 每节课 → 1张"用自己的话解释"卡（苏格拉底式问法）
-- 每节课 → 1张"具体例子/细节"卡（问例子，答第二句）
-
-**科目推断：** 通过关键词匹配（极限/导数/连续 → AP-Calculus-BC）
-
-## Windows 使用说明
-
-```cmd
-cd "C:\Users\25472\Sakura - gemini版\tools"
-pip install -r requirements.txt
-python export_anki.py --subject "AP-Calculus-BC"
-# 输出: anki_export.tsv
-# 导入: Anki → 文件 → 导入 → 选择 anki_export.tsv → 分隔符=Tab
-```
-
-## Status
-
-All checklist items complete. Ready for Agent 3 review.
+Both Phase 1 tasks complete. TASK-003 can now be dispatched.
