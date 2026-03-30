@@ -1,26 +1,74 @@
-import { prisma } from '@/lib/prisma'
-import Link from 'next/link'
+import Link from "next/link";
+import { prisma } from "@/lib/prisma";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
-export default async function HomePage() {
-  const classData = await prisma.class.findFirst()
-  const studentCount = await prisma.student.count()
+export default async function Home() {
+  // Fetch classes from database
+  const classes = await prisma.class.findMany({
+    include: {
+      students: {
+        include: {
+          subjects: true,
+        },
+      },
+    },
+  });
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex flex-col items-center justify-center p-8">
-      <div className="max-w-md w-full space-y-6 text-center">
-        <div className="text-4xl font-bold text-gray-900">AP 备考追踪平台</div>
-        <p className="text-gray-500">实时掌握备考进度，5分概率可视化</p>
-        {classData ? (
-          <Link href={`/${classData.id}/dashboard`}
-            className="block bg-white rounded-xl p-6 shadow hover:shadow-lg transition text-left">
-            <h2 className="text-xl font-semibold text-gray-900">{classData.name}</h2>
-            <p className="text-sm text-gray-500 mt-1">{studentCount} 名学生</p>
-          </Link>
-        ) : (
-          <p className="text-gray-400">请先运行 `npx prisma db seed` 初始化数据</p>
+    <div className="min-h-screen bg-zinc-50">
+      <div className="mx-auto max-w-5xl px-4 py-12 sm:px-6 lg:px-8">
+        <div className="mb-10 text-center">
+          <h1 className="text-4xl font-bold tracking-tight text-zinc-900 sm:text-5xl">
+            AP 备考追踪平台
+          </h1>
+          <p className="mt-3 text-lg text-zinc-500">
+            选择班级，开始追踪备考进度
+          </p>
+        </div>
+
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {classes.map((cls) => {
+            const totalSubjects = cls.students.reduce(
+              (sum, s) => sum + s.subjects.length,
+              0
+            );
+            return (
+              <Link key={cls.id} href={`/${cls.id}/dashboard`}>
+                <Card className="cursor-pointer transition-shadow hover:shadow-lg">
+                  <CardHeader>
+                    <CardTitle className="text-xl">{cls.name}</CardTitle>
+                    <CardDescription>{cls.season}</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex flex-col gap-2 text-sm text-zinc-600">
+                      <div className="flex items-center gap-2">
+                        <span className="font-medium">学生人数：</span>
+                        <span>{cls.students.length}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="font-medium">报考总科次：</span>
+                        <span>{totalSubjects}</span>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </Link>
+            );
+          })}
+        </div>
+
+        {classes.length === 0 && (
+          <div className="text-center text-zinc-500 py-12">
+            暂无班级，请先运行 seed 创建数据
+          </div>
         )}
-        <p className="text-xs text-gray-400">Phase 3 — 评分引擎已集成</p>
       </div>
-    </main>
-  )
+    </div>
+  );
 }

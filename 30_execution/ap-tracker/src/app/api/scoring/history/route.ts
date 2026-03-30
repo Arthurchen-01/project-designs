@@ -1,26 +1,34 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
-export async function GET(req: NextRequest) {
+export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url)
-    const studentId   = searchParams.get('studentId')
+    const studentId = searchParams.get('studentId')
     const subjectCode = searchParams.get('subjectCode')
-    if (!studentId || !subjectCode) return NextResponse.json({ error: 'studentId 和 subjectCode 必填' }, { status: 400 })
+
+    if (!studentId || !subjectCode) {
+      return NextResponse.json({ error: 'studentId and subjectCode are required' }, { status: 400 })
+    }
 
     const snapshots = await prisma.probabilitySnapshot.findMany({
-      where: { studentId, subjectCode }, orderBy: { updatedAt: 'asc' },
-    })
-    const records = await prisma.assessmentRecord.findMany({
-      where: { studentId, subjectCode }, orderBy: { date: 'asc' },
+      where: { studentId, subjectCode },
+      orderBy: { snapshotDate: 'asc' },
+      select: {
+        id: true,
+        snapshotDate: true,
+        fiveRate: true,
+        stabilityScore: true,
+        trendScore: true,
+        decayScore: true,
+        confidenceLevel: true,
+        explanation: true,
+      },
     })
 
-    return NextResponse.json({
-      success: true,
-      snapshots: snapshots.map(s => ({ date: s.updatedAt.toISOString().slice(0, 10), rate: s.rate, confidence: s.confidence })),
-      records: records.map(r => ({ date: r.date, pct: Math.round((r.score / r.maxScore) * 100) / 100, type: r.type, timed: r.timedMode === 'timed' })),
-    })
-  } catch (err: unknown) {
-    return NextResponse.json({ error: err instanceof Error ? err.message : 'Unknown' }, { status: 500 })
+    return NextResponse.json(snapshots)
+  } catch (err) {
+    console.error('scoring/history error', err)
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

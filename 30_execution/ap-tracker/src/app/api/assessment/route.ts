@@ -1,58 +1,64 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { prisma } from '@/lib/prisma'
+import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
+import { prisma } from "@/lib/prisma";
 
-// GET /api/assessment — 获取当前学生的测试记录
-export async function GET(req: NextRequest) {
-  const studentId = req.cookies.get('ap_student_id')?.value
+export async function POST(request: Request) {
+  const cookieStore = await cookies();
+  const currentStudentId = cookieStore.get("studentId")?.value;
 
-  if (!studentId) {
-    return NextResponse.json({ records: [], error: '未登录' }, { status: 401 })
+  const body = await request.json();
+  const {
+    studentId,
+    subjectCode,
+    recordType,
+    timedMode,
+    difficulty,
+    source,
+    scoreRaw,
+    scorePercent,
+    takenAt,
+  } = body;
+
+  const sid = studentId || currentStudentId;
+  if (!sid) {
+    return NextResponse.json({ error: "未指定学生" }, { status: 400 });
+  }
+  if (!subjectCode || !recordType) {
+    return NextResponse.json({ error: "缺少必填字段" }, { status: 400 });
+  }
+
+  const record = await prisma.assessmentRecord.create({
+    data: {
+      studentId: sid,
+      subjectCode,
+      recordType,
+      timedMode: timedMode || "timed",
+      difficulty: difficulty || "medium",
+      source: source || null,
+      scoreRaw: scoreRaw !== "" && scoreRaw != null ? parseFloat(scoreRaw) : null,
+      scorePercent: scorePercent !== "" && scorePercent != null ? parseFloat(scorePercent) : null,
+      takenAt: takenAt ? new Date(takenAt) : new Date(),
+    },
+  });
+
+  return NextResponse.json(record);
+}
+
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const studentId = searchParams.get("studentId");
+  const cookieStore = await cookies();
+  const sid = studentId || cookieStore.get("studentId")?.value;
+
+  if (!sid) {
+    return NextResponse.json({ error: "未指定学生" }, { status: 400 });
   }
 
   const records = await prisma.assessmentRecord.findMany({
-    where: { studentId },
-    include: { subject: { select: { code: true, name: true, color: true } } },
-    orderBy: { date: 'desc' },
-  })
+    where: { studentId: sid },
+    orderBy: { takenAt: "desc" },
+    take: 50,
+  });
 
-  return NextResponse.json({ records })
-}
-
-// POST /api/assessment — 录入测试记录
-export async function POST(req: NextRequest) {
-  const studentId = req.cookies.get('ap_student_id')?.value
-
-  if (!studentId) {
-    return NextResponse.json({ error: '未登录' }, { status: 401 })
-  }
-
-  const body = await req.json()
-  const { subjectCode, type, timedMode, score, maxScore, date, difficulty } = body
-
-  if (!subjectCode || !type || !timedMode || score == null || !date) {
-    return NextResponse.json(
-      { error: '缺少必填字段：subjectCode, type, timedMode, score, date' },
-      { status: 400 }
-    )
-  }
-
-  const scoreVal: number = Number(score)
-  // Cast to any to bypass strict null checking — Prisma client type includes `number | null`
-  // for maxScore field (nullable in schema), type narrowing is overly strict here.
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const record = await prisma.assessmentRecord.create({
-    data: {
-      studentId,
-      subjectCode,
-      type,
-      timedMode,
-      score: scoreVal,
-      maxScore: maxScore != null ? Number(maxScore) : null,
-      date,
-      difficulty: difficulty ?? null,
-    } as any,
-    include: { subject: { select: { code: true, name: true, color: true } } },
-  })
-
-  return NextResponse.json({ record }, { status: 201 })
+  return NextResponse.json(records);
 }

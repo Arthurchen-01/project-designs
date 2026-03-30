@@ -1,21 +1,63 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { calculateBatchFiveRates } from '@/lib/scoring-engine'
+import { NextResponse } from 'next/server'
+import { prisma } from '@/lib/prisma'
+import { calculateFiveRate } from '@/lib/scoring-engine'
 
-export async function POST(req: NextRequest) {
+export async function POST(req: Request) {
   try {
-    const { classId } = await req.json().catch(() => ({}))
-    const results = await calculateBatchFiveRates(classId || 'classroom-1')
-    const total = results.length
-    const avg = total > 0 ? results.reduce((s, r) => s + r.rate, 0) / total : 0
-    return NextResponse.json({
-      success: true,
-      summary: { total, avgRate: Math.round(avg * 100) / 100,
-        high: results.filter(r => r.confidence === 'high').length,
-        rising: results.filter(r => r.trend === 'rising').length,
-        falling: results.filter(r => r.trend === 'falling').length },
-      data: results.map(r => ({ studentId: r.studentId, subjectCode: r.subjectCode, rate: r.rate, confidence: r.confidence, trend: r.trend })),
+    const body = await req.json()
+    const { classId } = body as { classId: string }
+
+    if (!classId) {
+      return NextResponse.json({ error: 'classId is required' }, { status: 400 })
+    }
+
+    const students = await prisma.student.findMany({
+      where: { classId },
+      include: { subjects: true },
     })
-  } catch (err: unknown) {
-    return NextResponse.json({ error: err instanceof Error ? err.message : 'Unknown' }, { status: 500 })
+
+    const subjects = await prisma.subject.findMany({ select: { code: true } })
+
+    const results: {
+      studentId: string
+      subjectCode: string
+      fiveRate: number
+      confidenceLevel: string
+    }[] = []
+
+    for (const student of students) {
+      for (const subject of subjects) {
+        const result = await calculateFiveRate(prisma, student.id, subject.code)
+
+        await prisma.probabilitySnapshot.create({
+          data: {
+            studentId: student.id,
+            subjectCode: subject.code,
+            snapshotDate: new Date(),
+            fiveRate: result.fiveRate,
+            stabilityScore: result.components.stability,
+            trendScore: result.components.trend,
+            decayScore: result.components.decay,
+            confidenceLevel: result.confidenceLevel,
+          },
+        })
+
+        results.push({
+          studentId: student.id,
+          subjectCode: subject.code,
+          fiveRate: result.fiveRate,
+          confidenceLevel: result.confidenceLevel,
+        })
+      }
+    }
+
+    return NextResponse.json({
+      total: results.length,
+      updated: results.length,
+      results,
+    })
+  } catch (err) {
+    console.error('scoring/batch error', err)
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

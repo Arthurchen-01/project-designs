@@ -1,126 +1,305 @@
-"use client"
+"use client";
 
-import Link from "next/link"
-import { useParams, useRouter } from "next/navigation"
-import { useState, useEffect } from "react"
-import { pct } from "@/lib/utils"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { LayoutDashboard, LogIn, Loader2 } from "lucide-react"
+import { useEffect, useState } from "react";
+import { useParams, useSearchParams, useRouter } from "next/navigation";
+import Link from "next/link";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
+interface SubjectInfo {
+  subjectCode: string;
+  targetScore: number;
+  fiveRate: number;
+  confidenceLevel: string;
+}
 
 interface StudentData {
-  id: string
-  name: string
-  classId: string
-  className: string
-  enrollmentCount: number
-  overallRate: number
-  fiveRates: Array<{
-    id: string
-    rate: number
-    trend: string
-    subject: { code: string; name: string; color: string }
-  }>
+  id: string;
+  name: string;
+  classId: string;
+  avgFiveRate: number;
+  avgMcq: number;
+  mcqTestCount: number;
+  avgFrq: number;
+  frqTestCount: number;
+  avgTimed: number;
+  avgUntimed: number;
+  subjects: SubjectInfo[];
+  examDates: { subjectCode: string; date: string }[];
+}
+
+interface StudentListItem {
+  id: string;
+  name: string;
 }
 
 export default function PersonalPage() {
-  const params = useParams()
-  const classId = (params.classId as string) || "classroom-1"
-  const router = useRouter()
+  const params = useParams();
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const classId = params.classId as string;
+  const studentId = searchParams.get("student");
 
-  const [student, setStudent] = useState<StudentData | null>(null)
-  const [loading, setLoading] = useState(true)
+  const [studentData, setStudentData] = useState<StudentData | null>(null);
+  const [students, setStudents] = useState<StudentListItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [advice, setAdvice] = useState<string[]>([]);
+  const [adviceLoading, setAdviceLoading] = useState(false);
 
+  // Fetch student list
   useEffect(() => {
-    fetch('/api/personal/summary')
-      .then(r => r.json())
-      .then(d => {
-        setStudent(d)
-        setLoading(false)
-      })
-      .catch(() => setLoading(false))
-  }, [])
+    fetch(`/api/students?classId=${classId}`)
+      .then((r) => r.json())
+      .then((data) => {
+        setStudents(data);
+      });
+  }, [classId]);
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center py-20 text-gray-400">
-        <Loader2 className="w-6 h-6 animate-spin mr-2" />
-        <span>加载中...</span>
-      </div>
-    )
+  // Fetch student data
+  useEffect(() => {
+    const sid = studentId || students[0]?.id;
+    if (!sid) return;
+
+    fetch(`/api/student/${sid}`)
+      .then((r) => r.json())
+      .then((d) => {
+        setStudentData(d);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, [studentId, students, classId]);
+
+  // Fetch AI advice
+  useEffect(() => {
+    const sid = studentId || students[0]?.id;
+    if (!sid) return;
+
+    setAdviceLoading(true);
+    fetch(`/api/ai/advice?studentId=${sid}`)
+      .then((r) => r.json())
+      .then((d) => {
+        if (d.advice) setAdvice(d.advice);
+        setAdviceLoading(false);
+      })
+      .catch(() => setAdviceLoading(false));
+  }, [studentId, students, classId]);
+
+  if (loading || !studentData) {
+    return <div className="text-zinc-500">加载中...</div>;
   }
 
-  if (!student) {
-    return (
-      <>
-        <header className="bg-white border-b sticky top-0 z-10">
-          <div className="max-w-5xl mx-auto px-6 py-4 flex items-center gap-4">
-            <Link href={`/${classId}/dashboard`} className="text-gray-500 hover:text-gray-700 text-sm">← 返回仪表盘</Link>
-            <span className="text-gray-200">|</span>
-            <h1 className="font-semibold text-gray-900">个人中心</h1>
-          </div>
-        </header>
-        <div className="max-w-md mx-auto px-6 py-20 flex flex-col items-center gap-4 text-center">
-          <LogIn className="w-12 h-12 text-gray-300" />
-          <h2 className="text-lg font-semibold text-gray-700">请先登录</h2>
-          <p className="text-sm text-gray-500">查看个人学习数据前，需要先选择你的身份。</p>
-          <button onClick={() => router.push(`/${classId}/login`)} className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
-            去登录
-          </button>
-        </div>
-      </>
-    )
+  const currentStudent = studentData;
+  const avgFiveRate = currentStudent.avgFiveRate;
+  const confidenceLevel =
+    avgFiveRate >= 75 ? "高" : avgFiveRate >= 55 ? "中" : "低";
+  const confidenceColor =
+    avgFiveRate >= 75
+      ? "bg-green-100 text-green-800"
+      : avgFiveRate >= 55
+      ? "bg-yellow-100 text-yellow-800"
+      : "bg-red-100 text-red-800";
+
+  function handleStudentChange(sid: string | null) {
+    if (sid) router.push(`/${classId}/personal?student=${sid}`);
   }
 
   return (
-    <>
-      <header className="bg-white border-b sticky top-0 z-10">
-        <div className="max-w-5xl mx-auto px-6 py-4 flex items-center gap-4">
-          <Link href={`/${classId}/dashboard`} className="text-gray-500 hover:text-gray-700 text-sm">← 返回仪表盘</Link>
-          <span className="text-gray-200">|</span>
-          <h1 className="font-semibold text-gray-900">个人中心</h1>
+    <div className="space-y-6">
+      {/* Student selector */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-zinc-900">个人中心</h1>
+          <p className="text-zinc-500 mt-1">{currentStudent.name}</p>
         </div>
-      </header>
+        <div className="w-48">
+          <Select defaultValue={currentStudent.id} onValueChange={handleStudentChange}>
+            <SelectTrigger>
+              <SelectValue placeholder="选择学生" />
+            </SelectTrigger>
+            <SelectContent>
+              {students.map((s) => (
+                <SelectItem key={s.id} value={s.id}>
+                  {s.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
 
-      <div className="max-w-5xl mx-auto px-6 py-8 space-y-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>学生信息</CardTitle>
+      {/* Top 4 metric cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {/* Overall 5-rate */}
+        <Card className="border-l-4 border-l-green-500">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-zinc-600">
+              整体 5 分概率
+            </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold text-gray-900">{student.name}</p>
-            <p className="text-gray-500 mt-1">整体 5 分率：<span className="font-semibold text-blue-600">{pct(student.overallRate)}</span></p>
-            <p className="text-sm text-gray-400 mt-1">报考 {student.enrollmentCount} 科</p>
+            <div className="text-4xl font-bold text-green-700">
+              {avgFiveRate}%
+            </div>
+            <div className="mt-2">
+              <Badge className={confidenceColor}>
+                置信等级：{confidenceLevel}
+              </Badge>
+            </div>
           </CardContent>
         </Card>
 
-        {/* 科目列表 */}
-        <div>
-          <h2 className="font-semibold text-gray-900 mb-3">各科 5 分概率</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {student.fiveRates.map(fr => (
-              <Card key={fr.id} className="hover:shadow-sm transition-shadow">
-                <CardContent className="p-4">
-                  <div className="flex items-center justify-between mb-2">
-                    <p className="font-medium text-gray-800">{fr.subject.name}</p>
-                    <span className={`text-sm font-semibold ${
-                      fr.rate >= 0.7 ? "text-green-600" :
-                      fr.rate >= 0.5 ? "text-yellow-600" : "text-red-500"
-                    }`}>
-                      {pct(fr.rate)} {fr.trend === "rising" ? "↑" : fr.trend === "falling" ? "↓" : "→"}
-                    </span>
-                  </div>
-                  <div className="w-full bg-gray-100 rounded-full h-1.5">
-                    <div
-                      className={`h-1.5 rounded-full ${fr.rate >= 0.7 ? "bg-green-500" : fr.rate >= 0.5 ? "bg-yellow-400" : "bg-red-400"}`}
-                      style={{ width: pct(fr.rate) }}
-                    />
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+        {/* FRQ */}
+        <Card className="border-l-4 border-l-purple-500">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-zinc-600">
+              FRQ 测试情况
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-4xl font-bold text-purple-700">
+              {currentStudent.avgFrq}%
+            </div>
+            <p className="text-sm text-zinc-500 mt-1">
+              平均分 · 共 {currentStudent.frqTestCount} 次测试
+            </p>
+          </CardContent>
+        </Card>
+
+        {/* MCQ */}
+        <Card className="border-l-4 border-l-orange-500">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-zinc-600">
+              MCQ 测试情况
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-4xl font-bold text-orange-700">
+              {currentStudent.avgMcq}%
+            </div>
+            <p className="text-sm text-zinc-500 mt-1">
+              平均分 · 共 {currentStudent.mcqTestCount} 次测试
+            </p>
+          </CardContent>
+        </Card>
+
+        {/* Timed vs Untimed */}
+        <Card className="border-l-4 border-l-blue-500">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-zinc-600">
+              计时 vs 不计时对比
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-baseline gap-6">
+              <div>
+                <p className="text-xs text-zinc-400">不计时</p>
+                <p className="text-3xl font-bold text-blue-700">
+                  {currentStudent.avgUntimed}%
+                </p>
+              </div>
+              <div className="text-2xl text-zinc-300">vs</div>
+              <div>
+                <p className="text-xs text-zinc-400">计时</p>
+                <p className="text-3xl font-bold text-blue-700">
+                  {currentStudent.avgTimed}%
+                </p>
+              </div>
+            </div>
+            <p className="text-sm text-zinc-500 mt-1">
+              {currentStudent.avgTimed > currentStudent.avgUntimed
+                ? `计时高出 ${currentStudent.avgTimed - currentStudent.avgUntimed}%`
+                : currentStudent.avgTimed < currentStudent.avgUntimed
+                ? `不计时高出 ${currentStudent.avgUntimed - currentStudent.avgTimed}%`
+                : "持平"}
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Subject cards */}
+      <div>
+        <h2 className="text-xl font-bold text-zinc-900 mb-4">报名科目</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {currentStudent.subjects.map((sub) => {
+            const examDateObj = currentStudent.examDates.find(
+              (e) => e.subjectCode === sub.subjectCode
+            );
+            return (
+              <Link
+                key={sub.subjectCode}
+                href={`/${classId}/personal/${encodeURIComponent(sub.subjectCode)}?student=${currentStudent.id}`}
+              >
+                <Card className="hover:shadow-lg hover:scale-[1.02] transition-all duration-200 cursor-pointer h-full">
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-base font-semibold text-zinc-800">
+                      {sub.subjectCode}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-zinc-500">5 分率</span>
+                      <span className="font-bold text-green-700">
+                        {sub.fiveRate}%
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-zinc-500">置信等级</span>
+                      <span className="font-bold text-blue-700">
+                        {sub.confidenceLevel}
+                      </span>
+                    </div>
+                    {examDateObj && (
+                      <div className="flex justify-between items-center">
+                        <span className="text-sm text-zinc-500">考试日期</span>
+                        <span className="text-sm text-zinc-600">
+                          {examDateObj.date}
+                        </span>
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+              </Link>
+            );
+          })}
         </div>
       </div>
-    </>
-  )
+
+      {/* AI Learning Advice */}
+      <div>
+        <h2 className="text-xl font-bold text-zinc-900 mb-4">AI 学习建议</h2>
+        <Card className="border-l-4 border-l-cyan-500">
+          <CardContent className="pt-4">
+            {adviceLoading ? (
+              <p className="text-zinc-500">正在生成建议...</p>
+            ) : advice.length > 0 ? (
+              <ul className="space-y-3">
+                {advice.map((item, index) => (
+                  <li key={index} className="flex items-start gap-3">
+                    <Badge variant="outline" className="shrink-0 mt-0.5">
+                      {index + 1}
+                    </Badge>
+                    <span className="text-sm text-zinc-700">{item}</span>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-zinc-500">暂无建议</p>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
 }

@@ -1,236 +1,369 @@
-// ============================================================
-// AP 备考追踪平台 — Mock 数据
-// ============================================================
+// ============================================================================
+// AP Tracker — Mock Data
+// ============================================================================
 
-// ----------------------------------------------------------------
-// 班级
-// ----------------------------------------------------------------
-export const classroom = {
-  id: "classroom-1",
-  name: "AP备考班 2026",
-  season: "2025-2026",
+// ---------- Type Definitions ----------
+
+export type APSubject =
+  | "AP Macro"
+  | "AP Micro"
+  | "AP Calc BC"
+  | "AP Stats"
+  | "AP Physics"
+  | "AP Chemistry"
+  | "AP Biology"
+  | "AP English Lang";
+
+export interface ExamDate {
+  subject: APSubject;
+  date: string; // ISO date string
 }
 
-// ----------------------------------------------------------------
-// 科目
-// ----------------------------------------------------------------
-export const subjects = [
-  { code: "AP-MACRO",  name: "AP宏观经济学",  color: "#3B82F6" },
-  { code: "AP-MICRO",  name: "AP微观经济学",  color: "#8B5CF6" },
-  { code: "AP-CALC-BC", name: "AP微积分BC",  color: "#10B981" },
-  { code: "AP-STAT",   name: "AP统计学",      color: "#F59E0B" },
-  { code: "AP-PHY-C",  name: "AP物理C力学",  color: "#EF4444" },
-  { code: "AP-CHEM",   name: "AP化学",        color: "#06B6D4" },
-  { code: "AP-BIO",    name: "AP生物学",      color: "#84CC16" },
-  { code: "AP-LANG",   name: "AP英语语言",    color: "#EC4899" },
-]
-
-// ----------------------------------------------------------------
-// 学生
-// ----------------------------------------------------------------
-export const students = [
-  { id: "stu-01", name: "陈冠宇",   gender: "男" },
-  { id: "stu-02", name: "林思远",   gender: "男" },
-  { id: "stu-03", name: "王诗涵",   gender: "女" },
-  { id: "stu-04", name: "张明轩",   gender: "男" },
-  { id: "stu-05", name: "李雨桐",   gender: "女" },
-  { id: "stu-06", name: "刘子涵",   gender: "男" },
-  { id: "stu-07", name: "赵晓晨",   gender: "女" },
-  { id: "stu-08", name: "周宇航",   gender: "男" },
-  { id: "stu-09", name: "吴思琪",   gender: "女" },
-]
-
-// ----------------------------------------------------------------
-// 报考关系
-// ----------------------------------------------------------------
-export const studentSubjects: Record<string, string[]> = {
-  "stu-01": ["AP-MACRO", "AP-MICRO", "AP-CALC-BC", "AP-STAT"],
-  "stu-02": ["AP-MACRO", "AP-CALC-BC", "AP-PHY-C",  "AP-STAT"],
-  "stu-03": ["AP-MACRO", "AP-LANG",   "AP-ENG",    "AP-LIT"],
-  "stu-04": ["AP-MACRO", "AP-CHEM",   "AP-BIO",    "AP-CALC-BC"],
-  "stu-05": ["AP-MACRO", "AP-STAT",   "AP-MICRO"],
-  "stu-06": ["AP-MACRO", "AP-MICRO",  "AP-PHY-C",  "AP-CALC-BC"],
-  "stu-07": ["AP-LANG",  "AP-LIT",    "AP-ENG"],
-  "stu-08": ["AP-MACRO", "AP-STAT",   "AP-CHEM"],
-  "stu-09": ["AP-BIO",   "AP-CHEM",   "AP-MACRO"],
-}
-
-// ----------------------------------------------------------------
-// 5月AP考试日期
-// ----------------------------------------------------------------
-export const examDates = [
-  { date: "2026-05-04", subjects: ["AP-CHEM",  "AP-PHY-C"] },
-  { date: "2026-05-05", subjects: ["AP-MACRO", "AP-MICRO"] },
-  { date: "2026-05-06", subjects: ["AP-CALC-BC"] },
-  { date: "2026-05-07", subjects: ["AP-STAT"] },
-  { date: "2026-05-08", subjects: ["AP-LANG"] },
-  { date: "2026-05-11", subjects: ["AP-BIO"] },
-  { date: "2026-05-12", subjects: ["AP-LIT"] },
-]
-
-// ----------------------------------------------------------------
-// 成绩记录
-// ----------------------------------------------------------------
 export interface MockScore {
-  id: string
-  studentId: string
-  subjectCode: string
-  type: "mcq" | "frq" | "full-mock"
-  timedMode: "timed" | "untimed"
-  score: number
-  maxScore: number
-  date: string
-  difficulty?: "basic" | "medium" | "hard"
+  label: string; // e.g. "Mock 1", "Practice Test A"
+  mcqScore: number; // 0-100 percentage
+  frqScore: number; // 0-100 percentage
+  timed: boolean;
+  overallScore: number; // weighted 0-100 percentage
+  date: string; // ISO date string
 }
 
-export const scores: MockScore[] = [
-  // 陈冠宇 - AP-MACRO
-  { id: "s001", studentId: "stu-01", subjectCode: "AP-MACRO", type: "full-mock", timedMode: "timed",   score: 78, maxScore: 100, date: "2026-01-10", difficulty: "medium" },
-  { id: "s002", studentId: "stu-01", subjectCode: "AP-MACRO", type: "mcq",       timedMode: "timed",   score: 41, maxScore: 50,  date: "2026-01-24", difficulty: "medium" },
-  { id: "s003", studentId: "stu-01", subjectCode: "AP-MACRO", type: "frq",       timedMode: "timed",   score: 28, maxScore: 40,  date: "2026-02-07", difficulty: "hard" },
-  { id: "s004", studentId: "stu-01", subjectCode: "AP-MACRO", type: "full-mock", timedMode: "untimed", score: 89, maxScore: 100, date: "2026-02-21", difficulty: "medium" },
-  { id: "s005", studentId: "stu-01", subjectCode: "AP-MACRO", type: "mcq",       timedMode: "timed",   score: 47, maxScore: 50,  date: "2026-03-07", difficulty: "medium" },
-  { id: "s006", studentId: "stu-01", subjectCode: "AP-MACRO", type: "full-mock", timedMode: "timed",   score: 84, maxScore: 100, date: "2026-03-21", difficulty: "medium" },
-  // 陈冠宇 - AP-CALC-BC
-  { id: "s007", studentId: "stu-01", subjectCode: "AP-CALC-BC", type: "full-mock", timedMode: "timed",   score: 65, maxScore: 100, date: "2026-01-15", difficulty: "hard" },
-  { id: "s008", studentId: "stu-01", subjectCode: "AP-CALC-BC", type: "mcq",       timedMode: "timed",   score: 37, maxScore: 45,  date: "2026-02-05", difficulty: "medium" },
-  { id: "s009", studentId: "stu-01", subjectCode: "AP-CALC-BC", type: "full-mock", timedMode: "untimed", score: 80, maxScore: 100, date: "2026-02-26", difficulty: "hard" },
-  { id: "s010", studentId: "stu-01", subjectCode: "AP-CALC-BC", type: "frq",       timedMode: "timed",   score: 26, maxScore: 45,  date: "2026-03-12", difficulty: "hard" },
-  // 林思远 - AP-MACRO
-  { id: "s011", studentId: "stu-02", subjectCode: "AP-MACRO", type: "full-mock", timedMode: "timed",   score: 55, maxScore: 100, date: "2026-01-10", difficulty: "medium" },
-  { id: "s012", studentId: "stu-02", subjectCode: "AP-MACRO", type: "mcq",       timedMode: "timed",   score: 28, maxScore: 50,  date: "2026-02-01", difficulty: "medium" },
-  { id: "s013", studentId: "stu-02", subjectCode: "AP-MACRO", type: "full-mock", timedMode: "untimed", score: 72, maxScore: 100, date: "2026-02-21", difficulty: "medium" },
-  { id: "s014", studentId: "stu-02", subjectCode: "AP-MACRO", type: "mcq",       timedMode: "timed",   score: 34, maxScore: 50,  date: "2026-03-14", difficulty: "medium" },
-  // 王诗涵 - AP-LANG
-  { id: "s015", studentId: "stu-03", subjectCode: "AP-LANG", type: "full-mock", timedMode: "timed",   score: 62, maxScore: 100, date: "2026-01-18", difficulty: "hard" },
-  { id: "s016", studentId: "stu-03", subjectCode: "AP-LANG", type: "frq",       timedMode: "untimed", score: 22, maxScore: 40,  date: "2026-02-14", difficulty: "hard" },
-  { id: "s017", studentId: "stu-03", subjectCode: "AP-LANG", type: "full-mock", timedMode: "timed",   score: 68, maxScore: 100, date: "2026-03-07", difficulty: "hard" },
-  // 张明轩 - AP-CHEM
-  { id: "s018", studentId: "stu-04", subjectCode: "AP-CHEM", type: "full-mock", timedMode: "timed",   score: 48, maxScore: 100, date: "2026-01-22", difficulty: "hard" },
-  { id: "s019", studentId: "stu-04", subjectCode: "AP-CHEM", type: "mcq",       timedMode: "untimed", score: 32, maxScore: 50,  date: "2026-02-18", difficulty: "medium" },
-  { id: "s020", studentId: "stu-04", subjectCode: "AP-CHEM", type: "full-mock", timedMode: "timed",   score: 55, maxScore: 100, date: "2026-03-14", difficulty: "hard" },
-]
-
-// ----------------------------------------------------------------
-// 5分率快照 (人×科)
-// ----------------------------------------------------------------
-export interface FiveRate {
-  studentId: string
-  subjectCode: string
-  rate: number          // 0-1
-  confidence: "high" | "medium" | "low"
-  trend: "rising" | "stable" | "falling"
+export interface TopicMastery {
+  unit: string; // e.g. "Unit 1: Basic Economic Concepts"
+  mastery: number; // 0-1
 }
 
-export const fiveRates: FiveRate[] = [
-  { studentId: "stu-01", subjectCode: "AP-MACRO",   rate: 0.74, confidence: "high",   trend: "rising" },
-  { studentId: "stu-01", subjectCode: "AP-CALC-BC", rate: 0.58, confidence: "medium", trend: "rising" },
-  { studentId: "stu-01", subjectCode: "AP-MICRO",   rate: 0.68, confidence: "medium", trend: "stable" },
-  { studentId: "stu-01", subjectCode: "AP-STAT",    rate: 0.75, confidence: "high",   trend: "rising" },
-  { studentId: "stu-02", subjectCode: "AP-MACRO",   rate: 0.51, confidence: "medium", trend: "stable" },
-  { studentId: "stu-02", subjectCode: "AP-CALC-BC", rate: 0.45, confidence: "medium", trend: "stable" },
-  { studentId: "stu-03", subjectCode: "AP-LANG",    rate: 0.45, confidence: "medium", trend: "rising" },
-  { studentId: "stu-04", subjectCode: "AP-CHEM",    rate: 0.38, confidence: "low",   trend: "stable" },
-]
-
-// ----------------------------------------------------------------
-// 知识点掌握度
-// ----------------------------------------------------------------
-export const unitMastery: Record<string, Record<string, number>> = {
-  "AP-MACRO": {
-    "Unit 1 基础概念": 0.85, "Unit 2 供需": 0.80,
-    "Unit 3 国民收入": 0.72, "Unit 4 失业通胀": 0.68,
-    "Unit 5 财政政策": 0.90, "Unit 6 货币政策": 0.75,
-  },
-  "AP-CALC-BC": {
-    "Unit 1 极限": 0.88, "Unit 2 连续": 0.82,
-    "Unit 3 导数": 0.76, "Unit 4 导数应用": 0.70,
-    "Unit 5 积分": 0.65, "Unit 6 积分应用": 0.58,
-    "Unit 7 微分方程": 0.72, "Unit 8 无穷级数": 0.55,
-  },
-  "AP-CHEM": {
-    "Unit 1 原子结构": 0.60, "Unit 2 分子结构": 0.55,
-    "Unit 3 化学键": 0.48, "Unit 4 计量学": 0.65,
-    "Unit 5 热化学": 0.40, "Unit 6 化学动力学": 0.35,
-  },
+export interface StudentSubject {
+  subject: APSubject;
+  mockScores: MockScore[];
+  predictedFiveRate: number; // 0-1
+  topicMastery: TopicMastery[];
 }
 
-// ----------------------------------------------------------------
-// 资源共享
-// ----------------------------------------------------------------
+export interface Student {
+  id: string;
+  name: string;
+  avatar?: string;
+  subjects: StudentSubject[];
+}
+
+export interface Classroom {
+  id: string;
+  name: string;
+  students: Student[];
+}
+
 export interface SharedResource {
-  id: string
-  uploaderId: string
-  subjectCode: string
-  title: string
-  type: "note" | "video" | "practice" | "flashcard" | "lecture"
-  unit?: string
-  description: string
-  url: string
-  likes: number
+  id: string;
+  title: string;
+  subject: APSubject;
+  type: "notes" | "video" | "practice" | "flashcards";
+  sharedBy: string; // student id
+  url: string;
+  description: string;
 }
+
+// ---------- AP Exam Dates (May 2026) ----------
+
+export const apExamDates: ExamDate[] = [
+  { subject: "AP Biology", date: "2026-05-04" },
+  { subject: "AP Chemistry", date: "2026-05-05" },
+  { subject: "AP English Lang", date: "2026-05-06" },
+  { subject: "AP Stats", date: "2026-05-07" },
+  { subject: "AP Macro", date: "2026-05-11" },
+  { subject: "AP Micro", date: "2026-05-11" },
+  { subject: "AP Calc BC", date: "2026-05-12" },
+  { subject: "AP Physics", date: "2026-05-14" },
+];
+
+// ---------- Topic Definitions per Subject ----------
+
+const macroTopics: TopicMastery[] = [
+  { unit: "Unit 1: Basic Economic Concepts", mastery: 0 },
+  { unit: "Unit 2: Economic Indicators & the Business Cycle", mastery: 0 },
+  { unit: "Unit 3: National Income & Price Determination", mastery: 0 },
+  { unit: "Unit 4: Financial Sector", mastery: 0 },
+  { unit: "Unit 5: Stabilization Policies", mastery: 0 },
+  { unit: "Unit 6: Open Economy", mastery: 0 },
+];
+
+const microTopics: TopicMastery[] = [
+  { unit: "Unit 1: Basic Economic Concepts", mastery: 0 },
+  { unit: "Unit 2: Supply & Demand", mastery: 0 },
+  { unit: "Unit 3: Production, Cost & the Perfect Competition Model", mastery: 0 },
+  { unit: "Unit 4: Imperfect Competition", mastery: 0 },
+  { unit: "Unit 5: Factor Markets", mastery: 0 },
+  { unit: "Unit 6: Market Failure & the Role of Government", mastery: 0 },
+];
+
+const calcBCTopics: TopicMastery[] = [
+  { unit: "Unit 1: Limits & Continuity", mastery: 0 },
+  { unit: "Unit 2: Differentiation", mastery: 0 },
+  { unit: "Unit 3: Composite, Implicit & Inverse Functions", mastery: 0 },
+  { unit: "Unit 4: Contextual Applications of Differentiation", mastery: 0 },
+  { unit: "Unit 5: Analytical Applications of Differentiation", mastery: 0 },
+  { unit: "Unit 6: Integration & Accumulation of Change", mastery: 0 },
+  { unit: "Unit 7: Differential Equations", mastery: 0 },
+  { unit: "Unit 8: Applications of Integration", mastery: 0 },
+  { unit: "Unit 9: Parametric, Polar & Vector-Valued Functions", mastery: 0 },
+  { unit: "Unit 10: Infinite Sequences & Series", mastery: 0 },
+];
+
+const statsTopics: TopicMastery[] = [
+  { unit: "Unit 1: Exploring One-Variable Data", mastery: 0 },
+  { unit: "Unit 2: Exploring Two-Variable Data", mastery: 0 },
+  { unit: "Unit 3: Collecting Data", mastery: 0 },
+  { unit: "Unit 4: Probability", mastery: 0 },
+  { unit: "Unit 5: Sampling Distributions", mastery: 0 },
+  { unit: "Unit 6: Inference for Categorical Data", mastery: 0 },
+  { unit: "Unit 7: Inference for Quantitative Data", mastery: 0 },
+];
+
+const physicsTopics: TopicMastery[] = [
+  { unit: "Unit 1: Kinematics", mastery: 0 },
+  { unit: "Unit 2: Dynamics", mastery: 0 },
+  { unit: "Unit 3: Circular Motion & Gravitation", mastery: 0 },
+  { unit: "Unit 4: Energy", mastery: 0 },
+  { unit: "Unit 5: Momentum", mastery: 0 },
+  { unit: "Unit 6: Simple Harmonic Motion", mastery: 0 },
+  { unit: "Unit 7: Torque & Rotational Motion", mastery: 0 },
+  { unit: "Unit 8: Electric Charges & Electric Force", mastery: 0 },
+  { unit: "Unit 9: DC Circuits", mastery: 0 },
+  { unit: "Unit 10: Mechanical Waves & Sound", mastery: 0 },
+];
+
+const chemTopics: TopicMastery[] = [
+  { unit: "Unit 1: Atomic Structure & Properties", mastery: 0 },
+  { unit: "Unit 2: Molecular & Ionic Compound Structure", mastery: 0 },
+  { unit: "Unit 3: Intermolecular Forces & Properties", mastery: 0 },
+  { unit: "Unit 4: Chemical Reactions", mastery: 0 },
+  { unit: "Unit 5: Kinetics", mastery: 0 },
+  { unit: "Unit 6: Thermodynamics", mastery: 0 },
+  { unit: "Unit 7: Equilibrium", mastery: 0 },
+  { unit: "Unit 8: Acids & Bases", mastery: 0 },
+  { unit: "Unit 9: Applications of Thermodynamics", mastery: 0 },
+];
+
+const bioTopics: TopicMastery[] = [
+  { unit: "Unit 1: Chemistry of Life", mastery: 0 },
+  { unit: "Unit 2: Cell Structure & Function", mastery: 0 },
+  { unit: "Unit 3: Cellular Energetics", mastery: 0 },
+  { unit: "Unit 4: Cell Communication & Cell Cycle", mastery: 0 },
+  { unit: "Unit 5: Heredity", mastery: 0 },
+  { unit: "Unit 6: Gene Expression & Regulation", mastery: 0 },
+  { unit: "Unit 7: Natural Selection", mastery: 0 },
+  { unit: "Unit 8: Ecology", mastery: 0 },
+];
+
+const engLangTopics: TopicMastery[] = [
+  { unit: "Unit 1: Rhetorical Situation", mastery: 0 },
+  { unit: "Unit 2: Claims & Evidence", mastery: 0 },
+  { unit: "Unit 3: Reasoning & Organization", mastery: 0 },
+  { unit: "Unit 4: Style", mastery: 0 },
+  { unit: "Unit 5: Craft & Structure", mastery: 0 },
+];
+
+const topicMap: Record<APSubject, TopicMastery[]> = {
+  "AP Macro": macroTopics,
+  "AP Micro": microTopics,
+  "AP Calc BC": calcBCTopics,
+  "AP Stats": statsTopics,
+  "AP Physics": physicsTopics,
+  "AP Chemistry": chemTopics,
+  "AP Biology": bioTopics,
+  "AP English Lang": engLangTopics,
+};
+
+// ---------- Helper to generate scores ----------
+
+function rnd(min: number, max: number): number {
+  return Math.round((Math.random() * (max - min) + min) * 100) / 100;
+}
+
+function genMockScores(count: number, baseMcq: number, baseFrq: number): MockScore[] {
+  const labels = ["Mock 1", "Mock 2", "Mock 3", "Mock 4", "Mock 5"];
+  const dates = [
+    "2026-02-15",
+    "2026-03-01",
+    "2026-03-15",
+    "2026-03-28",
+    "2026-04-10",
+  ];
+  return Array.from({ length: count }, (_, i) => {
+    const mcq = rnd(baseMcq - 10, baseMcq + 8);
+    const frq = rnd(baseFrq - 10, baseFrq + 8);
+    return {
+      label: labels[i],
+      mcqScore: Math.min(100, Math.max(0, mcq)),
+      frqScore: Math.min(100, Math.max(0, frq)),
+      timed: i >= 2, // first two untimed, rest timed
+      overallScore: Math.min(100, Math.max(0, rnd(mcq * 0.6 + frq * 0.4 - 2, mcq * 0.6 + frq * 0.4 + 2))),
+      date: dates[i],
+    };
+  });
+}
+
+function genTopicMastery(subject: APSubject, base: number): TopicMastery[] {
+  return topicMap[subject].map((t) => ({
+    ...t,
+    mastery: rnd(base - 0.15, base + 0.15),
+  }));
+}
+
+// ---------- Students ----------
+
+const studentsRaw: {
+  name: string;
+  subjects: APSubject[];
+  mcqBase: number;
+  frqBase: number;
+  fiveRateBase: number;
+  masteryBase: number;
+  mockCount: number;
+}[] = [
+  { name: "张明宇", subjects: ["AP Macro", "AP Calc BC", "AP Physics"], mcqBase: 82, frqBase: 75, fiveRateBase: 0.78, masteryBase: 0.80, mockCount: 4 },
+  { name: "李思涵", subjects: ["AP Micro", "AP Stats", "AP Biology"], mcqBase: 78, frqBase: 72, fiveRateBase: 0.65, masteryBase: 0.72, mockCount: 3 },
+  { name: "王子轩", subjects: ["AP Calc BC", "AP Chemistry", "AP English Lang"], mcqBase: 88, frqBase: 82, fiveRateBase: 0.85, masteryBase: 0.88, mockCount: 5 },
+  { name: "刘雨桐", subjects: ["AP Macro", "AP Micro", "AP Stats"], mcqBase: 70, frqBase: 65, fiveRateBase: 0.50, masteryBase: 0.60, mockCount: 3 },
+  { name: "陈一诺", subjects: ["AP Physics", "AP Chemistry", "AP Calc BC", "AP Biology"], mcqBase: 90, frqBase: 85, fiveRateBase: 0.92, masteryBase: 0.90, mockCount: 5 },
+  { name: "赵梓萱", subjects: ["AP English Lang", "AP Macro", "AP Stats"], mcqBase: 75, frqBase: 78, fiveRateBase: 0.60, masteryBase: 0.68, mockCount: 4 },
+  { name: "黄诗琪", subjects: ["AP Biology", "AP Chemistry", "AP English Lang"], mcqBase: 80, frqBase: 76, fiveRateBase: 0.70, masteryBase: 0.75, mockCount: 4 },
+  { name: "吴浩然", subjects: ["AP Calc BC", "AP Physics", "AP Micro"], mcqBase: 85, frqBase: 80, fiveRateBase: 0.80, masteryBase: 0.82, mockCount: 3 },
+  { name: "周子墨", subjects: ["AP Stats", "AP Macro", "AP Biology", "AP Chemistry"], mcqBase: 73, frqBase: 68, fiveRateBase: 0.55, masteryBase: 0.63, mockCount: 4 },
+];
+
+export const students: Student[] = studentsRaw.map((s, i) => ({
+  id: `stu-${String(i + 1).padStart(3, "0")}`,
+  name: s.name,
+  subjects: s.subjects.map((subj) => ({
+    subject: subj,
+    mockScores: genMockScores(s.mockCount, s.mcqBase, s.frqBase),
+    predictedFiveRate: rnd(s.fiveRateBase - 0.1, s.fiveRateBase + 0.1),
+    topicMastery: genTopicMastery(subj, s.masteryBase),
+  })),
+}));
+
+// ---------- Classroom ----------
+
+export const classroom: Classroom = {
+  id: "cls-001",
+  name: "AP备考班2026",
+  students,
+};
+
+// ---------- Shared Resources ----------
 
 export const sharedResources: SharedResource[] = [
-  { id: "r01", uploaderId: "stu-01", subjectCode: "AP-MACRO",   title: "Macro 所有公式速查表",       type: "note",     description: "总结了Macro所有核心公式，适合考前快速复习",      url: "#", likes: 12 },
-  { id: "r02", uploaderId: "stu-02", subjectCode: "AP-MACRO",   title: "2023年FRQ标准答案解析",      type: "practice", description: "官方案例分析，每道题都有详细评分点说明",       url: "#", likes: 8  },
-  { id: "r03", uploaderId: "stu-01", subjectCode: "AP-CALC-BC", title: "BC 积分技巧总结",              type: "note",     description: "分部积分、换元法、三角换元三大方法汇总",       url: "#", likes: 15 },
-  { id: "r04", uploaderId: "stu-04", subjectCode: "AP-CHEM",    title: "Chemistry Unit 1-3 讲义",       type: "lecture",  description: "学校老师发的电子版讲义，全彩高清",               url: "#", likes: 20 },
-  { id: "r05", uploaderId: "stu-03", subjectCode: "AP-LANG",    title: "AP Lang Essay 框架模板",       type: "note",     description: "Synthesis/Argument/Rhetorical Analysis 三种模板", url: "#", likes: 25 },
-  { id: "r06", uploaderId: "stu-02", subjectCode: "AP-STAT",    title: "Stats 公式速记卡",             type: "flashcard", description: "AP Stats 核心公式做成 Anki 闪卡格式",         url: "#", likes: 18 },
-  { id: "r07", uploaderId: "stu-01", subjectCode: "AP-MICRO",   title: "Micro 图形分析专题",           type: "practice", description: "垄断/寡头/完全竞争图形汇总，附练习题",        url: "#", likes: 10 },
-  { id: "r08", uploaderId: "stu-06", subjectCode: "AP-PHY-C",  title: "Physics C 公式推导讲解",        type: "video",    description: "B站搬运，含推导过程和中文字幕",                   url: "#", likes: 14 },
-]
+  {
+    id: "res-001",
+    title: "AP Macro FRQ 高频考点总结",
+    subject: "AP Macro",
+    type: "notes",
+    sharedBy: "stu-001",
+    url: "#",
+    description: "涵盖 Unit 2-6 所有 FRQ 高频考点，附例题解析",
+  },
+  {
+    id: "res-002",
+    title: "AP Calc BC 公式速查表",
+    subject: "AP Calc BC",
+    type: "notes",
+    sharedBy: "stu-003",
+    url: "#",
+    description: "所有必背公式一页纸，考前速查",
+  },
+  {
+    id: "res-003",
+    title: "AP Physics 力学专题练习",
+    subject: "AP Physics",
+    type: "practice",
+    sharedBy: "stu-005",
+    url: "#",
+    description: "Unit 1-5 力学专项50题，含详细解答",
+  },
+  {
+    id: "res-004",
+    title: "AP Chemistry 有机化学 flashcards",
+    subject: "AP Chemistry",
+    type: "flashcards",
+    sharedBy: "stu-007",
+    url: "#",
+    description: "Anki 格式的有机化学反应卡片组",
+  },
+  {
+    id: "res-005",
+    title: "AP Stats 概率分布视频讲解",
+    subject: "AP Stats",
+    type: "video",
+    sharedBy: "stu-002",
+    url: "#",
+    description: "Unit 4 概率分布的30分钟视频精讲",
+  },
+  {
+    id: "res-006",
+    title: "AP Bio 细胞生物学思维导图",
+    subject: "AP Biology",
+    type: "notes",
+    sharedBy: "stu-006",
+    url: "#",
+    description: "Unit 2-4 完整思维导图，一图看懂细胞结构与功能",
+  },
+  {
+    id: "res-007",
+    title: "AP English Lang 修辞手法整理",
+    subject: "AP English Lang",
+    type: "notes",
+    sharedBy: "stu-004",
+    url: "#",
+    description: "常见修辞手法清单+范文标注",
+  },
+  {
+    id: "res-008",
+    title: "AP Micro 市场结构对比表",
+    subject: "AP Micro",
+    type: "notes",
+    sharedBy: "stu-008",
+    url: "#",
+    description: "完全竞争/垄断/寡头/垄断竞争四象限对比",
+  },
+];
 
-// ----------------------------------------------------------------
-// 辅助函数
-// ----------------------------------------------------------------
-export function getStudentById(id: string) {
-  return students.find(s => s.id === id)
+// ---------- Convenience getters ----------
+
+export function getStudentById(id: string): Student | undefined {
+  return students.find((s) => s.id === id);
 }
 
-export function getSubjectByCode(code: string) {
-  return subjects.find(s => s.code === code)
+export function getStudentsBySubject(subject: APSubject): Student[] {
+  return students.filter((s) => s.subjects.some((sub) => sub.subject === subject));
 }
 
-export function getStudentsBySubject(subjectCode: string) {
-  return students.filter(s => (studentSubjects[s.id] || []).includes(subjectCode))
-}
-
-export function getResourcesBySubject(subjectCode: string) {
-  return sharedResources.filter(r => r.subjectCode === subjectCode)
+export function getResourcesBySubject(subject: APSubject): SharedResource[] {
+  return sharedResources.filter((r) => r.subject === subject);
 }
 
 export function getClassroomStats() {
-  const totalEnrollments = students.reduce((sum, s) => sum + (studentSubjects[s.id] || []).length, 0)
-  const avgPerStudent = totalEnrollments / students.length
+  const totalStudents = students.length;
+  const subjectCounts: Partial<Record<APSubject, number>> = {};
+  const avgFiveRates: Partial<Record<APSubject, number[]>> = {};
 
-  // 班级整体5分率 = 所有"人×科"5分率均值
-  const avgFiveRate = fiveRates.length > 0
-    ? fiveRates.reduce((sum, f) => sum + f.rate, 0) / fiveRates.length
-    : 0
+  for (const s of students) {
+    for (const sub of s.subjects) {
+      subjectCounts[sub.subject] = (subjectCounts[sub.subject] ?? 0) + 1;
+      if (!avgFiveRates[sub.subject]) avgFiveRates[sub.subject] = [];
+      avgFiveRates[sub.subject]!.push(sub.predictedFiveRate);
+    }
+  }
 
-  const mcqScores = scores.filter(s => s.type === "mcq")
-  const frqScores = scores.filter(s => s.type === "frq")
-
-  const avgMcqRate = mcqScores.length > 0
-    ? mcqScores.reduce((sum, s) => sum + s.score / s.maxScore, 0) / mcqScores.length
-    : 0
-
-  const avgFrqRate = frqScores.length > 0
-    ? frqScores.reduce((sum, s) => sum + s.score / s.maxScore, 0) / frqScores.length
-    : 0
+  const avgRates: Partial<Record<APSubject, number>> = {};
+  for (const [subj, rates] of Object.entries(avgFiveRates)) {
+    avgRates[subj as APSubject] =
+      Math.round((rates.reduce((a, b) => a + b, 0) / rates.length) * 100) / 100;
+  }
 
   return {
-    totalEnrollments,
-    avgPerStudent,
-    avgFiveRate,
-    avgMcqRate,
-    avgFrqRate,
-  }
-}
-
-export function daysUntil(dateStr: string): number {
-  const today = new Date("2026-03-30")
-  const target = new Date(dateStr)
-  return Math.ceil((target.getTime() - today.getTime()) / (1000 * 60 * 60 * 24))
+    totalStudents,
+    subjectCounts,
+    averageFiveRates: avgRates,
+  };
 }
