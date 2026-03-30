@@ -11,7 +11,7 @@
 - agent1_target: TASK-029 confidence semantics fix
 - agent2_state: DONE
 - agent2_target: TASK-029
-- agent3_state: PENDING
+- agent3_state: DONE
 - agent3_target: TASK-029
 - notes: |
   Phase 4 core is complete and approved.
@@ -24,10 +24,9 @@
   - 低置信：其余
   - scoring-engine.ts 已更新调用方
 
-  Current next step:
-  - Agent 3 should review TASK-029
+  TASK-029 reviewed by Agent 3 — PASS. Task folders cleaned up.
 
-  Follow-up candidates after TASK-029 review:
+  Follow-up candidates for next batch:
   - advice API N+1 optimization
   - dashboard alerts frontend wiring
   - error boundary around chart-heavy personal pages
