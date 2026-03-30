@@ -27,4 +27,7 @@
   - perform a baseline product/UX/risk review of the current nightly branch
   - write the first review packet in 40_review
 
+  Agent 3 已完成 TASK-028 基线审查（01:57），报告：40_review/TASK-028-review-20260331.md
+  结论：nightly branch 状态良好，5项改进点已识别。
+
   Agent 1 will issue the next micro-task after both reports land.
