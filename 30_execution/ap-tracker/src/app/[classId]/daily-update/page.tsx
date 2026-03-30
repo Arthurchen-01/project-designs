@@ -69,6 +69,10 @@ export default function DailyUpdatePage() {
   const [submitting, setSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [submitError, setSubmitError] = useState("")
+  const [scoringResult, setScoringResult] = useState<{
+    rate: number; confidence: string; trend: string
+    prevRate: number | null; delta: number | null; explanation: string
+  } | null>(null)
 
   const today = new Date().toISOString().slice(0, 10)
 
@@ -157,9 +161,10 @@ export default function DailyUpdatePage() {
 
       const data = await res.json()
       setHistory(prev => [data.update, ...prev])
+      if (data.scoring) setScoringResult(data.scoring)
       setSubmitted(true)
       setForm(f => ({ ...f, score: "", totalCount: "", correctCount: "", duration: "", unit: "", description: "" }))
-      setTimeout(() => setSubmitted(false), 4000)
+      setTimeout(() => { setSubmitted(false); setScoringResult(null) }, 6000)
     } catch (err: unknown) {
       setSubmitError(err instanceof Error ? err.message : "提交失败，请重试")
     } finally {
@@ -223,11 +228,35 @@ export default function DailyUpdatePage() {
           </CardHeader>
           <CardContent>
             {submitted ? (
-              <div className="flex flex-col items-center gap-3 py-8 text-green-600">
-                <CheckCircle2 className="w-12 h-12" />
-                <p className="font-semibold text-lg">已记录！</p>
-                <p className="text-sm text-gray-500">数据已保存到数据库</p>
-                <Button variant="outline" onClick={() => setSubmitted(false)} className="mt-2">
+              <div className="space-y-4">
+                <div className="flex flex-col items-center gap-3 pt-4 text-green-600">
+                  <CheckCircle2 className="w-10 h-10" />
+                  <p className="font-semibold text-lg">已记录！</p>
+                </div>
+
+                {scoringResult && (
+                  <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 space-y-2">
+                    <p className="text-sm font-semibold text-blue-800">📊 5 分率已自动更新</p>
+                    <div className="flex items-center gap-3 text-sm">
+                      {scoringResult.prevRate != null && (
+                        <span className="text-gray-500">{Math.round(scoringResult.prevRate * 100)}%</span>
+                      )}
+                      <span className="text-blue-700 font-bold text-xl">
+                        → {Math.round(scoringResult.rate * 100)}%
+                      </span>
+                      {scoringResult.delta != null && (
+                        <span className={`font-bold text-base ${scoringResult.delta >= 0 ? "text-green-600" : "text-red-500"}`}>
+                          {scoringResult.delta >= 0 ? "↑" : "↓"} {Math.abs(Math.round(scoringResult.delta * 100))}%
+                        </span>
+                      )}
+                    </div>
+                    {scoringResult.explanation && (
+                      <p className="text-xs text-blue-700 leading-relaxed">{scoringResult.explanation}</p>
+                    )}
+                  </div>
+                )}
+
+                <Button variant="outline" onClick={() => { setSubmitted(false); setScoringResult(null) }} className="w-full">
                   继续填写
                 </Button>
               </div>
