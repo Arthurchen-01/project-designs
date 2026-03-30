@@ -1,26 +1,41 @@
-# HANDOFF.md — 2026-03-30 13:30
+# HANDOFF.md — TASK-004
 
-## TASK-001 + TASK-002 均已完成
+## What changed
 
-### TASK-001: generate_prompt.py
-- 位置: `30_execution/tools/generate_prompt.py`
-- 测试输出: `30_execution/tools/prompt_output.txt`
-- Windows 使用: `python generate_prompt.py --teacher asuka`
+- Updated `30_execution/tools/generate_prompt.py` — 升级支持 morning/review/link 三种模式
+- Created `30_execution/tools/sample_files/logs/2026-03-30.md` — 样例日志文件
 
-### TASK-002: export_anki.py
-- 位置: `30_execution/tools/export_anki.py`
-- 导出样本: `30_execution/tools/anki_export.tsv` (20张卡片)
-- Windows 使用: `python export_anki.py --subject "AP-Calculus-BC"`
+## Context
 
-### 测试验证结果
-| Test | Result |
-|---|---|
-| TC1: 基本 prompt 生成 | ✅ |
-| TC2: --teacher 参数 | ✅ |
-| TC3: 课次自动递增 | ✅ |
-| TC4: 剪贴板（Linux降级） | ✅ |
-| Anki TSV 格式验证 | ✅ |
-| --subject 筛选 | ✅ |
-| tag 格式 | ✅ |
+- Task: TASK-004 (Prompt 生成器升级)
+- Depends on: TASK-001 ✅
 
-Both Phase 1 tasks complete. TASK-003 can now be dispatched.
+## Verification results
+
+| Test | Command | Result |
+|---|---|---|
+| TC1 | `python generate_prompt.py --path sample_files` (morning) | ✅ 字符数 1786，包含六大部分，课次第0006课 |
+| TC2 | `python generate_prompt.py --mode review --date 2026-03-30 --path sample_files` | ✅ 精简 prompt，字符数 638，无日期日志警告正常 |
+| TC2b | review + 指定老师 + 日志文件存在 | ✅ 包含角色+日志，字符数 1301 |
+| TC3 | `python generate_prompt.py --mode review`（无--date） | ✅ 报错退出，提示明确 |
+| TC4 | `--mode morning --teacher asuka` | ✅ 与老师参数兼容 |
+| TC5 | `--mode link --repo-url https://github.com/user/sakura` | ✅ 生成9个raw链接，格式正确 |
+
+## 新功能使用说明
+
+```cmd
+# Morning 模式（默认，完整设定）
+python generate_prompt.py --path "C:\Users\25472\Sakura - gemini版"
+python generate_prompt.py --path "C:\Users\25472\Sakura - gemini版" --teacher asuka
+
+# Review 模式（精简，指定日期日志）
+python generate_prompt.py --mode review --date 2026-03-30 --path "C:\Users\25472\Sakura - gemini版"
+python generate_prompt.py --mode review --date 2026-03-30 --teacher sakura --path "C:\Users\25472\Sakura - gemini版"
+
+# Link 模式（GitHub raw 文件链接列表，粘贴一次即可加载所有文件）
+python generate_prompt.py --mode link --repo-url https://github.com/你的用户名/你的仓库
+```
+
+## Status
+
+All checklist items complete. Ready for Agent 3 review.
