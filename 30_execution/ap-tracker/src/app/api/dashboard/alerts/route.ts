@@ -7,7 +7,7 @@ export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url)
     const classId = searchParams.get('classId') || 'classroom-1'
-    const today = '2026-03-30'
+    const today = new Date().toISOString().slice(0, 10)
 
     const students = await prisma.student.findMany({ where: { classId }, select: { id: true, name: true } })
     const sIds = students.map(s => s.id)

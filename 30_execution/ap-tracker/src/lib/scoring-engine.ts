@@ -67,7 +67,7 @@ function stabilityScore(records: { score: number; maxScore: number }[]): number 
 
 function reviewQuality(updates: { taskType: string; date: string; score?: number | null; totalCount?: number | null }[]): number {
   if (!updates.length) return 0.5
-  const today = new Date('2026-03-30')
+  const today = new Date()
   let total = 0
   for (const u of updates.slice(0, 5)) {
     let score = REVIEW_WEIGHTS[u.taskType as keyof typeof REVIEW_WEIGHTS] ?? 0.5
@@ -83,7 +83,7 @@ function reviewQuality(updates: { taskType: string; date: string; score?: number
 }
 
 function forgettingDecay(records: { date: string }[], updates: { date: string }[]): number {
-  const today = new Date('2026-03-30')
+  const today = new Date()
   const all = [...records, ...updates].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
   const last = all[0]
   if (!last) return 0.15

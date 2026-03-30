@@ -48,24 +48,6 @@ export function ClassHeader({ classId }: { classId: string }) {
         <div className="flex items-center gap-5 text-sm">
           <nav className="flex gap-5">
             <Link
-              href={`${baseHref}/dashboard`}
-              className={`hover:text-blue-600 transition-colors ${pathname === `${baseHref}/dashboard` ? 'text-blue-600 font-medium' : 'text-gray-600'}`}
-            >
-              仪表盘
-            </Link>
-            <Link
-              href={`${baseHref}/daily-update`}
-              className={`hover:text-blue-600 transition-colors ${pathname === `${baseHref}/daily-update` ? 'text-blue-600 font-medium' : 'text-gray-600'}`}
-            >
-              每日更新
-            </Link>
-            <Link
-              href={`${baseHref}/record-test`}
-              className={`hover:text-blue-600 transition-colors ${pathname === `${baseHref}/record-test` ? 'text-blue-600 font-medium' : 'text-gray-600'}`}
-            >
-              录入成绩
-            </Link>
-            <Link
               href={`${baseHref}/personal`}
               className={`hover:text-blue-600 transition-colors ${pathname?.startsWith(`${baseHref}/personal`) ? 'text-blue-600 font-medium' : 'text-gray-600'}`}
             >
