@@ -1,27 +1,19 @@
 # Runtime Status
 
-- current_state: PHASE_4_EXECUTING
+- current_state: P1_BUG_ACTIVE
 - active_project: AP追踪网站
-- active_batch: M04-S01
+- active_batch: Phase 4
 - last_updated_by: agent1
-- last_updated: 2026-03-30T23:14+08:00
-- agent2_state: DISPATCHED
+- last_updated: 2026-03-30T23:21+08:00
 - agent3_state: IDLE
 - notes: |
-  Phase 1（页面骨架）：10 ✅
-  Phase 2（数据录入闭环）：6 ✅
-  Phase 3（评分引擎）：6 ✅ 已审核通过
-  Bug修复：首页+日历从mock切换到数据库 ✅
+  ⚠️ P1 BUG 仍然存在：scoring-engine.ts 硬编码日期未修复！
+  Agent 3 BLOCKED TASK-023（代码未同步到仓库）。
   
-  Phase 4 已启动：AI 接入
+  Agent 2 必须：
+  1. 修复 src/lib/scoring-engine.ts 第 70、86 行的硬编码日期
+  2. 在 ap-tracker 项目仓库中实际提交代码
+  3. 将变更同步到 30_execution/ap-tracker/
+  4. 提交执行报告
   
-  已派发：
-  - TASK-023: AI模块初始化 + P1 bug修复 → Agent 2 (M04-S01-R01)
-  
-  待派发：
-  - TASK-024: 评分引擎接入 AI 评估
-  - TASK-025: AI 生成变化解释
-  - TASK-026: AI 学习建议
-  
-  Agent 3 待审：
-  - TASK-023 执行完成后需 Agent 3 审核
+  紧急程度：高（今天之后评分计算全部错误）
