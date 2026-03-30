@@ -24,7 +24,7 @@ interface Student {
 interface Subject {
   code: string
   name: string
-  color: string
+  color?: string
 }
 
 interface DailyUpdate {
@@ -38,7 +38,7 @@ interface DailyUpdate {
   timeMinutes: number | null
   unit: string | null
   notes: string | null
-  subject: { code: string; name: string; color: string }
+  subject: { code: string; name: string; color?: string }
 }
 
 const TASK_TYPES = [
@@ -117,13 +117,7 @@ export default function DailyUpdatePage() {
       setLoadingUser(false)
     }
 
-    // 备用：直接从 mock-data 拿科目
-    try {
-      const { subjects: mockSubjects } = await import("@/lib/mock-data")
-      setSubjects(mockSubjects)
-    } catch {
-      // mock-data 可能不存在
-    }
+    // 科目从 /api/subjects 获取，已无 mock-data 依赖
   }, [])
 
   useEffect(() => {
@@ -310,7 +304,7 @@ export default function DailyUpdatePage() {
                   </div>
                   <div className="space-y-1.5">
                     <Label htmlFor="subject"><BookOpen className="w-3.5 h-3.5 inline mr-1" />科目 *</Label>
-                    <Select value={form.subjectCode} onValueChange={v => setForm({ ...form, subjectCode: v })}>
+                    <Select value={form.subjectCode} onValueChange={v => setForm({ ...form, subjectCode: v ?? "" })}>
                       <SelectTrigger id="subject"><SelectValue placeholder="选择科目" /></SelectTrigger>
                       <SelectContent>
                         {subjects.map(s => <SelectItem key={s.code} value={s.code}>{s.name}</SelectItem>)}
@@ -323,7 +317,7 @@ export default function DailyUpdatePage() {
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-1.5">
                     <Label htmlFor="activity">任务类型</Label>
-                    <Select value={form.taskType} onValueChange={v => setForm({ ...form, taskType: v })}>
+                    <Select value={form.taskType} onValueChange={v => setForm({ ...form, taskType: v ?? "" })}>
                       <SelectTrigger id="activity"><SelectValue /></SelectTrigger>
                       <SelectContent>
                         {TASK_TYPES.map(t => <SelectItem key={t.value} value={t.value}>{t.label}</SelectItem>)}
@@ -332,7 +326,7 @@ export default function DailyUpdatePage() {
                   </div>
                   <div className="space-y-1.5">
                     <Label htmlFor="timed">作答条件</Label>
-                    <Select value={form.timedMode} onValueChange={v => setForm({ ...form, timedMode: v })}>
+                    <Select value={form.timedMode} onValueChange={v => setForm({ ...form, timedMode: v ?? "" })}>
                       <SelectTrigger id="timed"><SelectValue /></SelectTrigger>
                       <SelectContent>
                         {TIMED_OPTIONS.map(o => <SelectItem key={o.value} value={o.value}>{o.label}</SelectItem>)}

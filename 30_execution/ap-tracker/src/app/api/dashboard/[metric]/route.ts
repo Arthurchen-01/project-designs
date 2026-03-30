@@ -38,8 +38,8 @@ export async function GET(
   const metricType = metric as MetricType;
 
   if (metricType === "subjects") {
-    const totalSubjects = students.reduce((sum, s) => sum + s.subjects.length, 0);
-    const rows = students.map((s) => ({
+    const totalSubjects = students.reduce((sum: number, s: { id: string; name: string; subjects: any[] }) => sum + s.subjects.length, 0);
+    const rows = students.map((s: any) => ({
       studentId: s.id,
       name: s.name,
       count: s.subjects.length,

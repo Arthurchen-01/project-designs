@@ -25,3 +25,4 @@ export function getAIConfig(): AIConfig {
 
   return { apiKey, baseUrl, model, isAvailable }
 }
+export function isAIEnabled(): boolean { return getAIConfig().isAvailable }

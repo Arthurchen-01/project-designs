@@ -1,4 +1,4 @@
-import { AI_CONFIG, isAIEnabled } from './ai-config'
+import { getAIConfig, isAIEnabled } from './ai-config'
 
 export interface ExplanationContext {
   studentName: string
@@ -117,14 +117,14 @@ async function generateExplanationWithAI(ctx: ExplanationContext): Promise<strin
   const timeout = setTimeout(() => controller.abort(), 10_000)
 
   try {
-    const res = await fetch(`${AI_CONFIG.baseUrl}/chat/completions`, {
+    const res = await fetch(`${getAIConfig().baseUrl}/chat/completions`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${AI_CONFIG.apiKey}`,
+        Authorization: `Bearer ${getAIConfig().apiKey}`,
       },
       body: JSON.stringify({
-        model: AI_CONFIG.model,
+        model: getAIConfig().model,
         messages: [
           { role: 'system', content: EXPLANATION_SYSTEM_PROMPT },
           { role: 'user', content: prompt },

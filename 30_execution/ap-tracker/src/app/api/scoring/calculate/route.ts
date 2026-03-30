@@ -11,7 +11,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'studentId and subjectCode are required' }, { status: 400 })
     }
 
-    const result = await calculateFiveRate(prisma, studentId, subjectCode)
+    const result = await calculateFiveRate(studentId, subjectCode)
 
     // Persist snapshot
     await prisma.probabilitySnapshot.create({
@@ -19,11 +19,11 @@ export async function POST(req: Request) {
         studentId,
         subjectCode,
         snapshotDate: new Date(),
-        fiveRate: result.fiveRate,
-        stabilityScore: result.components.stability,
-        trendScore: result.components.trend,
-        decayScore: result.components.decay,
-        confidenceLevel: result.confidenceLevel,
+        fiveRate: result.rate,
+        stabilityScore: result.stabilityScore,
+        trendScore: result.trendScore,
+        decayScore: result.forgettingDecay,
+        confidenceLevel: result.confidence,
       },
     })
 

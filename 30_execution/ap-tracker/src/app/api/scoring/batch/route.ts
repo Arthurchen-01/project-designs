@@ -27,26 +27,26 @@ export async function POST(req: Request) {
 
     for (const student of students) {
       for (const subject of subjects) {
-        const result = await calculateFiveRate(prisma, student.id, subject.code)
+        const result = await calculateFiveRate(student.id, subject.code)
 
         await prisma.probabilitySnapshot.create({
           data: {
             studentId: student.id,
             subjectCode: subject.code,
             snapshotDate: new Date(),
-            fiveRate: result.fiveRate,
-            stabilityScore: result.components.stability,
-            trendScore: result.components.trend,
-            decayScore: result.components.decay,
-            confidenceLevel: result.confidenceLevel,
+            fiveRate: result.rate,
+            stabilityScore: result.stabilityScore,
+            trendScore: result.trendScore,
+            decayScore: result.forgettingDecay,
+            confidenceLevel: result.confidence,
           },
         })
 
         results.push({
           studentId: student.id,
           subjectCode: subject.code,
-          fiveRate: result.fiveRate,
-          confidenceLevel: result.confidenceLevel,
+          fiveRate: result.rate,
+          confidenceLevel: result.confidence,
         })
       }
     }
