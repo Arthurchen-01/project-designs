@@ -16,7 +16,22 @@
 - notes: |
   Phase 4 is complete and approved.
 
-  Role correction is active for this overnight cycle.
+  Night role override is active for this overnight cycle.
+
+  This is an explicit temporary override of the daytime default three-agent split.
+
+  Daytime default:
+  - Agent 1 = planning / dispatch / orchestration
+  - Agent 2 = implementation
+  - Agent 3 = review
+
+  Overnight override:
+  - Agent 1 = main developer and main executor
+  - Agent 2 = technical reviewer
+  - Agent 3 = product and UX reviewer
+
+  This override applies only during overnight continuous development mode.
+  When overnight mode ends, daytime default roles resume unless a new override is written.
 
   Agent 1 is the only main developer and executor for code changes on the nightly branch.
 

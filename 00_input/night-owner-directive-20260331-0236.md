@@ -20,6 +20,9 @@ Immediate role correction:
 5. Agent 1 should work directly in the local night repo and on the nightly branch
 6. Agent 2 and Agent 3 should review Agent 1 progress in repeated cycles
 
+This overnight split explicitly overrides the daytime default role split for this mode only.
+When overnight mode ends, restore the daytime default unless a new explicit override is written.
+
 ## Main product goal
 
 Produce a clearly improved, testable, morning-ready stage version of the AP AI prep site.

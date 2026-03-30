@@ -16,7 +16,9 @@ The coordination repo remains this shared three-agent repository.
 
 ## Immediate role correction
 
-Do not follow the previous split where Agent 2 was the main executor.
+Do not follow the daytime default split where Agent 1 dispatches, Agent 2 executes, and Agent 3 reviews.
+
+This overnight cycle temporarily overrides the daytime default.
 
 For this overnight run:
 
@@ -25,6 +27,7 @@ For this overnight run:
 3. Agent 3 is product and UX review only
 4. Agent 2 and Agent 3 should not wait for new chat work and should not self-assign development
 5. Agent 2 and Agent 3 should review Agent 1's latest branch state and latest pushed changes
+6. When overnight mode ends, default daytime roles resume unless a new override is written
 
 ## User intent
 
