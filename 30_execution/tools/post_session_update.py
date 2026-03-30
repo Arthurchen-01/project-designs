@@ -195,7 +195,18 @@ def update_progress(base: Path, sessions: list[SessionData], date_str: str,
     # 取第一个 session 的核心内容作为进度条目
     session = sessions[0] if sessions else None
     if session:
-        topics_str = "、".join(session.topics[:3]) if session.topics else "综合复习"
+        # 优先用提取的知识点，其次用第一个 H2 标题
+        if session.topics:
+            topics_str = "、".join(session.topics[:3])
+        else:
+            # 取第一个非日期的 section 标题作为主题
+            for s in session.sections:
+                if not re.match(r"^\d{4}-\d{2}-\d{2}", s):
+                    topics_str = re.sub(r"^[^：：]+[：:]\s*", "", s).strip()
+                    if topics_str:
+                        break
+            else:
+                topics_str = "综合复习"
         content_line = f"## 第 {new_num} 课：{topics_str}"
         notes_line = f"- 核心理解：{session.key_understanding[:80]}"
         teacher_line = f"- 主讲老师：{', '.join(session.teachers) if session.teachers else '待补充'}"
@@ -223,11 +234,15 @@ def update_diary(base: Path, sessions: list[SessionData], date_str: str,
 
     session = sessions[0] if sessions else None
     if session:
-        # 构建日记条目
-        section_title = session.sections[0] if session.sections else "综合学习"
-        topic = re.sub(r"^[^：：]+[：:]\s*", "", section_title).strip()
+        # 取第一个非日期的 H2/H3 标题（忽略顶部的日期 H1）
+        section_title = "综合学习"
+        for s in session.sections:
+            if not re.match(r"^\d{4}-\d{2}-\d{2}", s):
+                section_title = re.sub(r"^[^：：]+[：:]\s*", "", s).strip()
+                if section_title:
+                    break
         lines = [
-            f"## 第 {date_str}：{topic}",
+            f"## 第 {date_str}：{section_title}",
         ]
         for i, (q, a) in enumerate(zip(session.questions[:4], session.answers[:4]), 1):
             # 截断 Q&A 展示
@@ -299,7 +314,18 @@ def update_session_archive(base: Path, date_str: str, sessions: list[SessionData
         archive_content = "# 会话归档记录\n\n<!-- 格式: YYYY-MM-DD | 课次 | 知识点 | 老师 -->"
 
     session = sessions[0] if sessions else None
-    topics_str = "、".join(session.topics[:3]) if (session and session.topics) else "综合"
+    if session and session.topics:
+        topics_str = "、".join(session.topics[:3])
+    elif session:
+        for s in session.sections:
+            if not re.match(r"^\d{4}-\d{2}-\d{2}", s):
+                topics_str = re.sub(r"^[^：：]+[：:]\s*", "", s).strip()[:20]
+                if topics_str:
+                    break
+        else:
+            topics_str = "综合"
+    else:
+        topics_str = "综合"
     teachers_str = "、".join(session.teachers) if (session and session.teachers) else ""
 
     new_row = f"\n| {date_str} | | {topics_str} | {teachers_str} |"
