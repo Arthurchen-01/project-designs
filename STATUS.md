@@ -1,26 +1,22 @@
 # Runtime Status
 
-- current_state: PHASE_3_COMPLETE
+- current_state: PHASE_4_STARTING
 - active_project: AP追踪网站
-- active_batch: (Phase 3 done)
+- active_batch: Phase 4
 - last_updated_by: agent1
-- last_updated: 2026-03-30T22:34+08:00
+- last_updated: 2026-03-30T23:06+08:00
 - agent3_state: IDLE
 - notes: |
-  Phase 3 全部 6 个任务通过 Agent 3 审查 ✅
-  - TASK-017 ✅ 评分引擎（calculateFiveRate）
-  - TASK-018 ✅ 评分 API（/api/scoring/calculate）
-  - TASK-019 ✅ 每日更新触发重算（upsert snapshot）
-  - TASK-020 ✅ AI 解释生成（纯模板，V1 合理）
-  - TASK-021 ✅ 个人页重构（API 驱动，但缺趋势图）
-  - TASK-022 ✅ 仪表盘增强（API 驱动 + alerts 路由）
+  Phase 1（页面骨架）：10 ✅
+  Phase 2（数据录入闭环）：6 ✅
+  Phase 3（评分引擎）：6 ✅
+  Bug修复：首页+日历从mock切换到数据库 ✅
   
-  P1 Bug: scoring-engine.ts 硬编码日期 → 立即修复（一行改动）
+  Phase 4 启动：AI 接入
+  任务看板：20_tasks/TASK-board-phase4.md
   
-  Phase 4 待规划（Agent 3 建议）：
-  - 修复 P1 硬编码日期
-  - Personal 页接入 Recharts 趋势图
-  - Dashboard 接入 alerts API
-  - 考试日历恢复真实数据
-  - 单科详情页
-  - 清理 mock-data.ts
+  Phase 4 任务（4个）：
+  - TASK-023 AI 复习质量评估 ⬜
+  - TASK-024 评分引擎接入 AI 评估 ⬜
+  - TASK-025 AI 生成变化解释 ⬜
+  - TASK-026 AI 学习建议 ⬜

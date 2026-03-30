@@ -1,6 +1,6 @@
 # AP 备考追踪平台 — 任务看板
 
-> Phase 4：UI 完善 + P1 修复 + 清理
+> Phase 4：AI 接入
 
 ## 状态说明
 - ⬜ 待开始
@@ -9,84 +9,84 @@
 
 ---
 
-## TASK-023：P1 Bug 修复 — 硬编码日期
+## TASK-023：AI 复习质量评估
 **负责人**：Agent 2
-**状态**：⬜ 待开始（最高优先级）
-**文件**：`src/lib/scoring-engine.ts`
+**状态**：⬜ 待开始
+**产出**：AI 判断每日更新描述的质量
 
-- [ ] 第 68 行 `reviewQuality()`: `new Date('2026-03-30')` → `new Date()`
-- [ ] 第 77 行 `forgettingDecay()`: `new Date('2026-03-30')` → `new Date()`
-- [ ] 验证：日期修复后评分计算正确
+- [ ] 创建 `src/lib/ai-evaluator.ts`
+- [ ] 实现 `evaluateDailyUpdate(context)` 函数
+- [ ] 接收参数：description、subjectCode、activityType、scorePercent、timedMode
+- [ ] 调用 OpenAI-compatible API（用户配置 API Key）
+- [ ] 返回结构化结果：
+  - evidenceLevel: "weak" | "medium" | "strong"
+  - qualityScore: 0-1（替代简单规则版的 reviewQuality）
+  - explanation: 自然语言解释
+- [ ] 创建 `src/app/api/ai/evaluate/route.ts` API Route
+- [ ] 创建 `src/lib/ai-config.ts`：管理 API Key 和模型配置
+- [ ] 环境变量：OPENAI_API_KEY, OPENAI_BASE_URL, OPENAI_MODEL
 
-**验收**：`npm run build` 通过，评分逻辑无硬编码日期
+**验收**：提交带描述的每日更新，AI 返回合理的评估结果
 
 ---
 
-## TASK-024：个人页趋势图接入 Recharts
+## TASK-024：评分引擎接入 AI 评估
 **负责人**：Agent 2
 **状态**：⬜ 待开始
 **前置**：TASK-023
+**产出**：scoring-engine 使用 AI 评估结果
 
-- [ ] personal/page.tsx 接入 /api/scoring/history
-- [ ] 添加 Recharts LineChart（5分率趋势）
-- [ ] 添加 MCQ/FRQ 历次成绩表格
-- [ ] 添加计时 vs 不计时对比柱状图
-- [ ] 科目卡片添加 Link → 单科详情页
+- [ ] 改造 `scoring-engine.ts` 的 `computeReviewQuality`：
+  - 优先使用 AI 评估的 qualityScore
+  - 如果 AI 不可用（无 key / 超时），fallback 到规则版
+- [ ] 改造 `daily-update/route.ts`：
+  - 提交后先调 AI 评估
+  - 将评估结果存入 DailyUpdate 的 aiEvidenceLevel / aiDeltaScore / aiExplanation
+  - 然后再调 scoring-engine 重算 5 分率
 
-**验收**：个人页显示趋势图表 + 科目可点击
+**验收**：AI 评估结果影响 5 分率计算
 
 ---
 
-## TASK-025：Dashboard 接入 Alerts + 恢复考试日历
+## TASK-025：AI 生成变化解释
 **负责人**：Agent 2
 **状态**：⬜ 待开始
 **前置**：TASK-023
+**产出**：AI 生成更自然的变化解释
 
-- [ ] dashboard/page.tsx 调用 /api/dashboard/alerts
-- [ ] 显示风险学生名单
-- [ ] 显示断更学生名单
-- [ ] 显示波动异常名单
-- [ ] 恢复考试日历为真实数据（从 Prisma 读取 ExamDate）
+- [ ] 改造 `ai-explainer.ts`：
+  - 增加 `generateExplanationWithAI(context)` 函数
+  - 调用 AI API 生成解释
+  - 如果 AI 不可用，fallback 到模板规则版
+- [ ] 解释模板提示词：
+  - 输入：学生姓名、科目、旧5分率、新5分率、变化量、最近活动描述、评分引擎各组件分数
+  - 要求：简洁中文，2-3句话，说明变化原因和下一步建议
+- [ ] 在 daily-update 页面展示 AI 生成的解释
 
-**验收**：Dashboard 显示 alerts + 真实考试日历
-
----
-
-## TASK-026：单科详情页
-**负责人**：Agent 2
-**状态**：⬜ 待开始
-**前置**：TASK-024
-
-- [ ] 创建 /[classId]/personal/[subjectId] 页面
-- [ ] 接入 /api/student/[id]/[subject]
-- [ ] 5分率趋势图（Recharts LineChart）
-- [ ] MCQ/FRQ 成绩表
-- [ ] 计时对比柱状图
-- [ ] 单元掌握度进度条
-- [ ] 返回个人中心链接
-
-**验收**：点击科目卡片进入详情页，图表+表格完整
+**验收**：每次更新后显示 AI 生成的个性化解释
 
 ---
 
-## TASK-027：清理 mock-data.ts + 代码整理
+## TASK-026：AI 学习建议
 **负责人**：Agent 2
 **状态**：⬜ 待开始
-**前置**：TASK-024, TASK-025, TASK-026
+**前置**：TASK-023
+**产出**：AI 给出个性化学习建议
 
-- [ ] 确认所有页面不再 import mock-data.ts
-- [ ] 删除或重命名 mock-data.ts
-- [ ] 删除不再使用的占位组件
-- [ ] `npm run build` 全量验证
+- [ ] 创建 `src/lib/ai-advisor.ts`
+- [ ] 实现 `generateAdvice(studentData)` 函数
+- [ ] 输入：学生所有科目的5分率、趋势、薄弱单元、最近活动
+- [ ] 输出：3条具体建议（如"建议加强AP Macro Unit 4的FRQ练习"）
+- [ ] 在个人中心页面底部展示"AI 学习建议"模块
+- [ ] 创建 `GET /api/ai/advice?studentId=` API
 
-**验收**：build 通过，无 mock-data 引用，无死代码
+**验收**：个人中心显示个性化的 AI 学习建议
 
 ---
 
 ## Phase 4 总验收标准
-1. scoring-engine 无硬编码日期
-2. 个人页有 Recharts 趋势图
-3. 科目卡片可点击进入单科详情
-4. Dashboard 显示 alerts + 考试日历
-5. 无 mock-data.ts 残留
-6. `npm run build` 通过
+1. 每日更新提交后，AI 评估复习质量并影响 5 分率
+2. 变化解释由 AI 生成（可读、个性化）
+3. 个人中心有 AI 学习建议
+4. 所有 AI 功能有 fallback（无 API Key 时用规则版）
+5. AI 配置通过环境变量管理
