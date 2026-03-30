@@ -12,15 +12,16 @@
 
 ## TASK-001：项目初始化
 **负责人**：Agent 2
-**状态**：⬜ 待开始
+**状态**：✅ 已完成
 **产出**：可运行的 Next.js 项目
+**完成时间**：2026-03-30 17:17
 
-- [ ] 用 `create-next-app` 初始化项目（TypeScript + App Router + Tailwind）
-- [ ] 安装 shadcn/ui 并初始化
-- [ ] 安装 Recharts
-- [ ] 配置项目目录结构
-- [ ] 创建 mock 数据文件（班级、学生、科目、成绩、考试日期）
-- [ ] 确认 `npm run dev` 可正常启动
+- [x] 用 `create-next-app` 初始化项目（TypeScript + App Router + Tailwind）
+- [x] 安装 shadcn/ui 并初始化
+- [x] 安装 Recharts
+- [x] 配置项目目录结构
+- [x] 创建 mock 数据文件（班级、学生、科目、成绩、考试日期）
+- [x] 确认 `npm run dev` 可正常启动
 
 **验收**：浏览器访问 localhost:3000 能看到首页框架
 
@@ -29,7 +30,7 @@
 ## TASK-002：首页 — 班级选择器
 **负责人**：Agent 2
 **状态**：⬜ 待开始
-**前置**：TASK-001
+**前置**：TASK-001 ✅
 **产出**：`/` 页面
 
 - [ ] 班级卡片列表组件
