@@ -31,6 +31,7 @@ export type DailyUpdateAvgAggregateOutputType = {
   totalCount: number | null
   correctCount: number | null
   timeMinutes: number | null
+  aiDeltaScore: number | null
 }
 
 export type DailyUpdateSumAggregateOutputType = {
@@ -38,6 +39,7 @@ export type DailyUpdateSumAggregateOutputType = {
   totalCount: number | null
   correctCount: number | null
   timeMinutes: number | null
+  aiDeltaScore: number | null
 }
 
 export type DailyUpdateMinAggregateOutputType = {
@@ -53,6 +55,9 @@ export type DailyUpdateMinAggregateOutputType = {
   timeMinutes: number | null
   unit: string | null
   notes: string | null
+  aiEvidenceLevel: string | null
+  aiDeltaScore: number | null
+  aiExplanation: string | null
   createdAt: Date | null
 }
 
@@ -69,6 +74,9 @@ export type DailyUpdateMaxAggregateOutputType = {
   timeMinutes: number | null
   unit: string | null
   notes: string | null
+  aiEvidenceLevel: string | null
+  aiDeltaScore: number | null
+  aiExplanation: string | null
   createdAt: Date | null
 }
 
@@ -85,6 +93,9 @@ export type DailyUpdateCountAggregateOutputType = {
   timeMinutes: number
   unit: number
   notes: number
+  aiEvidenceLevel: number
+  aiDeltaScore: number
+  aiExplanation: number
   createdAt: number
   _all: number
 }
@@ -95,6 +106,7 @@ export type DailyUpdateAvgAggregateInputType = {
   totalCount?: true
   correctCount?: true
   timeMinutes?: true
+  aiDeltaScore?: true
 }
 
 export type DailyUpdateSumAggregateInputType = {
@@ -102,6 +114,7 @@ export type DailyUpdateSumAggregateInputType = {
   totalCount?: true
   correctCount?: true
   timeMinutes?: true
+  aiDeltaScore?: true
 }
 
 export type DailyUpdateMinAggregateInputType = {
@@ -117,6 +130,9 @@ export type DailyUpdateMinAggregateInputType = {
   timeMinutes?: true
   unit?: true
   notes?: true
+  aiEvidenceLevel?: true
+  aiDeltaScore?: true
+  aiExplanation?: true
   createdAt?: true
 }
 
@@ -133,6 +149,9 @@ export type DailyUpdateMaxAggregateInputType = {
   timeMinutes?: true
   unit?: true
   notes?: true
+  aiEvidenceLevel?: true
+  aiDeltaScore?: true
+  aiExplanation?: true
   createdAt?: true
 }
 
@@ -149,6 +168,9 @@ export type DailyUpdateCountAggregateInputType = {
   timeMinutes?: true
   unit?: true
   notes?: true
+  aiEvidenceLevel?: true
+  aiDeltaScore?: true
+  aiExplanation?: true
   createdAt?: true
   _all?: true
 }
@@ -252,6 +274,9 @@ export type DailyUpdateGroupByOutputType = {
   timeMinutes: number | null
   unit: string | null
   notes: string | null
+  aiEvidenceLevel: string | null
+  aiDeltaScore: number | null
+  aiExplanation: string | null
   createdAt: Date
   _count: DailyUpdateCountAggregateOutputType | null
   _avg: DailyUpdateAvgAggregateOutputType | null
@@ -291,6 +316,9 @@ export type DailyUpdateWhereInput = {
   timeMinutes?: Prisma.IntNullableFilter<"DailyUpdate"> | number | null
   unit?: Prisma.StringNullableFilter<"DailyUpdate"> | string | null
   notes?: Prisma.StringNullableFilter<"DailyUpdate"> | string | null
+  aiEvidenceLevel?: Prisma.StringNullableFilter<"DailyUpdate"> | string | null
+  aiDeltaScore?: Prisma.FloatNullableFilter<"DailyUpdate"> | number | null
+  aiExplanation?: Prisma.StringNullableFilter<"DailyUpdate"> | string | null
   createdAt?: Prisma.DateTimeFilter<"DailyUpdate"> | Date | string
   student?: Prisma.XOR<Prisma.StudentScalarRelationFilter, Prisma.StudentWhereInput>
   subject?: Prisma.XOR<Prisma.SubjectScalarRelationFilter, Prisma.SubjectWhereInput>
@@ -309,6 +337,9 @@ export type DailyUpdateOrderByWithRelationInput = {
   timeMinutes?: Prisma.SortOrderInput | Prisma.SortOrder
   unit?: Prisma.SortOrderInput | Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
+  aiEvidenceLevel?: Prisma.SortOrderInput | Prisma.SortOrder
+  aiDeltaScore?: Prisma.SortOrderInput | Prisma.SortOrder
+  aiExplanation?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   student?: Prisma.StudentOrderByWithRelationInput
   subject?: Prisma.SubjectOrderByWithRelationInput
@@ -330,6 +361,9 @@ export type DailyUpdateWhereUniqueInput = Prisma.AtLeast<{
   timeMinutes?: Prisma.IntNullableFilter<"DailyUpdate"> | number | null
   unit?: Prisma.StringNullableFilter<"DailyUpdate"> | string | null
   notes?: Prisma.StringNullableFilter<"DailyUpdate"> | string | null
+  aiEvidenceLevel?: Prisma.StringNullableFilter<"DailyUpdate"> | string | null
+  aiDeltaScore?: Prisma.FloatNullableFilter<"DailyUpdate"> | number | null
+  aiExplanation?: Prisma.StringNullableFilter<"DailyUpdate"> | string | null
   createdAt?: Prisma.DateTimeFilter<"DailyUpdate"> | Date | string
   student?: Prisma.XOR<Prisma.StudentScalarRelationFilter, Prisma.StudentWhereInput>
   subject?: Prisma.XOR<Prisma.SubjectScalarRelationFilter, Prisma.SubjectWhereInput>
@@ -348,6 +382,9 @@ export type DailyUpdateOrderByWithAggregationInput = {
   timeMinutes?: Prisma.SortOrderInput | Prisma.SortOrder
   unit?: Prisma.SortOrderInput | Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
+  aiEvidenceLevel?: Prisma.SortOrderInput | Prisma.SortOrder
+  aiDeltaScore?: Prisma.SortOrderInput | Prisma.SortOrder
+  aiExplanation?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.DailyUpdateCountOrderByAggregateInput
   _avg?: Prisma.DailyUpdateAvgOrderByAggregateInput
@@ -372,6 +409,9 @@ export type DailyUpdateScalarWhereWithAggregatesInput = {
   timeMinutes?: Prisma.IntNullableWithAggregatesFilter<"DailyUpdate"> | number | null
   unit?: Prisma.StringNullableWithAggregatesFilter<"DailyUpdate"> | string | null
   notes?: Prisma.StringNullableWithAggregatesFilter<"DailyUpdate"> | string | null
+  aiEvidenceLevel?: Prisma.StringNullableWithAggregatesFilter<"DailyUpdate"> | string | null
+  aiDeltaScore?: Prisma.FloatNullableWithAggregatesFilter<"DailyUpdate"> | number | null
+  aiExplanation?: Prisma.StringNullableWithAggregatesFilter<"DailyUpdate"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"DailyUpdate"> | Date | string
 }
 
@@ -386,6 +426,9 @@ export type DailyUpdateCreateInput = {
   timeMinutes?: number | null
   unit?: string | null
   notes?: string | null
+  aiEvidenceLevel?: string | null
+  aiDeltaScore?: number | null
+  aiExplanation?: string | null
   createdAt?: Date | string
   student: Prisma.StudentCreateNestedOneWithoutDailyUpdatesInput
   subject: Prisma.SubjectCreateNestedOneWithoutDailyUpdatesInput
@@ -404,6 +447,9 @@ export type DailyUpdateUncheckedCreateInput = {
   timeMinutes?: number | null
   unit?: string | null
   notes?: string | null
+  aiEvidenceLevel?: string | null
+  aiDeltaScore?: number | null
+  aiExplanation?: string | null
   createdAt?: Date | string
 }
 
@@ -418,6 +464,9 @@ export type DailyUpdateUpdateInput = {
   timeMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   unit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aiEvidenceLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aiDeltaScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  aiExplanation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   student?: Prisma.StudentUpdateOneRequiredWithoutDailyUpdatesNestedInput
   subject?: Prisma.SubjectUpdateOneRequiredWithoutDailyUpdatesNestedInput
@@ -436,6 +485,9 @@ export type DailyUpdateUncheckedUpdateInput = {
   timeMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   unit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aiEvidenceLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aiDeltaScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  aiExplanation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -452,6 +504,9 @@ export type DailyUpdateCreateManyInput = {
   timeMinutes?: number | null
   unit?: string | null
   notes?: string | null
+  aiEvidenceLevel?: string | null
+  aiDeltaScore?: number | null
+  aiExplanation?: string | null
   createdAt?: Date | string
 }
 
@@ -466,6 +521,9 @@ export type DailyUpdateUpdateManyMutationInput = {
   timeMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   unit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aiEvidenceLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aiDeltaScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  aiExplanation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -482,6 +540,9 @@ export type DailyUpdateUncheckedUpdateManyInput = {
   timeMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   unit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aiEvidenceLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aiDeltaScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  aiExplanation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -508,6 +569,9 @@ export type DailyUpdateCountOrderByAggregateInput = {
   timeMinutes?: Prisma.SortOrder
   unit?: Prisma.SortOrder
   notes?: Prisma.SortOrder
+  aiEvidenceLevel?: Prisma.SortOrder
+  aiDeltaScore?: Prisma.SortOrder
+  aiExplanation?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -516,6 +580,7 @@ export type DailyUpdateAvgOrderByAggregateInput = {
   totalCount?: Prisma.SortOrder
   correctCount?: Prisma.SortOrder
   timeMinutes?: Prisma.SortOrder
+  aiDeltaScore?: Prisma.SortOrder
 }
 
 export type DailyUpdateMaxOrderByAggregateInput = {
@@ -531,6 +596,9 @@ export type DailyUpdateMaxOrderByAggregateInput = {
   timeMinutes?: Prisma.SortOrder
   unit?: Prisma.SortOrder
   notes?: Prisma.SortOrder
+  aiEvidenceLevel?: Prisma.SortOrder
+  aiDeltaScore?: Prisma.SortOrder
+  aiExplanation?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -547,6 +615,9 @@ export type DailyUpdateMinOrderByAggregateInput = {
   timeMinutes?: Prisma.SortOrder
   unit?: Prisma.SortOrder
   notes?: Prisma.SortOrder
+  aiEvidenceLevel?: Prisma.SortOrder
+  aiDeltaScore?: Prisma.SortOrder
+  aiExplanation?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -555,6 +626,7 @@ export type DailyUpdateSumOrderByAggregateInput = {
   totalCount?: Prisma.SortOrder
   correctCount?: Prisma.SortOrder
   timeMinutes?: Prisma.SortOrder
+  aiDeltaScore?: Prisma.SortOrder
 }
 
 export type DailyUpdateCreateNestedManyWithoutStudentInput = {
@@ -649,6 +721,14 @@ export type NullableIntFieldUpdateOperationsInput = {
   divide?: number
 }
 
+export type NullableFloatFieldUpdateOperationsInput = {
+  set?: number | null
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
 export type DailyUpdateCreateWithoutStudentInput = {
   id?: string
   date: string
@@ -660,6 +740,9 @@ export type DailyUpdateCreateWithoutStudentInput = {
   timeMinutes?: number | null
   unit?: string | null
   notes?: string | null
+  aiEvidenceLevel?: string | null
+  aiDeltaScore?: number | null
+  aiExplanation?: string | null
   createdAt?: Date | string
   subject: Prisma.SubjectCreateNestedOneWithoutDailyUpdatesInput
 }
@@ -676,6 +759,9 @@ export type DailyUpdateUncheckedCreateWithoutStudentInput = {
   timeMinutes?: number | null
   unit?: string | null
   notes?: string | null
+  aiEvidenceLevel?: string | null
+  aiDeltaScore?: number | null
+  aiExplanation?: string | null
   createdAt?: Date | string
 }
 
@@ -720,6 +806,9 @@ export type DailyUpdateScalarWhereInput = {
   timeMinutes?: Prisma.IntNullableFilter<"DailyUpdate"> | number | null
   unit?: Prisma.StringNullableFilter<"DailyUpdate"> | string | null
   notes?: Prisma.StringNullableFilter<"DailyUpdate"> | string | null
+  aiEvidenceLevel?: Prisma.StringNullableFilter<"DailyUpdate"> | string | null
+  aiDeltaScore?: Prisma.FloatNullableFilter<"DailyUpdate"> | number | null
+  aiExplanation?: Prisma.StringNullableFilter<"DailyUpdate"> | string | null
   createdAt?: Prisma.DateTimeFilter<"DailyUpdate"> | Date | string
 }
 
@@ -734,6 +823,9 @@ export type DailyUpdateCreateWithoutSubjectInput = {
   timeMinutes?: number | null
   unit?: string | null
   notes?: string | null
+  aiEvidenceLevel?: string | null
+  aiDeltaScore?: number | null
+  aiExplanation?: string | null
   createdAt?: Date | string
   student: Prisma.StudentCreateNestedOneWithoutDailyUpdatesInput
 }
@@ -750,6 +842,9 @@ export type DailyUpdateUncheckedCreateWithoutSubjectInput = {
   timeMinutes?: number | null
   unit?: string | null
   notes?: string | null
+  aiEvidenceLevel?: string | null
+  aiDeltaScore?: number | null
+  aiExplanation?: string | null
   createdAt?: Date | string
 }
 
@@ -790,6 +885,9 @@ export type DailyUpdateCreateManyStudentInput = {
   timeMinutes?: number | null
   unit?: string | null
   notes?: string | null
+  aiEvidenceLevel?: string | null
+  aiDeltaScore?: number | null
+  aiExplanation?: string | null
   createdAt?: Date | string
 }
 
@@ -804,6 +902,9 @@ export type DailyUpdateUpdateWithoutStudentInput = {
   timeMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   unit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aiEvidenceLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aiDeltaScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  aiExplanation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   subject?: Prisma.SubjectUpdateOneRequiredWithoutDailyUpdatesNestedInput
 }
@@ -820,6 +921,9 @@ export type DailyUpdateUncheckedUpdateWithoutStudentInput = {
   timeMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   unit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aiEvidenceLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aiDeltaScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  aiExplanation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -835,6 +939,9 @@ export type DailyUpdateUncheckedUpdateManyWithoutStudentInput = {
   timeMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   unit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aiEvidenceLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aiDeltaScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  aiExplanation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -850,6 +957,9 @@ export type DailyUpdateCreateManySubjectInput = {
   timeMinutes?: number | null
   unit?: string | null
   notes?: string | null
+  aiEvidenceLevel?: string | null
+  aiDeltaScore?: number | null
+  aiExplanation?: string | null
   createdAt?: Date | string
 }
 
@@ -864,6 +974,9 @@ export type DailyUpdateUpdateWithoutSubjectInput = {
   timeMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   unit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aiEvidenceLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aiDeltaScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  aiExplanation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   student?: Prisma.StudentUpdateOneRequiredWithoutDailyUpdatesNestedInput
 }
@@ -880,6 +993,9 @@ export type DailyUpdateUncheckedUpdateWithoutSubjectInput = {
   timeMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   unit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aiEvidenceLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aiDeltaScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  aiExplanation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -895,6 +1011,9 @@ export type DailyUpdateUncheckedUpdateManyWithoutSubjectInput = {
   timeMinutes?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   unit?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aiEvidenceLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  aiDeltaScore?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  aiExplanation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -913,6 +1032,9 @@ export type DailyUpdateSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   timeMinutes?: boolean
   unit?: boolean
   notes?: boolean
+  aiEvidenceLevel?: boolean
+  aiDeltaScore?: boolean
+  aiExplanation?: boolean
   createdAt?: boolean
   student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
   subject?: boolean | Prisma.SubjectDefaultArgs<ExtArgs>
@@ -931,6 +1053,9 @@ export type DailyUpdateSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   timeMinutes?: boolean
   unit?: boolean
   notes?: boolean
+  aiEvidenceLevel?: boolean
+  aiDeltaScore?: boolean
+  aiExplanation?: boolean
   createdAt?: boolean
   student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
   subject?: boolean | Prisma.SubjectDefaultArgs<ExtArgs>
@@ -949,6 +1074,9 @@ export type DailyUpdateSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   timeMinutes?: boolean
   unit?: boolean
   notes?: boolean
+  aiEvidenceLevel?: boolean
+  aiDeltaScore?: boolean
+  aiExplanation?: boolean
   createdAt?: boolean
   student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
   subject?: boolean | Prisma.SubjectDefaultArgs<ExtArgs>
@@ -967,10 +1095,13 @@ export type DailyUpdateSelectScalar = {
   timeMinutes?: boolean
   unit?: boolean
   notes?: boolean
+  aiEvidenceLevel?: boolean
+  aiDeltaScore?: boolean
+  aiExplanation?: boolean
   createdAt?: boolean
 }
 
-export type DailyUpdateOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "studentId" | "subjectCode" | "date" | "taskType" | "timedMode" | "score" | "totalCount" | "correctCount" | "timeMinutes" | "unit" | "notes" | "createdAt", ExtArgs["result"]["dailyUpdate"]>
+export type DailyUpdateOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "studentId" | "subjectCode" | "date" | "taskType" | "timedMode" | "score" | "totalCount" | "correctCount" | "timeMinutes" | "unit" | "notes" | "aiEvidenceLevel" | "aiDeltaScore" | "aiExplanation" | "createdAt", ExtArgs["result"]["dailyUpdate"]>
 export type DailyUpdateInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
   subject?: boolean | Prisma.SubjectDefaultArgs<ExtArgs>
@@ -1003,6 +1134,9 @@ export type $DailyUpdatePayload<ExtArgs extends runtime.Types.Extensions.Interna
     timeMinutes: number | null
     unit: string | null
     notes: string | null
+    aiEvidenceLevel: string | null
+    aiDeltaScore: number | null
+    aiExplanation: string | null
     createdAt: Date
   }, ExtArgs["result"]["dailyUpdate"]>
   composites: {}
@@ -1441,6 +1575,9 @@ export interface DailyUpdateFieldRefs {
   readonly timeMinutes: Prisma.FieldRef<"DailyUpdate", 'Int'>
   readonly unit: Prisma.FieldRef<"DailyUpdate", 'String'>
   readonly notes: Prisma.FieldRef<"DailyUpdate", 'String'>
+  readonly aiEvidenceLevel: Prisma.FieldRef<"DailyUpdate", 'String'>
+  readonly aiDeltaScore: Prisma.FieldRef<"DailyUpdate", 'Float'>
+  readonly aiExplanation: Prisma.FieldRef<"DailyUpdate", 'String'>
   readonly createdAt: Prisma.FieldRef<"DailyUpdate", 'DateTime'>
 }
     

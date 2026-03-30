@@ -162,6 +162,9 @@ export const DailyUpdateScalarFieldEnum = {
   timeMinutes: 'timeMinutes',
   unit: 'unit',
   notes: 'notes',
+  aiEvidenceLevel: 'aiEvidenceLevel',
+  aiDeltaScore: 'aiDeltaScore',
+  aiExplanation: 'aiExplanation',
   createdAt: 'createdAt'
 } as const
 

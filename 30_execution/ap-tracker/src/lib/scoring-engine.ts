@@ -91,12 +91,28 @@ function forgettingDecay(records: { date: string }[], updates: { date: string }[
   return Math.min(0.15, days * 0.005)
 }
 
-export async function calculateFiveRate(studentId: string, subjectCode: string): Promise<ScoringOutput> {
-  const { records, updates, snapshots } = await fetchData(studentId, subjectCode)
+export interface ScoringInput {
+  studentId: string
+  subjectCode: string
+  /** AI 评估质量分（0-1），优先使用；未提供则 fallback 到规则计算 */
+  aiQualityScore?: number
+}
+
+export async function calculateFiveRate(
+  studentIdOrInput: string | ScoringInput,
+  subjectCode?: string
+): Promise<ScoringOutput> {
+  const input: ScoringInput =
+    typeof studentIdOrInput === 'string'
+      ? { studentId: studentIdOrInput, subjectCode: subjectCode! }
+      : studentIdOrInput
+
+  const { studentId, subjectCode: sc, aiQualityScore } = input
+  const { records, updates, snapshots } = await fetchData(studentId, sc)
   const tp   = testPerformance(records)
   const ts   = trendScore(records)
   const ss   = stabilityScore(records)
-  const rq   = reviewQuality(updates)
+  const rq   = aiQualityScore != null ? aiQualityScore : reviewQuality(updates)
   const decay = forgettingDecay(records, updates)
   const histMax = snapshots.length ? Math.max(...snapshots.map(s => s.rate)) : 1.0
   const confidence = calculateConfidence(tp.count, records.length)
@@ -104,9 +120,13 @@ export async function calculateFiveRate(studentId: string, subjectCode: string):
   const capped = Math.min(raw, histMax)
   const rate = Math.max(0, Math.min(1, capped * (1 - decay)))
   const trend: Trend = ts >= 0.65 ? 'rising' : ts <= 0.35 ? 'falling' : 'stable'
-  return { studentId, subjectCode, rate, testPerformance: tp.score, trendScore: ts,
+  return {
+    studentId, subjectCode: sc, rate,
+    testPerformance: tp.score, trendScore: ts,
     stabilityScore: ss, reviewQualityScore: rq, forgettingDecay: decay,
-    confidence, trend, historicalMax: histMax, dataPoints: tp.count, updatedAt: new Date().toISOString() }
+    confidence, trend, historicalMax: histMax, dataPoints: tp.count,
+    updatedAt: new Date().toISOString(),
+  }
 }
 
 export async function calculateBatchFiveRates(classId: string) {

@@ -143,6 +143,9 @@ model DailyUpdate {
   timeMinutes Int?
   unit        String?
   notes       String?
+  aiEvidenceLevel String?         // "weak" | "medium" | "strong"
+  aiDeltaScore    Float?          // AI quality score 0-1
+  aiExplanation   String?        // AI 评估解释
   createdAt   DateTime @default(now())
 
   student   Student @relation(fields: [studentId], references: [id])

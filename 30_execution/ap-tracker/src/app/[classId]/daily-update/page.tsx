@@ -73,6 +73,9 @@ export default function DailyUpdatePage() {
     rate: number; confidence: string; trend: string
     prevRate: number | null; delta: number | null; explanation: string
   } | null>(null)
+  const [aiResult, setAiResult] = useState<{
+    evidenceLevel: string; qualityScore: number; source: string
+  } | null>(null)
 
   const today = new Date().toISOString().slice(0, 10)
 
@@ -162,9 +165,14 @@ export default function DailyUpdatePage() {
       const data = await res.json()
       setHistory(prev => [data.update, ...prev])
       if (data.scoring) setScoringResult(data.scoring)
+      if (data.ai) setAiResult(data.ai)
       setSubmitted(true)
       setForm(f => ({ ...f, score: "", totalCount: "", correctCount: "", duration: "", unit: "", description: "" }))
-      setTimeout(() => { setSubmitted(false); setScoringResult(null) }, 6000)
+      setTimeout(() => {
+        setSubmitted(false)
+        setScoringResult(null)
+        setAiResult(null)
+      }, 6000)
     } catch (err: unknown) {
       setSubmitError(err instanceof Error ? err.message : "提交失败，请重试")
     } finally {
@@ -253,10 +261,25 @@ export default function DailyUpdatePage() {
                     {scoringResult.explanation && (
                       <p className="text-xs text-blue-700 leading-relaxed">{scoringResult.explanation}</p>
                     )}
+                    {aiResult && (
+                      <div className="mt-2 flex items-center gap-2">
+                        <span className="text-xs text-gray-400">AI评估：</span>
+                        <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
+                          aiResult.evidenceLevel === 'strong' ? 'bg-green-100 text-green-700' :
+                          aiResult.evidenceLevel === 'medium' ? 'bg-yellow-100 text-yellow-700' :
+                          'bg-red-100 text-red-600'
+                        }`}>
+                          {aiResult.evidenceLevel === 'strong' ? '证据充分' :
+                           aiResult.evidenceLevel === 'medium' ? '证据一般' : '证据薄弱'}
+                          （{Math.round(aiResult.qualityScore * 100)}%）
+                        </span>
+                        <span className="text-xs text-gray-400">via {aiResult.source === 'ai' ? 'GPT' : '规则'}</span>
+                      </div>
+                    )}
                   </div>
                 )}
 
-                <Button variant="outline" onClick={() => { setSubmitted(false); setScoringResult(null) }} className="w-full">
+                <Button variant="outline" onClick={() => { setSubmitted(false); setScoringResult(null); setAiResult(null) }} className="w-full">
                   继续填写
                 </Button>
               </div>
