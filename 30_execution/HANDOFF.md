@@ -1,57 +1,20 @@
-# HANDOFF.md — TASK-005/006/007
+# HANDOFF
 
-## What changed
+> 最后更新：2026-03-30 18:42
 
-- `src/app/[classId]/dashboard/[metric]/page.tsx` — 新建：4种指标明细表格
-- `src/app/[classId]/personal/page.tsx` — 重写：占位页 → 4模块卡片 + 科目列表 + 学生选择器
-- `src/app/[classId]/personal/[subjectId]/page.tsx` — 新建：单科详情（图表+成绩表+掌握度）
-- `src/components/ui/table.tsx` — 新建：shadcn/ui Table
-- `src/components/ui/progress.tsx` — 新建：shadcn/ui Progress
+## 当前状态
+Phase 2 正在进行。TASK-011（数据库初始化）已完成。
 
-## Context
+## 给 Agent 1 的下一步建议
+- 派发 TASK-012（学生登录）或直接推进 TASK-013/014（数据录入）
+- 数据库已有完整 seed 数据，页面可以从 mock 切换到 prisma 读取
 
-- Tasks: TASK-005 (指标明细页), TASK-006 (个人中心), TASK-007 (单科详情)
-- 项目路径: `C:\Users\25472\projects\ap-tracker`
-- 技术栈: Next.js 16.2.1 + React 19.2.4 + Tailwind CSS v4 + shadcn/ui + Recharts
+## 给 Agent 2 的下一步指令
+- 下一个任务应该是 TASK-012（简易登录）或 TASK-013（每日更新入库）
+- prisma.ts 客户端已就绪，可直接 import 使用
+- schema 中 DailyUpdate 和 AssessmentRecord 是核心写入表
 
-## Verification results
-
-| Test | Result |
-|---|---|
-| dashboard/[metric] subjects | ✅ 学生姓名+科数+科目列表 |
-| dashboard/[metric] five-rate | ✅ 5分率+最高最低科+风险Badge |
-| dashboard/[metric] mcq/frq | ✅ 平均分+最高最低+趋势箭头 |
-| 行点击跳转 personal | ✅ ?student=xxx |
-| personal 学生选择器 | ✅ Select 下拉切换 |
-| personal 4个模块卡片 | ✅ 5分率/FRQ/MCQ/计时对比 |
-| personal 科目卡片 | ✅ 5分率+掌握度+考试日期 |
-| personal 科目点击 | ✅ → personal/[subjectId] |
-| subjectId 5分率趋势图 | ✅ Recharts LineChart |
-| subjectId MCQ/FRQ成绩表 | ✅ Table + 计时模式Badge |
-| subjectId 计时对比柱状图 | ✅ Recharts BarChart |
-| subjectId 单元掌握度 | ✅ Progress 进度条 |
-| next build | ✅ 0 TypeScript 错误 |
-| Git commit | ✅ commit 175962f |
-
-## 已知问题
-
-无
-
-## Phase 1 状态
-
-所有 Phase 1 页面任务（TASK-001 ~ TASK-010）均已完成。
-- 页面骨架全部就绪
-- Mock 数据覆盖所有页面
-- Build 通过，0 错误
-
-## 下一步
-
-| 选项 | 说明 |
-|---|---|
-| Agent 3 审查 | 对 TASK-005/006/007 进行代码审查 |
-| Phase 2 | 接入真实数据 / API |
-| UI 打磨 | 交互细节优化 |
-
-## Status
-
-TASK-005/006/007 complete. Phase 1 fully implemented. Ready for review or next phase.
+## 注意事项
+- Prisma 6 而非 7（7 有 SQLite 兼容问题）
+- prisma.config.ts 中 DATABASE_URL fallback 为 ""
+- seed 脚本中 PrismaClient 用相对路径连接 dev.db

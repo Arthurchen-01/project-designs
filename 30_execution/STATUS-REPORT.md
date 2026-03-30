@@ -1,55 +1,21 @@
-# STATUS-REPORT.md — ap-tracker 项目
+# 执行状态报告
 
-**Date:** 2026-03-30 17:45 CST  
-**Agent:** 2  
+> 最后更新：2026-03-30 18:42
 
-## 任务状态
+## Phase 1：✅ 全部完成
+全部 10 个任务通过 Agent 3 审查。
 
-| 任务 | 状态 | 说明 |
-|---|---|---|
-| TASK-001 项目初始化 | ✅ COMPLETE | mock 数据 + 类型定义 + build 验证通过 |
-| TASK-002 首页-班级选择器 | ✅ COMPLETE | 班级卡片列表，点击跳转 dashboard |
-| TASK-003 核心指标卡片 | ✅ COMPLETE | 4 个可点击指标卡，数据实时计算 |
-| TASK-004 5月考试日历 | ✅ COMPLETE | 网格日历 + 弹窗详情 + 颜色规则 |
-| TASK-005 指标明细页 | ✅ COMPLETE | 4种metric表格+风险等级+趋势箭头 |
-| TASK-006 个人中心总览 | ✅ COMPLETE | 4模块卡片+科目列表+学生选择器 |
-| TASK-007 单科详情页 | ✅ COMPLETE | 5分率趋势图+成绩表+掌握度进度条 |
-| TASK-008 每日更新表单 | ✅ COMPLETE | 完整表单 + 验证 + 9 个字段 |
-| TASK-009 资源共享页 | ✅ COMPLETE | 卡片网格 + 科目筛选 + 类型标签 |
-| TASK-010 全局导航布局 | ✅ COMPLETE | 4 tab 导航栏 + 返回首页 |
+## Phase 2：进行中
 
-## Pass / Blocker / Next
+### TASK-011：Prisma + SQLite 数据库初始化 ✅
+- Prisma 6 + SQLite
+- 9 张表，seed 数据已填充
+- 228 条测试记录、29 条 5 分率快照
+- `npm run build` 通过
 
-| Item | Status |
-|---|---|
-| 仪表盘（dashboard） | ✅ PASS — 4 指标卡 + 考试日历 |
-| 指标明细页 | ✅ PASS — 4种metric表格，行可点击跳转 |
-| 个人中心 | ✅ PASS — 4模块+科目卡片+学生选择 |
-| 单科详情页 | ✅ PASS — 趋势图+成绩表+掌握度 |
-| Recharts 图表 | ✅ PASS — LineChart + BarChart |
-| next build | ✅ PASS — 0 TypeScript 错误 |
-| Git commit | ✅ PASS — commit 175962f（ap-tracker 仓库） |
-
-**Blocker:** 无
-
-## 已创建的页面路由
-
-```
-/                                        → 首页（班级选择器）
-/[classId]/dashboard                     → 仪表盘（4指标卡 + 考试日历）
-/[classId]/dashboard/[metric]            → 指标明细（4种表格）
-/[classId]/personal                      → 个人中心（4模块+科目列表）
-/[classId]/personal/[subjectId]          → 单科详情（图表+掌握度）
-/[classId]/daily-update                  → 每日更新表单
-/[classId]/resources                     → 资源共享页
-```
-
-## Phase 1 完成度
-
-Phase 1 所有页面任务（TASK-001 ~ TASK-010）均已完成。页面骨架+mock数据全部就绪。
-
-## Notes for Agent 1
-
-- TASK-005/006/007 批次完成，build 通过
-- Phase 1 页面骨架全部完成
-- 可开始 Phase 2 或进行代码审查
+### 下一步待执行
+- TASK-012：学生注册/登录
+- TASK-013：每日更新表单提交入库
+- TASK-014：测试记录录入
+- TASK-015：页面从 mock 切换到数据库
+- TASK-016：资源共享上传
