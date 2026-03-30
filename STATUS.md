@@ -1,16 +1,33 @@
-# Runtime Status
+# AP 备考追踪平台 — 项目状态
 
-- current_state: MULTI_PROJECT
-- active_project: 苏格拉底家教系统 (Phase 1 complete, Phase 2 pending)
-- active_batch: none
-- last_updated_by: agent1
-- last_updated: 2026-03-30T16:23+08:00
-- notes: |
-  苏格拉底家教 Phase 1 全部完成（3个工具就绪）。
-  
-  新需求收到：AP考试进度追踪网站（AI驱动版）
-  - 状态：待评估
-  - 复杂度：高（前端+后端+AI集成+数据库）
-  - 文档：00_input/AP-tracking-website.md
-  
-  待用户确认：是否启动AP追踪项目，以及优先级排序。
+> 最后更新：2026-03-30
+
+## 当前阶段：Phase 1 — 页面骨架 + 假数据
+
+## PRD 来源
+- `00_input/AP-备考平台-PRD-V1.md` — 完整产品需求文档
+- `10_architecture/AP-platform-architecture.md` — 技术架构
+
+## 任务状态总览
+
+| 任务 | 名称 | 负责人 | 状态 | 备注 |
+|------|------|--------|------|------|
+| TASK-001 | 项目初始化 | Agent 2 | ⬜ 待开始 | |
+| TASK-002 | 首页-班级选择器 | Agent 2 | ⬜ 待开始 | 依赖 001 |
+| TASK-003 | 仪表盘-指标卡片 | Agent 2 | ⬜ 待开始 | 依赖 002 |
+| TASK-004 | 仪表盘-5月日历 | Agent 2 | ⬜ 待开始 | 依赖 003 |
+| TASK-005 | 指标明细页 | Agent 2 | ⬜ 待开始 | 依赖 003 |
+| TASK-006 | 个人中心总览 | Agent 2 | ⬜ 待开始 | 依赖 005 |
+| TASK-007 | 单科详情页 | Agent 2 | ⬜ 待开始 | 依赖 006 |
+| TASK-008 | 每日更新表单 | Agent 2 | ⬜ 待开始 | 依赖 001 |
+| TASK-009 | 资源共享页 | Agent 2 | ⬜ 待开始 | 依赖 001 |
+| TASK-010 | 全局导航布局 | Agent 2 | ⬜ 待开始 | 依赖 002 |
+
+## Agent 3 审查任务
+- 待 Agent 2 完成 TASK-001 后启动首轮审查
+
+## 关键决策记录
+- 5分率模型：规则引擎(85%) + AI判断(15%)，偏严格
+- 知识点掌握度：V1只做整体，不做逐题
+- 前端：Next.js + Tailwind + shadcn/ui + Recharts
+- V1用SQLite + mock数据，不接真实后端
