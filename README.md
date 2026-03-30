@@ -85,6 +85,28 @@ cat ap-learning-platform/DESIGN.md
 cat heartbeat-demo/README.md
 ```
 
+### 作为三 Agent 运行仓库使用
+
+这个仓库现在也可以直接作为三机协作的共享 runtime 仓库使用。
+
+新增的运行骨架包括：
+
+- `AGENTS.md`
+- `HEARTBEAT.md`
+- `00_input/`
+- `10_architecture/`
+- `20_tasks/`
+- `30_execution/`
+- `40_review/`
+- `memory/`
+- `system/`
+
+推荐做法：
+
+1. 三台机器分别 clone 同一个仓库
+2. 每台机器在仓库根目录写自己的 `.agent-role.local`
+3. 1号、2号、3号通过仓库而不是聊天直接协作
+
 ---
 
 ## 📝 设计理念
