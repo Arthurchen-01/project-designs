@@ -1,43 +1,57 @@
-# HANDOFF.md — TASK-003/004
+# HANDOFF.md — TASK-005/006/007
 
 ## What changed
 
-- `src/app/[classId]/dashboard/page.tsx` — 重写：占位页 → 4个指标卡片 + 考试日历
-- `src/components/exam-calendar.tsx` — 新建：5月考试日历独立组件
-- `src/components/ui/dialog.tsx` — 新建：shadcn/ui Dialog 组件（考试详情弹窗用）
+- `src/app/[classId]/dashboard/[metric]/page.tsx` — 新建：4种指标明细表格
+- `src/app/[classId]/personal/page.tsx` — 重写：占位页 → 4模块卡片 + 科目列表 + 学生选择器
+- `src/app/[classId]/personal/[subjectId]/page.tsx` — 新建：单科详情（图表+成绩表+掌握度）
+- `src/components/ui/table.tsx` — 新建：shadcn/ui Table
+- `src/components/ui/progress.tsx` — 新建：shadcn/ui Progress
 
 ## Context
 
-- Tasks: TASK-003 (核心指标卡片), TASK-004 (5月考试日历)
+- Tasks: TASK-005 (指标明细页), TASK-006 (个人中心), TASK-007 (单科详情)
 - 项目路径: `C:\Users\25472\projects\ap-tracker`
-- 技术栈: Next.js 16.2.1 + React 19.2.4 + Tailwind CSS v4 + shadcn/ui
+- 技术栈: Next.js 16.2.1 + React 19.2.4 + Tailwind CSS v4 + shadcn/ui + Recharts
 
 ## Verification results
 
 | Test | Result |
 |---|---|
-| 4 个指标卡片渲染 | ✅ 数据从 mock-data 实时计算 |
-| 卡片颜色区分 | ✅ 蓝/绿/橙/紫 |
-| 卡片 hover 效果 | ✅ shadow + scale |
-| 点击跳转 | ✅ → /[classId]/dashboard/[metric] |
-| 考试日历 5月1-31 | ✅ 周一~周日网格 |
-| 考试日期颜色 | ✅ 6档颜色规则 |
-| 考试详情弹窗 | ✅ Dialog 显示学生+风险标注 |
-| next build | ✅ 编译通过，0 错误 |
-| Git commit | ✅ commit 7ef96ee |
+| dashboard/[metric] subjects | ✅ 学生姓名+科数+科目列表 |
+| dashboard/[metric] five-rate | ✅ 5分率+最高最低科+风险Badge |
+| dashboard/[metric] mcq/frq | ✅ 平均分+最高最低+趋势箭头 |
+| 行点击跳转 personal | ✅ ?student=xxx |
+| personal 学生选择器 | ✅ Select 下拉切换 |
+| personal 4个模块卡片 | ✅ 5分率/FRQ/MCQ/计时对比 |
+| personal 科目卡片 | ✅ 5分率+掌握度+考试日期 |
+| personal 科目点击 | ✅ → personal/[subjectId] |
+| subjectId 5分率趋势图 | ✅ Recharts LineChart |
+| subjectId MCQ/FRQ成绩表 | ✅ Table + 计时模式Badge |
+| subjectId 计时对比柱状图 | ✅ Recharts BarChart |
+| subjectId 单元掌握度 | ✅ Progress 进度条 |
+| next build | ✅ 0 TypeScript 错误 |
+| Git commit | ✅ commit 175962f |
 
 ## 已知问题
 
-- dashboard/[metric] 路由页面尚未创建（TASK-005 范围）
+无
+
+## Phase 1 状态
+
+所有 Phase 1 页面任务（TASK-001 ~ TASK-010）均已完成。
+- 页面骨架全部就绪
+- Mock 数据覆盖所有页面
+- Build 通过，0 错误
 
 ## 下一步
 
-| 任务 | 说明 | 前置 |
-|---|---|---|
-| TASK-005 | 指标明细页 dashboard/[metric] | TASK-003 ✅ |
-| TASK-006 | 个人中心详情 | TASK-005 |
-| TASK-007 | 单科详情页 | TASK-006 |
+| 选项 | 说明 |
+|---|---|
+| Agent 3 审查 | 对 TASK-005/006/007 进行代码审查 |
+| Phase 2 | 接入真实数据 / API |
+| UI 打磨 | 交互细节优化 |
 
 ## Status
 
-TASK-003/004 complete. Ready for next dispatch.
+TASK-005/006/007 complete. Phase 1 fully implemented. Ready for review or next phase.
