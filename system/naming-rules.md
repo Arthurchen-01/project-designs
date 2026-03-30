@@ -9,7 +9,7 @@
 - Execution checklist inside task folder: `execution-checklist.md`
 - Test plan inside task folder: `test-plan.md`
 - Main execution status file: `STATUS-REPORT.md`
-- Review reports: `review-YYYYMMDD-HHMM.md`
+- Review reports: `TASK-XXX-review-YYYYMMDD.md`
 
 ## Commit prefixes
 

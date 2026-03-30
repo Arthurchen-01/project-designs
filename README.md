@@ -106,6 +106,8 @@ cat heartbeat-demo/README.md
 1. 三台机器分别 clone 同一个仓库
 2. 每台机器在仓库根目录写自己的 `.agent-role.local`
 3. 1号、2号、3号通过仓库而不是聊天直接协作
+4. 具体落地说明见 `docs/THREE-SERVER-BOOTSTRAP.md`
+5. 风险与故障排查见 `docs/THREATS-AND-DEBUG.md`
 
 ---
 

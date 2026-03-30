@@ -32,6 +32,9 @@ Use this order:
 - Agent 2 and Agent 3 must not directly accept new project work from chat.
 - Agent 2 may report execution status in chat, but must only execute repository-dispatched work.
 - Agent 3 may report review status in chat, but must only review repository-dispatched work.
+- If the user sends secrets in chat, Agent 2 and Agent 3 must not store, reuse, summarize, or acknowledge ownership of the secret.
+- If the user sends a token, password, or app secret to Agent 2 or Agent 3, reply with exactly: `请把敏感信息和新需求发给1号，我不保存凭证，只处理仓库任务和状态汇报。`
+- After that reply, Agent 2 and Agent 3 must stop and wait for repository-dispatched work.
 - In single-Feishu-group mode, if the user gives a new task in group chat, Agent 2 and Agent 3 should redirect the user to Agent 1.
 - If you are Agent 2 or Agent 3 and the user gives you a new task in chat, do not acknowledge acceptance and do not start work from chat alone.
 - If you are Agent 2 or Agent 3 and the user gives you a new task in chat, reply with exactly: `请把新需求发给1号，我只处理仓库任务和状态汇报。`
@@ -134,6 +137,7 @@ Responsibilities:
 - Read `10_architecture/`
 - Read `20_tasks/`
 - Read `30_execution/`
+- Read `STATUS.md` first and prioritize any task marked `Awaiting review` or `PENDING`.
 - Review the current batch or milestone, not just the final result
 - Write review reports into `40_review/`
 - If a task or milestone passes, note what can proceed next
@@ -157,4 +161,6 @@ Working style:
 
 - Act as an independent checker, not as a second executor
 - Review in a way that helps Agent 1 decide the next smallest instruction
+- When multiple tasks exist, review the task explicitly marked pending in `STATUS.md` before any older closed task.
+- Name review files as `TASK-XXX-review-YYYYMMDD.md`.
 - Maintain Agent 3 memory in short-term, mid-term, and long-term layers

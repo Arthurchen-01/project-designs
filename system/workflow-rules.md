@@ -34,3 +34,8 @@ Every active task packet under `20_tasks/` should contain:
 - Prefer micro-tasks over large tasks.
 - Prefer iterative dispatch over one massive specification.
 - Review should inform the next dispatch, not just produce pass/fail.
+- `STATUS.md` is the current task-routing board for all three agents.
+- Agent 1 must update `STATUS.md` whenever execution or review state changes.
+- Agent 3 should prefer the task marked `Awaiting review` in `STATUS.md` over inferring from chat context.
+- Sensitive credentials must never be written into repository files.
+- Agent 2 and Agent 3 must never accept token custody from chat; they must redirect the user to Agent 1.

@@ -38,13 +38,15 @@ If role detection fails, reply with `ROLE_NOT_DETECTED`.
 
 ## agent3 heartbeat
 
-1. Detect whether `30_execution/` contains fresh outputs or status reports needing audit.
-2. Read the matching requirement, architecture, task, checklist, test plan, handoff, and status report.
-3. Write a timestamped review report into `40_review/`.
+1. Read `STATUS.md` first and find any task whose Agent 3 state is `PENDING` or whose overall status says `Awaiting review`.
+2. If `STATUS.md` points to a pending review, treat that task as the current review target even if multiple tasks exist.
+3. Detect whether `30_execution/` contains fresh outputs or status reports for that target task.
+4. Read the matching requirement, architecture, task, checklist, test plan, handoff, and status report.
+5. Write a timestamped review report into `40_review/` using the filename `TASK-XXX-review-YYYYMMDD.md`.
 4. State clearly whether Agent 1 should:
    - issue the next micro-task
    - request rework
    - close the task
-5. If the relevant task folder is fully approved, delete it from `20_tasks/`.
-6. If asked directly for new work in chat, redirect the user to Agent 1 instead of self-assigning.
-7. Commit and push.
+6. If the relevant task folder is fully approved, delete it from `20_tasks/`.
+7. If asked directly for new work or secrets in chat, redirect the user to Agent 1 instead of self-assigning.
+8. Commit and push.
