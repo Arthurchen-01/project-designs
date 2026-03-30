@@ -1,30 +1,43 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { calculateFiveRate } from '@/lib/scoring-engine'
-import { generateExplanation } from '@/lib/explanation'
+import { generateExplanation, generateExplanationWithAI } from '@/lib/explanation'
 import { evaluateDailyUpdate } from '@/lib/ai-evaluator'
 
+// ---------------------------------------------------------------------------
+// GET /api/daily-update — 获取历史记录
+// ---------------------------------------------------------------------------
 export async function GET(req: NextRequest) {
   const studentId = req.cookies.get('ap_student_id')?.value
   if (!studentId) return NextResponse.json({ updates: [], error: '未登录' }, { status: 401 })
+
   const updates = await prisma.dailyUpdate.findMany({
     where: { studentId },
-    include: { subject: { select: { code: true, name: true, color: true } } },
-    orderBy: { date: 'desc' }, take: 30,
+    include: {
+      subject: { select: { code: true, name: true, color: true } },
+    },
+    orderBy: { date: 'desc' },
+    take: 30,
   })
+
   return NextResponse.json({ updates })
 }
 
+// ---------------------------------------------------------------------------
+// POST /api/daily-update — 提交每日更新 → AI评估 → 计算5分率 → 生成解释
+// ---------------------------------------------------------------------------
 export async function POST(req: NextRequest) {
   const studentId = req.cookies.get('ap_student_id')?.value
   if (!studentId) return NextResponse.json({ error: '未登录' }, { status: 401 })
+
   const body = await req.json()
   const {
     date, subjectCode, taskType, timedMode,
     score, totalCount, correctCount, timeMinutes, unit, notes,
   } = body
+
   if (!date || !subjectCode || !taskType) {
-    return NextResponse.json({ error: '缺少必填字段' }, { status: 400 })
+    return NextResponse.json({ error: '缺少必填字段：date, subjectCode, taskType' }, { status: 400 })
   }
 
   // Step 1: 创建每日更新记录
@@ -44,7 +57,12 @@ export async function POST(req: NextRequest) {
     },
   })
 
-  // Step 2: 调用 AI 评估（失败不影响主流程）
+  // Step 2: 获取学生和科目名称（用于 AI 解释）
+  const student = await prisma.student.findUnique({ where: { id: studentId } })
+  const studentName = student?.name ?? '同学'
+  const subjectName = update.subject.name
+
+  // Step 3: AI 评估（失败不影响主流程）
   let aiResult: { evidenceLevel: string; qualityScore: number; explanation: string; source: string } | null = null
   try {
     const evalResult = await evaluateDailyUpdate({
@@ -58,7 +76,6 @@ export async function POST(req: NextRequest) {
     })
     aiResult = evalResult
 
-    // 将 AI 评估结果写回 DailyUpdate 记录
     await prisma.dailyUpdate.update({
       where: { id: update.id },
       data: {
@@ -71,17 +88,42 @@ export async function POST(req: NextRequest) {
     console.warn('[daily-update] AI evaluation skipped:', err)
   }
 
-  // Step 3: 计算 5 分率（传入 AI 质量分优先使用）
+  // Step 4: 计算 5 分率（传入 AI 质量分优先使用）
   const prevSnapshot = await prisma.probabilitySnapshot.findUnique({
     where: { studentId_subjectCode: { studentId, subjectCode } },
   })
   const prevRate = prevSnapshot?.rate ?? null
 
+  let scoringResult: {
+    rate: number; confidence: string; trend: string
+    prevRate: number | null; delta: number | null
+    explanation: string; explanationSource: 'ai' | 'rule'
+  } | null = null
+
   try {
     const result = aiResult
       ? await calculateFiveRate({ studentId, subjectCode, aiQualityScore: aiResult.qualityScore })
       : await calculateFiveRate(studentId, subjectCode)
-    const explanation = generateExplanation({ prevRate, curr: result })
+
+    // 获取最近 5 条活动摘要（用于 AI 解释上下文）
+    const recentUpdates = await prisma.dailyUpdate.findMany({
+      where: { studentId, subjectCode },
+      orderBy: { date: 'desc' },
+      take: 5,
+      select: { taskType: true, date: true, aiEvidenceLevel: true },
+    })
+    const recentActivities = recentUpdates.map(u =>
+      `${u.date}的${u.taskType}${u.aiEvidenceLevel ? `(${u.aiEvidenceLevel}证据)` : ''}`
+    )
+
+    // 优先使用 AI 生成解释（Task 025）
+    const explanationResult = await generateExplanationWithAI({
+      prevRate,
+      curr: result,
+      studentName,
+      subjectName,
+      recentActivities,
+    })
 
     await prisma.probabilitySnapshot.upsert({
       where: { studentId_subjectCode: { studentId, subjectCode } },
@@ -95,27 +137,29 @@ export async function POST(req: NextRequest) {
       },
     })
 
-    return NextResponse.json({
-      update: {
-        ...update,
-        aiEvidenceLevel: aiResult?.evidenceLevel ?? null,
-        aiDeltaScore:    aiResult?.qualityScore ?? null,
-        aiExplanation:   aiResult?.explanation ?? null,
-      },
-      scoring: {
-        rate: result.rate,
-        confidence: result.confidence,
-        trend: result.trend,
-        prevRate,
-        delta: prevRate != null ? result.rate - prevRate : null,
-        explanation,
-      },
-      ai: aiResult
-        ? { evidenceLevel: aiResult.evidenceLevel, qualityScore: aiResult.qualityScore, source: aiResult.source }
-        : null,
-    }, { status: 201 })
+    scoringResult = {
+      rate: result.rate,
+      confidence: result.confidence,
+      trend: result.trend,
+      prevRate,
+      delta: prevRate != null ? result.rate - prevRate : null,
+      explanation: explanationResult.text,
+      explanationSource: explanationResult.source,
+    }
   } catch (err) {
     console.error('[daily-update] scoring error:', err)
-    return NextResponse.json({ update, scoring: null, ai: null }, { status: 201 })
   }
+
+  return NextResponse.json({
+    update: {
+      ...update,
+      aiEvidenceLevel: aiResult?.evidenceLevel ?? null,
+      aiDeltaScore:    aiResult?.qualityScore ?? null,
+      aiExplanation:   aiResult?.explanation ?? null,
+    },
+    scoring: scoringResult,
+    ai: aiResult
+      ? { evidenceLevel: aiResult.evidenceLevel, qualityScore: aiResult.qualityScore, source: aiResult.source }
+      : null,
+  }, { status: 201 })
 }

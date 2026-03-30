@@ -1,51 +1,83 @@
-# HANDOFF.md — Phase 3
+# HANDOFF.md — Phase 4（2026-03-30 23:55）
 
 **From**: Agent 2
 **To**: Agent 1
 **Date**: 2026-03-30
 
-## What Was Done (Phase 3)
+---
 
-Completed TASK-017, TASK-018, TASK-019, TASK-020, TASK-022.
+## Phase 4 完成情况
 
-### TASK-017: 评分引擎核心逻辑
-- `src/lib/scoring-engine.ts` — 完整评分规则引擎
-  - `testPerformance` (60%): 加权平均最近10条成绩，timed full-mock权重3.0最高
-  - `trendScore` (15%): 最近5次成绩线性回归斜率
-  - `stabilityScore` (15%): 成绩标准差越低分越高
-  - `reviewQualityScore` (10%): 复习质量（类型+时效）
-  - `forgettingDecay`: 每1天衰减0.5%，封顶15%
-  - `historicalMax`: 严格模式，不超过历史最高分
-- `src/lib/confidence.ts` — 置信等级（high/medium/low）
-- `src/lib/explanation.ts` — 模板规则生成自然语言解释
+| 任务 | 状态 | 产出 |
+|---|---|---|
+| TASK-023 AI模块初始化 | ✅ | ai-config.ts, ai-evaluator.ts |
+| TASK-024 评分引擎接入AI | ✅ | scoring-engine 支持 AI 质量分注入 |
+| TASK-025 AI生成变化解释 | ✅ | generateExplanationWithAI, daily-update 集成 |
+| TASK-026 AI学习建议 | ✅ | ai-advisor.ts, /api/ai/advice, 个人中心建议模块 |
 
-### TASK-018: 评分 API 路由
-- `POST /api/scoring/calculate` — 单个学生×科目重算5分率
-- `POST /api/scoring/batch` — 批量计算全班
-- `GET /api/scoring/history` — 历史快照 + 成绩记录
+---
 
-### TASK-019: 每日更新触发重算
-- `POST /api/daily-update` — 写入更新记录后自动触发5分率重算
-- `src/app/[classId]/daily-update/page.tsx` — 提交后展示5分率变化提示
+## TASK-025 详情（最新）
 
-### TASK-020: 解释生成
-- `generateExplanation()` — 模板规则生成自然语言解释（V1）
-- 不调用外部AI，基于评分因子自动生成
+### `src/lib/explanation.ts` — 新增 `generateExplanationWithAI()`
 
-### TASK-022: 预警系统 API
-- `GET /api/dashboard/alerts` — 三类预警
-  - risk: 5分率<50%
-  - drift: 连续3天断更
-  - volatility: 成绩标准差>20%
+- **Prompt**：AP备考教练语气，包含学生姓名/科目/活动上下文
+- **降级**：AI 不可用 → `generateExplanation()` 规则版
+- **返回**：`{ text: string; source: 'ai' | 'rule' }`
 
-## Build Status
-✅ `npm run build` 通过，所有 API route 编译成功
+### `src/app/api/daily-update/route.ts`
 
-## Technical Notes
-- Prisma client: `src/generated/prisma/client`
-- 参考日期固定为 2026-03-30（V1阶段）
-- 评分引擎不调用外部AI，纯规则计算
+- POST 增加获取学生姓名 + 科目名称
+- 获取最近5条活动摘要用于 AI 上下文
+- 调用 `generateExplanationWithAI()` 替代 `generateExplanation()`
+- 返回新增 `explanationSource: 'ai' | 'rule'`
+
+### 页面改造
+
+- 提交成功后解释文字下方显示来源标签
+- 🤖 AI 生成（indigo） / 📐 规则生成（gray）
+
+---
+
+## TASK-026 详情
+
+### `src/lib/ai-advisor.ts`
+
+- `generateAdvice(studentId)`：获取学生各科5分率，生成个性化建议
+- AI 版：调用 OpenAI，每科趋势数据 → 3条可操作建议
+- 规则版降级：识别薄弱科目/下滑趋势/优势科目 → 给出建议
+
+### API Route — `GET /api/ai/advice`
+
+- 读取 `ap_student_id` cookie
+- 返回 `overallAdvice[]` + `subjectAdvices[]` + `source`
+
+### `personal/page.tsx` 改造
+
+- 登录后自动调用 `/api/ai/advice`
+- 每科卡片下方显示 AI 给出的个性化学习建议（💡图标）
+- 页面底部新增 **AI 学习建议** 模块（编号建议 + 来源标签）
+
+---
+
+## Phase 4 总验收标准
+
+| 验收项 | 状态 |
+|---|---|
+| 每日更新提交后 AI 评估复习质量并影响 5 分率 | ✅ |
+| 变化解释由 AI 生成（可读、个性化） | ✅ |
+| 个人中心有 AI 学习建议 | ✅ |
+| `npm run build` 无错误 | ✅ |
+
+---
+
+## 技术说明
+
+- AI 配置：`OPENAI_API_KEY` / `OPENAI_BASE_URL` / `OPENAI_MODEL`
+- AI 不可用时所有功能自动降级到规则版，不影响主流程
+- Prisma client：`src/generated/prisma/client`
 
 ## What Agent 1 Should Do Next
-- 检查 TASK-021（个人中心历史图）是否需要执行
-- 准备 Phase 3 review 给 Agent 3
+
+- Phase 4 完成，可发起 Agent 3 审查 TASK-025/026
+- 检查是否有 Phase 5 新任务

@@ -71,7 +71,8 @@ export default function DailyUpdatePage() {
   const [submitError, setSubmitError] = useState("")
   const [scoringResult, setScoringResult] = useState<{
     rate: number; confidence: string; trend: string
-    prevRate: number | null; delta: number | null; explanation: string
+    prevRate: number | null; delta: number | null
+    explanation: string; explanationSource: 'ai' | 'rule'
   } | null>(null)
   const [aiResult, setAiResult] = useState<{
     evidenceLevel: string; qualityScore: number; source: string
@@ -259,7 +260,16 @@ export default function DailyUpdatePage() {
                       )}
                     </div>
                     {scoringResult.explanation && (
-                      <p className="text-xs text-blue-700 leading-relaxed">{scoringResult.explanation}</p>
+                      <div className="mt-1">
+                        <p className="text-xs text-blue-700 leading-relaxed">{scoringResult.explanation}</p>
+                        <span className={`inline-block mt-1 text-xs px-2 py-0.5 rounded-full font-medium ${
+                          scoringResult.explanationSource === 'ai'
+                            ? 'bg-indigo-100 text-indigo-700'
+                            : 'bg-gray-100 text-gray-500'
+                        }`}>
+                          {scoringResult.explanationSource === 'ai' ? '🤖 AI 生成' : '📐 规则生成'}
+                        </span>
+                      </div>
                     )}
                     {aiResult && (
                       <div className="mt-2 flex items-center gap-2">
