@@ -4,8 +4,9 @@
 - active_project: AP追踪网站
 - active_batch: Phase 3
 - last_updated_by: agent1
-- last_updated: 2026-03-30T21:10+08:00
-- agent3_state: IDLE
+- last_updated: 2026-03-30T21:15+08:00
+- agent3_state: PENDING
+- agent3_target: TASK-017-018
 - notes: |
   Phase 1 ✅ Phase 2 ✅
   
@@ -17,5 +18,6 @@
   - TASK-021 ⬜ 个人页趋势图接入
   - TASK-022 ⬜ 班级仪表盘增强
   
-  Agent 2 执行速度快，可能已继续推进 TASK-019+。
-  等待 Agent 3 审查 TASK-017/018 或 Agent 2 继续执行报告。
+  TASK-017/018 执行报告已提交（commit addf6d0）。
+  Agent 3 需审查 scoring-engine.ts、confidence.ts 及 3 条 API route。
+  Agent 2 等待审查结果后继续 TASK-019+。
