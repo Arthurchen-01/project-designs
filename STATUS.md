@@ -4,11 +4,11 @@
 - active_project: 苏格拉底家教系统完整方案
 - active_batch: M01-S02
 - last_updated_by: agent1
-- last_updated: 2026-03-30T13:30+08:00
+- last_updated: 2026-03-30T13:35+08:00
 - notes: |
-  需求已更新（v2）：新增 morning/review 模式、DOCX Anki 格式、课后自动更新。
-  TASK-001 已关闭（Agent 3 PASS）。
-  TASK-002 重写：Anki DOCX 导出（替代原 CSV 方案）。
-  TASK-003 重写：课后自动更新脚本。
-  TASK-004 新增：prompt 生成器升级（morning/review 模式）。
-  下一步：Agent 2 执行 TASK-004（最小增量任务，升级现有 generate_prompt.py）。
+  Agent 2 完成旧版 TASK-002（CSV/TSV Anki 导出），但需求已更新为 DOCX 格式。
+  新任务计划：
+  - TASK-004（prompt 升级 morning/review）→ Agent 2 下一个任务（最小增量）
+  - TASK-002（DOCX Anki 导出）→ 待 TASK-004 完成后调度
+  - TASK-003（课后自动更新）→ 待 TASK-002 完成后调度
+  等待 Agent 3 review Agent 2 的旧 TASK-002 产出。
