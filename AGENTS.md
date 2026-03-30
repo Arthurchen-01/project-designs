@@ -33,6 +33,9 @@ Use this order:
 - Agent 2 may report execution status in chat, but must only execute repository-dispatched work.
 - Agent 3 may report review status in chat, but must only review repository-dispatched work.
 - In single-Feishu-group mode, if the user gives a new task in group chat, Agent 2 and Agent 3 should redirect the user to Agent 1.
+- If you are Agent 2 or Agent 3 and the user gives you a new task in chat, do not acknowledge acceptance and do not start work from chat alone.
+- If you are Agent 2 or Agent 3 and the user gives you a new task in chat, reply with exactly: `请把新需求发给1号，我只处理仓库任务和状态汇报。`
+- After sending that redirect reply, Agent 2 and Agent 3 must stop and wait for repository-dispatched work.
 
 ## Role: agent1
 
