@@ -182,6 +182,17 @@ def extract_diary_count(diary_content: str) -> int:
 
 
 # ---------------------------------------------------------------------------
+
+def _first_meaningful_session(sessions: list) -> "SessionData|None":
+    """返回第一个有实际 Q&A 内容或章节标题的 session（跳过纯日期 H1 块）。"""
+    if not sessions:
+        return None
+    for s in sessions:
+        if s.questions or (s.sections and not s.sections[0].startswith(s.date)):
+            return s
+    return sessions[0] if sessions else None
+
+
 # 更新 progress.md
 # ---------------------------------------------------------------------------
 def update_progress(base: Path, sessions: list[SessionData], date_str: str,
@@ -193,7 +204,7 @@ def update_progress(base: Path, sessions: list[SessionData], date_str: str,
 
     # 构建新课次内容
     # 取第一个 session 的核心内容作为进度条目
-    session = sessions[0] if sessions else None
+    session = _first_meaningful_session(sessions)
     if session:
         # 优先用提取的知识点，其次用第一个 H2 标题
         if session.topics:
@@ -232,7 +243,7 @@ def update_diary(base: Path, sessions: list[SessionData], date_str: str,
                  dry_run: bool = False):
     diary_content = read_file(base, "diary.md")
 
-    session = sessions[0] if sessions else None
+    session = _first_meaningful_session(sessions)
     if session:
         # 取第一个非日期的 H2/H3 标题（忽略顶部的日期 H1）
         section_title = "综合学习"
@@ -273,7 +284,7 @@ def update_mid_term_memory(base: Path, sessions: list[SessionData],
                            dry_run: bool = False):
     content = read_file(base, "mid_term_memory.md")
 
-    session = sessions[0] if sessions else None
+    session = _first_meaningful_session(sessions)
     if not session or not session.topics:
         print("[SKIP] mid_term_memory.md 无需更新")
         return
@@ -313,7 +324,7 @@ def update_session_archive(base: Path, date_str: str, sessions: list[SessionData
     else:
         archive_content = "# 会话归档记录\n\n<!-- 格式: YYYY-MM-DD | 课次 | 知识点 | 老师 -->"
 
-    session = sessions[0] if sessions else None
+    session = _first_meaningful_session(sessions)
     if session and session.topics:
         topics_str = "、".join(session.topics[:3])
     elif session:
@@ -344,7 +355,7 @@ def update_session_archive(base: Path, date_str: str, sessions: list[SessionData
 # ---------------------------------------------------------------------------
 def update_role_files(base: Path, sessions: list[SessionData], date_str: str,
                       dry_run: bool = False):
-    session = sessions[0] if sessions else None
+    session = _first_meaningful_session(sessions)
     if not session or not session.teachers:
         return
 
