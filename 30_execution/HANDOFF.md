@@ -1,37 +1,45 @@
-# HANDOFF.md — TASK-001
+# HANDOFF.md — TASK-002
 
 ## What changed
 
-- Created `30_execution/tools/generate_prompt.py` — cross-platform prompt generator
-- Created `30_execution/requirements.txt` — dependencies
-- Created `30_execution/tools/sample_files/` — 9 sample Sakura设定 files for Linux testing
+- Created `30_execution/tools/export_anki.py` — Anki 导出脚本
+- Created `30_execution/tools/anki_export.tsv` — 20-card sample output
 
 ## Context
 
-- Task: TASK-001 (Sakura 一键 Prompt 生成器)
-- Architecture reference: `10_architecture/project-brief.md` Phase 1.1
+- Task: TASK-002 (学习记录解析器 + Anki 导出)
+- Architecture reference: `10_architecture/project-brief.md` Phase 1.3
 
 ## Verification results
 
 | Test | Command | Result |
 |---|---|---|
-| TC1 | `python3 generate_prompt.py --path sample_files --teacher mikasa` | ✅ 字符数 1771, 包含所有必要章节 |
-| TC2 | `python3 generate_prompt.py --path sample_files --teacher asuka` | ✅ 包含明日香角色设定 |
-| TC3 | `python3 generate_prompt.py --path sample_files --teacher sakura` | ✅ 包含小樱角色设定 |
-| TC4 | `python3 generate_prompt.py --path sample_files --teacher kenshin` | ✅ 包含剑心角色设定 |
-| TC5 | 课次编号递增 (progress.md 第0005课 → prompt第0006课) | ✅ 自动递增正确 |
-| TC6 | 所有四位老师的 --teacher 参数 | ✅ 均可用 |
-| TC7 | 缺失文件警告处理 | ✅ 未崩溃，输出警告 |
+| TC1 | `python3 export_anki.py --path sample_files` | ✅ 20张卡片，文件生成 |
+| TC2 | CSV列数验证 | ✅ 全部3列，无多余引号 |
+| TC3 | `--subject AP-Calculus-BC` 筛选 | ✅ 全部20张含目标tag |
+| TC4 | tag格式检查（逗号分隔，无空格） | ✅ 0格式错误行 |
+| TC5 | 内容完整性（课次/关键词覆盖） | ✅ 5课全覆盖，diary关键词均包含 |
 
-**已知限制:** 剪贴板功能需要 `pip install pyperclip`（Windows/macOS 原生剪贴板支持）。
+## 算法说明
+
+**从 progress.md 生成卡片：**
+- 每节课 → 1张"概念定义/核心思想"卡（问定义，答描述）
+- 每节课 → 1张"关键点"卡（问关键点，答第一句）
+
+**从 diary.md 生成卡片：**
+- 每节课 → 1张"用自己的话解释"卡（苏格拉底式问法）
+- 每节课 → 1张"具体例子/细节"卡（问例子，答第二句）
+
+**科目推断：** 通过关键词匹配（极限/导数/连续 → AP-Calculus-BC）
 
 ## Windows 使用说明
 
-在用户机器上运行：
 ```cmd
 cd "C:\Users\25472\Sakura - gemini版\tools"
-pip install pyperclip
-python generate_prompt.py --teacher mikasa
+pip install -r requirements.txt
+python export_anki.py --subject "AP-Calculus-BC"
+# 输出: anki_export.tsv
+# 导入: Anki → 文件 → 导入 → 选择 anki_export.tsv → 分隔符=Tab
 ```
 
 ## Status
