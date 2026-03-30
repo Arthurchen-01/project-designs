@@ -115,7 +115,12 @@ export async function calculateFiveRate(
   const rq   = aiQualityScore != null ? aiQualityScore : reviewQuality(updates)
   const decay = forgettingDecay(records, updates)
   const histMax = snapshots.length ? Math.max(...snapshots.map(s => s.rate)) : 1.0
-  const confidence = calculateConfidence(tp.count, records.length)
+  // Compute days since last record for recency-aware confidence
+  const lastRecordDate = records.length > 0 ? records[records.length - 1].date : null
+  const daysSinceLastRecord = lastRecordDate
+    ? Math.ceil((new Date().getTime() - new Date(lastRecordDate).getTime()) / 86400000)
+    : 999
+  const confidence = calculateConfidence(tp.count, records.length, daysSinceLastRecord)
   const raw = tp.score * 0.60 + ts * 0.15 + ss * 0.15 + rq * 0.10
   const capped = Math.min(raw, histMax)
   const rate = Math.max(0, Math.min(1, capped * (1 - decay)))
