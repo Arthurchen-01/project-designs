@@ -1,0 +1,173 @@
+// ============================================================
+// AP 备考追踪平台 — Prisma Schema
+// ============================================================
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+// ----------------------------------------------------------------
+// 班级
+// ----------------------------------------------------------------
+model Class {
+  id      String    @id @default(cuid())
+  name    String             // "AP备考班 2026"
+  season  String             // "2025-2026"
+  students Student[]
+
+  @@map("class")
+}
+
+// ----------------------------------------------------------------
+// 学生
+// ----------------------------------------------------------------
+model Student {
+  id        String  @id @default(cuid())
+  classId   String
+  name      String
+  gender    String  // "男" / "女"
+
+  class         Class           @relation(fields: [classId], references: [id])
+  enrollments   StudentSubject[]
+  scores        AssessmentRecord[]
+  fiveRates     ProbabilitySnapshot[]
+  resources     Resource[]
+  dailyUpdates  DailyUpdate[]
+
+  @@map("student")
+}
+
+// ----------------------------------------------------------------
+// AP 科目
+// ----------------------------------------------------------------
+model Subject {
+  code        String  @id              // "AP-MACRO"
+  name        String                 // "AP宏观经济学"
+  color       String                 // "#3B82F6"
+
+  enrollments   StudentSubject[]
+  examDates     ExamDate[]
+  scores        AssessmentRecord[]
+  fiveRates     ProbabilitySnapshot[]
+  resources     Resource[]
+  dailyUpdates  DailyUpdate[]
+
+  @@map("subject")
+}
+
+// ----------------------------------------------------------------
+// 学生报考关系
+// ----------------------------------------------------------------
+model StudentSubject {
+  id          String @id @default(cuid())
+  studentId   String
+  subjectCode String
+
+  student   Student @relation(fields: [studentId], references: [id])
+  subject   Subject @relation(fields: [subjectCode], references: [code])
+
+  @@unique([studentId, subjectCode])
+  @@map("student_subject")
+}
+
+// ----------------------------------------------------------------
+// 考试日期
+// ----------------------------------------------------------------
+model ExamDate {
+  id          String @id @default(cuid())
+  date        String              // "2026-05-04"
+  subjectCode String
+
+  subject     Subject @relation(fields: [subjectCode], references: [code])
+
+  @@map("exam_date")
+}
+
+// ----------------------------------------------------------------
+// 测试记录（成绩）
+// ----------------------------------------------------------------
+model AssessmentRecord {
+  id          String @id @default(cuid())
+  studentId   String
+  subjectCode String
+  type        String              // "mcq" | "frq" | "full-mock"
+  timedMode   String              // "timed" | "untimed"
+  score       Int
+  maxScore    Int
+  date        String              // "2026-01-10"
+  difficulty  String?             // "basic" | "medium" | "hard"
+
+  student   Student @relation(fields: [studentId], references: [id])
+  subject   Subject @relation(fields: [subjectCode], references: [code])
+
+  @@map("assessment_record")
+}
+
+// ----------------------------------------------------------------
+// 5分率快照（人×科）
+// ----------------------------------------------------------------
+model ProbabilitySnapshot {
+  id          String @id @default(cuid())
+  studentId   String
+  subjectCode String
+  rate        Float               // 0.0 - 1.0
+  confidence  String              // "high" | "medium" | "low"
+  trend       String              // "rising" | "stable" | "falling"
+  updatedAt   DateTime @default(now())
+
+  student   Student @relation(fields: [studentId], references: [id])
+  subject   Subject @relation(fields: [subjectCode], references: [code])
+
+  @@unique([studentId, subjectCode])
+  @@map("probability_snapshot")
+}
+
+// ----------------------------------------------------------------
+// 每日更新
+// ----------------------------------------------------------------
+model DailyUpdate {
+  id          String   @id @default(cuid())
+  studentId   String
+  subjectCode String
+  date        String               // "2026-03-30"
+  taskType    String               // "MCQ" | "FRQ" | "FullMock" | "Review" | "错题整理" | "看资料" | "其他"
+  timedMode   String               // "timed" | "untimed"
+  score       Int?
+  totalCount  Int?
+  correctCount Int?
+  timeMinutes Int?
+  unit        String?
+  notes       String?
+  createdAt   DateTime @default(now())
+
+  student   Student @relation(fields: [studentId], references: [id])
+  subject   Subject @relation(fields: [subjectCode], references: [code])
+
+  @@map("daily_update")
+}
+
+// ----------------------------------------------------------------
+// 资源共享
+// ----------------------------------------------------------------
+model Resource {
+  id          String @id @default(cuid())
+  uploaderId  String
+  subjectCode String
+  title       String
+  type        String              // "note" | "video" | "practice" | "flashcard" | "lecture"
+  unit        String?
+  description String
+  url         String
+  likes       Int    @default(0)
+  createdAt   DateTime @default(now())
+
+  uploader  Student @relation(fields: [uploaderId], references: [id])
+  subject   Subject @relation(fields: [subjectCode], references: [code])
+
+  @@map("resource")
+}
