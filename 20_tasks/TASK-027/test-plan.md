@@ -1,17 +1,15 @@
 # TASK-027 Test Plan
 
-Minimum verification:
+## Primary checks
 
-1. Confirm the correct branch is checked out:
-   - `nightly/2026-03-31-confidence-fix`
-2. Run dependency / environment preparation if needed
-3. Run:
-   - `npm run build`
-4. If API/config work is touched:
-   - verify env loading path
-   - verify provider/model/base URL formatting
-   - attempt at least one real or near-real call when credentials allow
-5. Record:
-   - what passed
-   - what was blocked
-   - what Agent 1 should dispatch next
+1. The latest nightly branch state is actually reviewed, not ignored
+2. Technical blockers are ranked by severity
+3. Build, runtime, API, and config risk are discussed concretely
+4. The review clearly tells Agent 1 what to fix next
+5. The result is written as a review packet in `40_review/`
+
+## Minimum evidence
+
+- review file path
+- concrete blocker list
+- clear next-step recommendation for Agent 1

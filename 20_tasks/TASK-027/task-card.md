@@ -4,43 +4,46 @@
 
 - Batch ID: M05-S01-R01
 - Assignee: Agent 2
-- Type: execution
+- Type: technical review
 
 ## Objective
 
-Start the overnight continuous development run on the real code branch:
+Review the current overnight development state on the real code branch after role correction:
 
 - Repo: `https://github.com/Arthurchen-01/ap-tracker.git`
 - Branch: `nightly/2026-03-31-confidence-fix`
 
-Implement one coherent high-impact batch that improves student/teacher usefulness and records API/config reality.
+Agent 1 is the main overnight executor. Agent 2 is not the main implementer for this cycle.
+
+Perform a technical review of Agent 1's latest branch state and latest pushes.
 
 ## Required scope for this task
 
-1. Sync your own runtime copy of the nightly branch
+1. Sync your own runtime copy of the nightly branch if needed
 2. Read:
    - `00_input/night-continuous-dev-20260331.md`
    - `10_architecture/night-batch-20260331.md`
-3. Choose the highest-value next batch across these areas:
-   - home / dashboard / personal / subject detail / daily update / resources
-   - tooltip / explanation / action guidance
-   - API config / env config / model config / real call validation
-4. Implement the batch
-5. Verify build
-6. Push to the same nightly branch
-7. Write report files in `30_execution/`
+3. Review the latest nightly branch state with emphasis on:
+   - build and runtime risk
+   - API and env wiring
+   - obvious bug risk
+   - code quality issues that will block morning demo use
+4. Do not self-assign feature implementation
+5. Write a technical review packet for Agent 1
 
 ## Deliverables
 
-- pushed commit(s) on `nightly/2026-03-31-confidence-fix`
-- `30_execution/TASK-027-report.md`
-- updated `30_execution/HANDOFF.md`
-- updated `30_execution/STATUS-REPORT.md`
+- `40_review/TASK-027-review-20260331.md`
+- include:
+  - top technical blockers
+  - what is already safe enough
+  - what Agent 1 should fix next
+  - whether API/config status is acceptable for the next cycle
 
 ## Guardrails
 
 - do not touch `main`
 - do not work from chat alone
 - do not rewrite architecture files
-- do not make broad speculative rewrites
-- prefer one coherent finished batch over many partial edits
+- do not become the main executor for this cycle
+- act as a reviewer, not as a second developer

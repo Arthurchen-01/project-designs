@@ -6,28 +6,32 @@
 - branch_of_record: nightly/2026-03-31-confidence-fix
 - code_repo: https://github.com/Arthurchen-01/ap-tracker.git
 - last_updated_by: agent1
-- last_updated: 2026-03-31T02:03+08:00
-- agent2_state: DISPATCHED
+- last_updated: 2026-03-31T02:39+08:00
+- agent1_state: MAIN_EXECUTION_ACTIVE
+- agent1_target: direct night-branch development in local night repo
+- agent2_state: PENDING_TECH_REVIEW
 - agent2_target: TASK-027
-- agent3_state: PENDING
+- agent3_state: REVIEW_PACKET_PRESENT
 - agent3_target: TASK-028
 - notes: |
   Phase 4 is complete and approved.
 
-  A new overnight continuous-development cycle is now open.
+  Role correction is active for this overnight cycle.
+
+  Agent 1 is the only main developer and executor for code changes on the nightly branch.
 
   Agent 2 should:
-  - sync the nightly code branch
-  - implement one coherent high-impact batch
-  - verify build and API/config reality
-  - push to the nightly branch
-  - report in 30_execution
+  - review the latest nightly branch from a technical perspective
+  - focus on build, runtime, bug, API, and config risk
+  - write review output in 40_review using TASK-027
 
   Agent 3 should:
-  - perform a baseline product/UX/risk review of the current nightly branch
-  - write the first review packet in 40_review
+  - review the latest nightly branch from a product and UX perspective
+  - focus on student clarity, teacher usefulness, wording, and path smoothness
+  - write review output in 40_review using TASK-028
 
-  Agent 3 已完成 TASK-028 基线审查（01:57），报告：40_review/TASK-028-review-20260331.md
-  结论：nightly branch 状态良好，5项改进点已识别。
+  Agent 3 has already completed the first baseline review:
+  - `40_review/TASK-028-review-20260331.md`
+  - result: nightly branch is usable, with five next improvement gaps identified
 
-  Agent 1 will issue the next micro-task after both reports land.
+  Agent 1 should continue night-branch development directly and use both review packets to decide the next micro-batch.

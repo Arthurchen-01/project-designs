@@ -5,7 +5,7 @@ Owner: Agent 1
 
 ## Goal
 
-Switch from single-point trial work to constrained overnight continuous development.
+Switch from small trial work to a real overnight continuous development cycle on the night branch.
 
 The working code repo is:
 
@@ -13,6 +13,18 @@ The working code repo is:
 - Branch of record: `nightly/2026-03-31-confidence-fix`
 
 The coordination repo remains this shared three-agent repository.
+
+## Immediate role correction
+
+Do not follow the previous split where Agent 2 was the main executor.
+
+For this overnight run:
+
+1. Agent 1 is the only main developer and main executor for code changes on the night branch
+2. Agent 2 is technical review only
+3. Agent 3 is product and UX review only
+4. Agent 2 and Agent 3 should not wait for new chat work and should not self-assign development
+5. Agent 2 and Agent 3 should review Agent 1's latest branch state and latest pushed changes
 
 ## User intent
 
@@ -40,7 +52,8 @@ The work should improve clarity, actionability, flow, and API readiness.
 
 - Do not touch `main`
 - Do not modify the daytime local repo
-- Work only on the GitHub nightly branch and each agent's own runtime copy
+- Agent 1 works only on the GitHub nightly branch and the local night repo
+- Agent 2 and Agent 3 review the nightly branch only
 - Commit in small stages
 - Push multiple times if useful
 - Keep user-facing explanations simple and actionable
@@ -53,18 +66,19 @@ The work should improve clarity, actionability, flow, and API readiness.
 - Better five-rate explanation and supporting context
 - Tooltip / explanation coverage started or improved
 - API reading, connection attempts, and issue notes recorded
-- Agent 2 execution report
-- Agent 3 review verdict
+- Agent 2 technical review verdict
+- Agent 3 product and UX review verdict
 
 ## Review roles
 
-- Agent 2: implementation, run checks, API/config validation
-- Agent 3: UX/product review from student/teacher perspective, plus quality/risk review
+- Agent 2: technical review, bug review, run checks, API/config validation, code and runtime risk review
+- Agent 3: UX and product review from student/teacher perspective, plus wording and flow review
 
-## Stop rule for this first dispatch cycle
+## Stop rule for this dispatch cycle
 
-This first dispatch cycle is complete when:
+This dispatch cycle is complete when:
 
-1. Agent 2 has pushed one new coherent improvement batch to the nightly branch and written a report
-2. Agent 3 has written a baseline review or first-pass review packet
-3. Agent 1 can issue the next smallest overnight instruction from those outputs
+1. Agent 1 has continued pushing meaningful night-branch progress
+2. Agent 2 has written a technical review packet
+3. Agent 3 has written a product and UX review packet
+4. Agent 1 can issue the next smallest overnight instruction from those outputs

@@ -17,46 +17,55 @@ This is a coordinated overnight run with one code branch and one coordination re
 ## Roles for this batch
 
 - Agent 1:
-  - command center only
-  - no direct execution artifacts in `30_execution/`
-  - issue the next smallest packet after each report
+  - command center plus main overnight developer
+  - owns the night branch implementation loop
+  - keeps development in the local night repo and on the nightly branch
+  - uses review outputs from Agent 2 and Agent 3 to decide the next smallest packet
 
 - Agent 2:
-  - pull the code repo branch
-  - implement one coherent overnight improvement batch
-  - verify build and API/config status where possible
-  - push changes to the nightly branch
-  - write concise execution report back here
+  - do not act as the main executor for this run
+  - perform technical review of Agent 1 changes
+  - verify build, API/config status, and obvious code/runtime risk where possible
+  - write concise technical review back here
 
 - Agent 3:
-  - perform a baseline review immediately
-  - focus on student/teacher clarity, product flow, and risk
-  - after Agent 2 pushes a fresh batch, review again in the next cycle if needed
+  - perform product and UX review of Agent 1 changes
+  - focus on student and teacher clarity, product flow, wording, and risk
+  - review again after fresh night-branch pushes when needed
 
 ## First cycle objective
 
-Start both execution and review immediately without waiting for another user message.
+Start development and review immediately without waiting for another user message.
 
-### Track A: Agent 2
+### Track A: Agent 1
+
+Target: continue direct development in the night repo and on `nightly/2026-03-31-confidence-fix`
+
+Expected outcome:
+
+- one or more pushed improvement batches
+- build verification
+- API/config findings recorded
+
+### Track B: Agent 2
 
 Target: `TASK-027`
 
 Expected outcome:
 
-- synced local runtime copy of the nightly branch
-- one pushed improvement batch
-- build verification
-- API/config findings recorded
+- technical review of the latest nightly branch state
+- top blockers ranked by build, runtime, API, and implementation risk
+- clear recommendation for Agent 1's next development batch
 
-### Track B: Agent 3
+### Track C: Agent 3
 
 Target: `TASK-028`
 
 Expected outcome:
 
-- baseline review of current nightly branch/product state
-- top blockers ranked by user impact
-- clear recommendation for Agent 1's next dispatch
+- product and UX review of the latest nightly branch state
+- top blockers ranked by student and teacher impact
+- clear recommendation for Agent 1's next product-focused batch
 
 ## Priority order for product decisions
 
