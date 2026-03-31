@@ -1,28 +1,30 @@
 # Runtime Status
 
-- current_state: DAYTIME_ACTIVE
+- current_state: NIGHT_CONTINUOUS_ACTIVE
 - active_project: AP tracking site
-- active_batch: M05-S02-R02
+- active_batch: M05-S03-R01
 - branch_of_record: nightly/2026-03-31-confidence-fix
 - code_repo: https://github.com/Arthurchen-01/ap-tracker.git
-- last_updated_by: agent3 (mode switch on user request)
-- last_updated: 2026-03-31T15:12+08:00
-- agent1_state: AWAITING_REVIEW
-- agent1_target: TASK-029 confidence semantics fix
-- agent2_state: DONE
-- agent2_target: TASK-029
-- agent3_state: PRODUCT_REVIEW_DONE
-- agent3_target: nightly product review (P1 fixes)
+- last_updated_by: agent1
+- last_updated: 2026-03-31T15:44+08:00
+- agent1_state: DISPATCHED_NEXT_MICRO_BATCH
+- agent1_target: TASK-030 daily-update field alignment + confidence display fix
+- agent2_state: PENDING_EXECUTION
+- agent2_target: TASK-030
+- agent3_state: REVIEW_PACKET_PRESENT
+- agent3_target: TASK-028-product-review-20260331
 - notes: |
-  Agent 3 产品视角审查完成（2026-03-31 02:53+08:00）。
-  详细报告：40_review/TASK-028-product-review-20260331.md
+  Phase 4 core is complete and approved.
 
-  发现 1 个 P1 + 1 个 P2：
-  🔴 P1 — 每日更新表单字段名不匹配
-    前端发送 taskType/notes/timeMinutes，API 期望 activityType/description/durationMinutes
-    需要 Agent 2 修复字段映射
-  🟡 P2 — 个人页置信等级走客户端计算
-    personal/page.tsx 和 subject detail 用 avgFiveRate 判断置信度，未使用 API 的 recency-aware confidenceLevel
-    应改为读取 API 返回的 confidenceLevel 字段
+  Fresh product review introduced a new fix batch:
+  - TASK-030 = daily-update field alignment + confidence display correction
 
-  产品整体状态：良好，PRD V1 全部实现。
+  Issues to fix:
+  1. P1: daily-update frontend/API field mismatch
+  2. P2: personal page must use API-provided confidenceLevel
+  3. P2: subject detail page must use API-provided confidenceLevel
+
+  Follow-up candidates after TASK-030:
+  - advice API N+1 optimization
+  - dashboard alerts frontend wiring
+  - error boundary around chart-heavy personal pages
