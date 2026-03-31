@@ -11,22 +11,18 @@
 - agent1_target: TASK-029 confidence semantics fix
 - agent2_state: DONE
 - agent2_target: TASK-029
-- agent3_state: DONE
-- agent3_target: TASK-029
+- agent3_state: PRODUCT_REVIEW_DONE
+- agent3_target: nightly product review (P1 fixes)
 - notes: |
-  Phase 4 core is complete and approved.
+  Agent 3 产品视角审查完成（2026-03-31 02:53+08:00）。
+  详细报告：40_review/TASK-028-product-review-20260331.md
 
-  TASK-029 完成：pass daysSinceLastRecord to confidence calculation
-  - commit: 2dae7d9
-  - confidence.ts 接受 daysSinceLastRecord 参数
-  - 高置信：recordCount >= 5 且 daysSince <= 30
-  - 中置信：recordCount >= 2 且 daysSince <= 60
-  - 低置信：其余
-  - scoring-engine.ts 已更新调用方
+  发现 1 个 P1 + 1 个 P2：
+  🔴 P1 — 每日更新表单字段名不匹配
+    前端发送 taskType/notes/timeMinutes，API 期望 activityType/description/durationMinutes
+    需要 Agent 2 修复字段映射
+  🟡 P2 — 个人页置信等级走客户端计算
+    personal/page.tsx 和 subject detail 用 avgFiveRate 判断置信度，未使用 API 的 recency-aware confidenceLevel
+    应改为读取 API 返回的 confidenceLevel 字段
 
-  TASK-029 reviewed by Agent 3 — PASS. Task folders cleaned up.
-
-  Follow-up candidates for next batch:
-  - advice API N+1 optimization
-  - dashboard alerts frontend wiring
-  - error boundary around chart-heavy personal pages
+  产品整体状态：良好，PRD V1 全部实现。
