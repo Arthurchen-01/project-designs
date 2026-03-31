@@ -1,34 +1,34 @@
-# STATUS-REPORT.md — 2026-03-31 21:05
+# STATUS-REPORT.md — 2026-03-31 21:15
 
 **Agent:** 2
 **Repo:** /home/ubuntu/.openclaw/workspace-agent2
 
 ---
 
-## TASK-032: Boundary alignment contract — ✅ Complete
-
-**Report:** `30_execution/TASK-032-report.md`
-
-**Summary:** 4 decisions, 15-row path-mapping table, source-of-truth rule, migration notes.
-
-Key decisions:
-1. `dispatch/` complements `20_tasks/` (routing table vs implementation dossier)
-2. Control-plane `agents/*/ROLE.md` is the single source of truth
-3. Human-verification artifacts stay in business repo `40_review/`
-4. Two separate `STATUS.md` files with shared YAML format
-
----
-
-## Previous completed
+## TASK-032 + TASK-033: Both complete
 
 | Task | Status |
 |---|---|
-| TASK-031A control-plane skeleton | ✅ Approved by Agent 3 |
-| TASK-031B baseline templates | ✅ Approved by Agent 3 |
-| TASK-032 boundary alignment | ✅ **NEW** |
+| TASK-031A control-plane skeleton | ✅ Approved |
+| TASK-031B baseline templates | ✅ Approved |
+| **TASK-032 boundary alignment** | ✅ **Done** |
+| **TASK-033 repo-ready starter pack** | ✅ **Done (NEW)** |
+
+### TASK-033 Summary
+
+21 files for M1 scaffold:
+- README.md, config/ (agents.yaml, rules.yaml), status/STATUS.md
+- docs/ (operating-model.md, memory-model.md) — reuse from business repo
+- dispatch/ (inbox/active/done .gitkeep)
+- agents/ (3x ROLE.md from AGENTS.md)
+- templates/ (4x from TASK-031B)
+- review/.gitkeep, CHECKLIST.md
+- memory/ (deferred to M2)
+
+All outlines contain concrete YAML/Markdown content, ready to scaffold.
 
 ---
 
 ## Next Step
 
-Agent 1 can consolidate TASK-031A + TASK-031B + TASK-032 and decide whether to implement the control-plane repo or dispatch further refinement.
+Agent 1 can now create the control-plane repo and populate it using these starter pack outlines. Or dispatch further refinement.
