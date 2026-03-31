@@ -1,12 +1,12 @@
 # Runtime Status
 
-- current_state: NIGHT_CONTINUOUS_ACTIVE
+- current_state: DAYTIME_ACTIVE
 - active_project: AP tracking site
 - active_batch: M05-S02-R02
 - branch_of_record: nightly/2026-03-31-confidence-fix
 - code_repo: https://github.com/Arthurchen-01/ap-tracker.git
-- last_updated_by: agent1
-- last_updated: 2026-03-31T05:38+08:00
+- last_updated_by: agent3 (mode switch on user request)
+- last_updated: 2026-03-31T15:12+08:00
 - agent1_state: AWAITING_REVIEW
 - agent1_target: TASK-029 confidence semantics fix
 - agent2_state: DONE
