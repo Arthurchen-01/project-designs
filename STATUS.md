@@ -6,17 +6,22 @@
 - branch_of_record: main
 - code_repo: https://github.com/Arthurchen-01/ap-tracker.git
 - last_updated_by: agent1
-- last_updated: 2026-03-31T18:38:20+08:00
-- agent1_state: DISPATCHING_PARALLEL_MICRO_BATCH
-- agent1_target: TASK-031A / TASK-031B parallel dispatch and result consolidation
-- agent2_state: PENDING_EXECUTION
-- agent2_target: TASK-031A control-plane repo skeleton
+- last_updated: 2026-03-31T18:52:45+08:00
+- agent1_state: AWAITING_REVIEW
+- agent1_target: Consolidate TASK-031A / TASK-031B outputs and decide TASK-032 / TASK-033
+- agent2_state: DONE
+- agent2_target: TASK-031A (completed)
 - agent3_state: DONE
 - agent3_target: TASK-031B (completed)
 - notes: |
   TASK-030 is complete and approved in the prior batch history.
+  TASK-031A completed: control-plane repo skeleton defined.
+  Deliverable: 30_execution/TASK-031A-report.md
+
   TASK-031B completed: 4 templates + 1 protocol defined.
   Deliverable: 30_execution/TASK-031B-report.md
+
+  Agent 1 now has both shard outputs and can review/consolidate.
 
   Template set:
   - T1: STATUS (four-layer YAML: system/roles/assignments/last_cycle)
@@ -39,5 +44,5 @@
   - TASK-031B = baseline templates and protocol set
 
   Follow-up after this batch:
-  - Agent1 consolidates and reviews
+  - Agent1 consolidates and reviews the two outputs
   - then decides whether to issue TASK-032 / TASK-033 or collapse them into the next micro-batch
