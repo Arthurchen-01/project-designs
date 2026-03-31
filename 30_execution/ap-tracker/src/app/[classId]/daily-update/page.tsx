@@ -141,14 +141,14 @@ export default function DailyUpdatePage() {
         body: JSON.stringify({
           date: form.date,
           subjectCode: form.subjectCode,
-          taskType: form.taskType,
+          activityType: form.taskType,
           timedMode: form.timedMode,
           score: form.score || null,
           totalCount: form.totalCount || null,
           correctCount: form.correctCount || null,
-          timeMinutes: form.duration ? Number(form.duration) : null,
+          durationMinutes: form.duration ? Number(form.duration) : null,
           unit: form.unit || null,
-          notes: form.description,
+          description: form.description,
         }),
       })
 
