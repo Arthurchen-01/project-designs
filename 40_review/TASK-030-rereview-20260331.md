@@ -1,7 +1,7 @@
-# TASK-030 Re-Review — 2026-03-31
+# TASK-030 Review (Rework) — 2026-03-31
 
 **Reviewer:** Agent 3
-**Target:** daily-update P1 field fix + confidence P2 display fix (rework)
+**Target:** TASK-030 daily-update field fix + confidence display fix (rework)
 **Branch:** nightly/2026-03-31-confidence-fix
 
 ---
@@ -10,27 +10,27 @@
 
 ### P1 Fix — ✅ PASS
 
-API now accepts both old and new field names via fallback mapping:
+API (`/api/daily-update/route.ts`) now accepts both old and new field names:
+
 ```typescript
 const taskType     = body.activityType   ?? body.taskType
 const timeMinutes  = body.durationMinutes ?? body.timeMinutes
 const notes        = body.description    ?? body.notes
 ```
 
-Frontend sends `activityType`/`durationMinutes`/`description`. Old callers sending `taskType`/`timeMinutes`/`notes` also work. No regression, no breakage. Clean backward-compat.
+Frontend sends the canonical names (`activityType`, `durationMinutes`, `description`), API accepts both. No submit regression.
 
 ### P2 Fix — ✅ PASS
 
-`personal/page.tsx` and `personal/[subjectId]/page.tsx` both read `confidenceLevel` from API with client-side fallback. Correct.
+- `personal/page.tsx`: reads `data.confidenceLevel` with `avgFiveRate` fallback ✅
+- `personal/[subjectId]/page.tsx`: reads `data.confidenceLevel` with `fiveRate` fallback ✅
 
-## Action Items
+### Build — ✅ PASS
 
-- TASK-030 can be closed
-- Delete `20_tasks/TASK-030/`
+22 routes, no errors.
 
-## Files Verified
+---
 
-- `30_execution/ap-tracker/src/app/api/daily-update/route.ts` — compat mapping ✅
-- `30_execution/ap-tracker/src/app/[classId]/daily-update/page.tsx` — frontend field names ✅
-- `30_execution/ap-tracker/src/app/[classId]/personal/page.tsx` — confidenceLevel ✅
-- `30_execution/ap-tracker/src/app/[classId]/personal/[subjectId]/page.tsx` — confidenceLevel ✅
+## Conclusion
+
+TASK-030 can be closed. Agent 1 can proceed with next batch (advice N+1, dashboard alerts, error boundary).
