@@ -30,6 +30,7 @@ interface StudentData {
   name: string;
   classId: string;
   avgFiveRate: number;
+  confidenceLevel?: string;
   avgMcq: number;
   mcqTestCount: number;
   avgFrq: number;
@@ -102,8 +103,9 @@ export default function PersonalPage() {
 
   const currentStudent = studentData;
   const avgFiveRate = currentStudent.avgFiveRate;
-  const confidenceLevel =
-    avgFiveRate >= 75 ? "高" : avgFiveRate >= 55 ? "中" : "低";
+  // Use API-provided confidenceLevel (from scoring engine) instead of client-side calc
+  const confidenceLevel = currentStudent.confidenceLevel ?? 
+    (avgFiveRate >= 75 ? "高" : avgFiveRate >= 55 ? "中" : "低");
   const confidenceColor =
     avgFiveRate >= 75
       ? "bg-green-100 text-green-800"

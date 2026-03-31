@@ -110,8 +110,9 @@ export default function SubjectDetailPage({
   }
 
   const fiveRate = data.fiveRate;
-  const confidence =
-    fiveRate >= 75 ? "高" : fiveRate >= 55 ? "中" : "低";
+  // Use API-provided confidenceLevel (from scoring engine) instead of client-side calc
+  const confidence = data.confidenceLevel ?? 
+    (fiveRate >= 75 ? "高" : fiveRate >= 55 ? "中" : "低");
   const confidenceColor =
     fiveRate >= 75
       ? "bg-green-100 text-green-800"
