@@ -31,13 +31,17 @@ export async function POST(req: NextRequest) {
   if (!studentId) return NextResponse.json({ error: '未登录' }, { status: 401 })
 
   const body = await req.json()
+
+  // Accept both legacy names (taskType/timeMinutes/notes) and new names (activityType/durationMinutes/description)
   const {
-    date, subjectCode, taskType, timedMode,
-    score, totalCount, correctCount, timeMinutes, unit, notes,
+    date, subjectCode, timedMode, score, totalCount, correctCount, unit,
   } = body
+  const taskType     = body.activityType   ?? body.taskType
+  const timeMinutes  = body.durationMinutes ?? body.timeMinutes
+  const notes        = body.description    ?? body.notes
 
   if (!date || !subjectCode || !taskType) {
-    return NextResponse.json({ error: '缺少必填字段：date, subjectCode, taskType' }, { status: 400 })
+    return NextResponse.json({ error: '缺少必填字段：date, subjectCode, activityType' }, { status: 400 })
   }
 
   // Step 1: 创建每日更新记录
