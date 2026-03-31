@@ -11,10 +11,19 @@
 - agent1_target: TASK-031A / TASK-031B parallel dispatch and result consolidation
 - agent2_state: PENDING_EXECUTION
 - agent2_target: TASK-031A control-plane repo skeleton
-- agent3_state: PENDING_EXECUTION
-- agent3_target: TASK-031B baseline templates and protocol set
+- agent3_state: DONE
+- agent3_target: TASK-031B (completed)
 - notes: |
   TASK-030 is complete and approved in the prior batch history.
+  TASK-031B completed: 4 templates + 1 protocol defined.
+  Deliverable: 30_execution/TASK-031B-report.md
+
+  Template set:
+  - T1: STATUS (four-layer YAML: system/roles/assignments/last_cycle)
+  - T2: Handoff (summary + changed files + verification + blockers)
+  - T3: Reading-order (cold-start / pre-execution / pre-review)
+  - T4: Human-verification (user-visible flag + actionable steps + risk level)
+  - P1: No-hidden-context protocol (all coordination through repo)
 
   Execution mode adjusted by user instruction.
 
