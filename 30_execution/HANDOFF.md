@@ -1,21 +1,20 @@
-# HANDOFF.md — 2026-03-31 18:45
+# HANDOFF.md — 2026-03-31 21:05
 
-## TASK-031A Complete
+## TASK-032 Complete
 
-**Report:** `30_execution/TASK-031A-report.md`
+**Report:** `30_execution/TASK-032-report.md`
 
-Control-plane repo skeleton defined:
-- 7 directories: config, agents, dispatch, status, review, memory, docs
-- 8 M1 mandatory files listed
-- 4 open questions for Agent 1 to resolve before next dispatch
+### 4 Decisions
 
-### Key decisions
-- dispatch/ is a lifecycle pipeline (inbox → active → done), separate from business-repo 20_tasks/
-- Role definitions in control-plane agents/ ROLE.md; workspace AGENTS.md as derived copy
-- YAML config format (consistency with existing conventions)
+1. dispatch/ complements 20_tasks/ — control plane handles lifecycle, business repo handles implementation
+2. Control-plane agents/*/ROLE.md is the single source of truth for roles
+3. Human-verification stays in 40_review/ (business repo)
+4. Two STATUS.md files: control-plane = runtime heartbeat, business-repo = execution ledger
 
-### Open questions
-1. dispatch/ vs 20_tasks/ — replace or complement?
-2. ROLE.md duplication — two sources of truth
-3. Write-boundary enforcement — manual only
-4. Config format — YAML proposed
+### Path mapping (15 rows)
+
+See full table in TASK-032-report.md section 2.
+
+### Key open risk
+
+Control-plane repo doesn't exist yet — this contract is spec only. Agent 1 must create the repo before any real dispatch.
