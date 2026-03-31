@@ -1,12 +1,12 @@
 # TASK-033 Test Plan
 
 ## Verification goals
-1. A new AI can follow the reading-order template without guessing where to start
-2. A human can use the verification template to understand how to inspect completed work
-3. The templates are small and reusable
-4. The templates do not depend on hidden chat context
+1. The starter pack uses the approved boundary decisions from `TASK-032`
+2. The starter file list is concrete enough to scaffold without redesign
+3. Template placement is explicit and non-duplicative
+4. The result stays at M1 starter-pack level, not runtime implementation
 
 ## Pass criteria
-- Reviewer can follow the reading order from cold start
-- Reviewer can tell what changed and how to verify it
-- The deliverables are ready to become baseline control-plane templates
+- A reviewer can name the first files to create and why
+- A reviewer can tell where STATUS, handoff, reading-order, and human-verification live
+- The starter pack is small enough to scaffold in the next implementation batch
