@@ -1,92 +1,121 @@
-# TASK-031A Report — Control-plane repo skeleton (directory/file map)
+# TASK-031A Report — Control-plane Repo Skeleton
 
-**Agent:** 2
-**Date:** 2026-03-31 18:40 CST
-**Batch:** DAY-2026-03-31-S02
+**Task:** TASK-031A — Control-plane repo directory/file map  
+**Agent:** 2  
+**Date:** 2026-03-31T12:35+08:00
 
 ---
 
-## 1. Proposed structure
+## Proposed Directory Structure
 
 ```
-agent-control-plane/              # Root: the control-plane repo
-├── README.md                     # Purpose, quick-start, ownership
+control-plane/
+├── README.md                       # Overview, quickstart, architecture summary
 ├── config/
-│   ├── agents.yaml               # Agent registry (id, role, workspace, model)
-│   └── rules.yaml                # Global rules: write-boundaries, chat routing, heartbeat cadence
-├── agents/                       # One subdirectory per registered agent
-│   ├── agent1/
-│   │   └── ROLE.md               # Role declaration (as written in workspace AGENTS.md)
-│   ├── agent2/
-│   │   └── ROLE.md
-│   └── agent3/
-│       └── ROLE.md
-├── dispatch/
-│   ├── inbox/                    # Incoming work items (file-per-item, dropped by Agent 1 or external)
-│   ├── active/                   # Currently dispatched (moved here by Agent 1)
-│   └── done/                     # Completed items (moved here by Agent 1 after review)
+│   ├── agents.yaml                 # Agent definitions (roles, models, tools, constraints)
+│   ├── rules.yaml                  # Global workflow rules (hearthbeat, git, commit conventions)
+│   ├── models.json                 # Provider configs, API keys, model list
+│   └── channels.yaml               # Messaging channels (Feishu, Discord, etc.)
 ├── status/
-│   └── STATUS.md                 # Single aggregated runtime state file
+│   ├── STATUS.md                   # Global project status
+│   └── memory/
+│       ├── agent-1/               # Agent 1 mid/long-term memory
+│       ├── agent-2/               # Agent 2 mid/long-term memory
+│       └── agent-3/               # Agent 3 mid/long-term memory
+├── dispatch/
+│   ├── README.md                   # How dispatch works
+│   ├── templates/                  # Task card, execution checklist, test plan templates
+│   │   ├── task-card.md
+│   │   ├── execution-checklist.md
+│   │   └── test-plan.md
+│   └── rules.yaml                  # Dispatch-specific rules (priority, assignment, blocking)
 ├── review/
-│   └── .gitkeep                  # Agent 3 writes review packets here
-├── memory/
-│   ├── agent1/
-│   ├── agent2/
-│   └── agent3/
-└── docs/
-    ├── operating-model.md        # Control-flow rules, batch-ID convention
-    └── memory-model.md           # Short/mid/long term layer spec
+│   ├── README.md                   # How review works
+│   └── templates/
+│       ├── review-report.md
+│       └── baseline-review.md
+├── docs/
+│   ├── operating-model.md          # Roles, responsibilities, write scope, constraints
+│   ├── memory-model.md             # Short/mid/long-term memory design
+│   ├── reading-order.md            # Which files each agent should read on startup
+│   └── human-verification.md       # Configurable human-verification points
+├── agents/
+│   ├── agent-1/
+│   │   ├── ROLE.md                 # Agent 1 role definition (canonical source of truth)
+│   │   ├── AGENTS.md               # Agent 1 workflow instructions
+│   │   └── MEMORY.md               # Agent 1 memory file
+│   ├── agent-2/
+│   │   ├── ROLE.md
+│   │   ├── AGENTS.md
+│   │   └── MEMORY.md
+│   └── agent-3/
+│       ├── ROLE.md
+│       ├── AGENTS.md
+│       └── MEMORY.md
+└── .gitignore
 ```
 
----
+## Directory Purposes
 
-## 2. Why this split is minimal
+| Directory | Purpose | M1 Mandatory? |
+|-----------|---------|:-------------:|
+| `config/` | Global configs, agent definitions, model/providers, channels | ✅ |
+| `status/` | Single source of truth for project state | ✅ |
+| `status/memory/` | Agent-specific memory directories | ✅ |
+| `dispatch/` | Task dispatch templates, rules, workflow | ✅ |
+| `review/` | Review templates, process docs | ✅ |
+| `docs/` | Operating model, memory model, verification points | ✅ |
+| `agents/` | Per-agent role definitions (single source of truth) | ✅ |
 
-- **7 top-level directories** — each maps to exactly one concern (config, agents, dispatch, status, review, memory, docs).
-- **No business logic** — this repo does not contain application code. It is purely coordination scaffolding.
-- **No protocol files** — handoff/verification protocol semantics belong to TASK-031B (baseline templates).
-- **No `00_input/`, `10_architecture/`, `20_tasks/`, `30_execution/`, `40_review/`** — those are business-repo layouts managed by the agents themselves. The control plane only dispatches and reads back.
-- **`dispatch/` is the new `20_tasks/`** — but at the control-plane level, items are file-based (one YAML or markdown per work packet), not directory trees. The control plane dispatches; agents organize their own task trees inside business repos.
+## Mandatory M1 Files
 
----
+| File | What it defines | Which agent maintains it? |
+|------|----------------|--------------------------|
+| `config/agents.yaml` | Agent capabilities, models, constraints | Agent 1 (or human) |
+| `config/rules.yaml` | Global workflow rules | Agent 1 (or human) |
+| `config/models.json` | API keys, model list | Human |
+| `config/channels.yaml` | Messaging channels | Human |
+| `status/STATUS.md` | Project state | Agent 1 (or human) |
+| `agents/agent-*/ROLE.md` | Agent role (source of truth) | Human or Agent 1 |
+| `agents/agent-*/AGENTS.md` | Agent workflow instructions | Agent 1 |
+| `agents/agent-*/MEMORY.md` | Agent memory | Agent 2/3 (self) |
+| `dispatch/templates/task-card.md` | Task card template | Agent 1 |
+| `dispatch/templates/execution-checklist.md` | Checklist template | Agent 1 |
+| `dispatch/templates/test-plan.md` | Test plan template | Agent 1 |
+| `review/templates/review-report.md` | Review report template | Agent 1 |
+| `docs/operating-model.md` | Roles, write scope, constraints | Agent 1 |
+| `docs/memory-model.md` | Memory layer design | Agent 1 |
+| `docs/reading-order.md` | What each agent reads on startup | Agent 1 |
+| `docs/human-verification.md` | Verification points config | Human |
 
-## 3. M1 mandatory files
+## Control Repo vs Business Repo Separation
 
-For the first milestone (M1), these files must exist:
+| Concern | Control Plane | Business Repo (e.g. ap-tracker) |
+|---------|--------------|----------------------------------|
+| Role definitions | `agents/agent-*/ROLE.md` (canonical) | `AGENTS.md` (synced copy) |
+| Workflow rules | `config/rules.yaml` (canonical) | `system/workflow-rules.md` (synced copy) |
+| Dispatch templates | `dispatch/templates/` | `20_tasks/` (per-project) |
+| Review templates | `review/templates/` | `40_review/` (per-project) |
+| Status | `status/STATUS.md` (global) | `STATUS.md` (per-project) |
+| Memory | `status/memory/agent-*/` (global) | `memory/agent-*/` (per-project) |
+| Execution reports | — | `30_execution/` (per-project) |
+| Source code | — | per-project repos |
+| Input files | — | `00_input/` (per-project) |
+| Architecture | — | `10_architecture/` (per-project) |
 
-| File | Why mandatory at M1 |
-|---|---|
-| `README.md` | Explains what this repo is and how to use it |
-| `config/agents.yaml` | Agent registry — without this, nothing runs |
-| `config/rules.yaml` | Write-boundary rules — without this, agents conflict |
-| `agents/*/ROLE.md` | Role declaration per agent — mirrors workspace AGENTS.md |
-| `status/STATUS.md` | Single source of truth for runtime state |
-| `dispatch/inbox/.gitkeep` | Makes the inbox directory exist from day 1 |
-| `docs/operating-model.md` | Control-flow rules |
-| `docs/memory-model.md` | Memory layer spec |
+**Key principle:** The control plane defines WHO (roles, models, rules) and HOW (templates, workflows). The business repo contains WHAT (input, execution, output, source code).
 
-M1 does NOT require:
-- `dispatch/active/` and `dispatch/done/` — these are created on first real dispatch.
-- `memory/` directories — created lazily when agents first write memory.
-- `review/` — created when Agent 3 writes first review packet.
+## Source of Truth Decision
 
----
+For role definitions, `agents/agent-*/ROLE.md` in the control repo is the canonical source of truth. The business repo's `AGENTS.md` is a synced copy that agents read locally. When the control repo updates a role, a sync mechanism copies it to all active business repos.
 
-## 4. Open questions / risks
+For workflow rules, `config/rules.yaml` is the single source of truth. Business repos have `system/workflow-rules.md` as a human-readable rendering.
 
-1. **`dispatch/` vs business-repo `20_tasks/`** — the control plane uses `dispatch/inbox → active → done` as a lifecycle pipeline. The business repo still has `20_tasks/` for task trees with checklists. Need to clarify: does `dispatch/` replace `20_tasks/`, or is it a complementary abstraction layer?
+## Report Back
 
-2. **`agents/ROLE.md` duplication** — agents already have AGENTS.md in their workspace. Having ROLE.md in the control plane as well means two sources of truth for role definition. Propose: control-plane ROLE.md is the source; workspace AGENTS.md is a symlink or copy.
-
-3. **Write-boundary enforcement** — the control plane can declare write boundaries in `rules.yaml`, but enforcement is manual (agents must comply). No runtime lock. Risk of accidental cross-boundary writes remains.
-
-4. **Config file format** — YAML vs TOML vs JSON. Suggested: YAML for human readability (consistent with existing STATUS.md YAML frontmatter convention).
-
----
-
-## Acceptance standard
-
-- [x] Clearly defines minimal repo skeleton
-- [x] Stays at M1 structure only (no protocol drift)
-- [x] Separates control-plane vs business-repo responsibilities
-- [x] Specific enough for Agent 1 to dispatch next implementation packet
+- ✅ Top-level directories defined: 7 directories
+- ✅ Purpose of each directory documented
+- ✅ Mandatory M1 files: 15 files across 7 directories
+- ✅ Clear separation between control repo (roles, rules, models, templates) and business repo (input, execution, output, code)
+- ✅ Source of truth: `agents/agent-*/ROLE.md` for roles, `config/rules.yaml` for workflow rules
+- 📄 Written to: `30_execution/TASK-031A-report.md`
