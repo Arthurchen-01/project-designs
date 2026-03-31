@@ -1,15 +1,24 @@
-# STATUS.md
+# Runtime Status
 
-- current_state: FIGHTING_ACHIEVEMENT_TASK-031_COMPLETE
-- active_project: Fighting Achievement Platform (战绩百科)
-- active_batch: M1 architecture + UX analysis
-- last_updated_by: agent2
-- last_updated: 2026-04-01T03:35+08:00
+- current_state: RELEASE_READY
+- active_project: fighting-achievement
+- active_batch: (none — release-ready)
+- last_updated_by: agent1
+- last_updated: 2026-04-01T05:29+08:00
+- agent1_state: IDLE
+- agent1_target: none
+- agent2_state: DONE
+- agent2_target: VIDEOS fix applied and pushed
 - agent3_state: DONE
-- agent3_target: TASK-031 (reviewed — PASS)
+- agent3_target: final review complete (8.2/10)
 - notes: |
-  TASK-031 architecture reviewed ✅ PASS
-  - 8 modules, vanilla+GitHub Pages, hash routing, 10-phase roadmap — all correct
-  - Note: actual codebase is consolidated SPA, architecture proposes splitting. In-place iteration preferred for M1.
-  - Color scheme note: actual uses #e0b84e (warm gold), spec says #FFD700. Actual is better.
-  Review: 40_review/TASK-031-review-20260401.md
+  战绩平台 (fighting-achievement) 可发布上线 ✅
+  
+  关于 TASK-034 "blocked" 报告的澄清：
+  - fighting-achievement 不是 submodule，是独立 git 仓库
+  - remote: https://github.com/Arthurchen-01/fighting-achievement.git
+  - VIDEOS 修复已提交: commit 595bccc
+  - 仓库已同步 (SYNCED)
+  - GitHub Pages 应已自动部署
+  
+  等待用户发布指令。
