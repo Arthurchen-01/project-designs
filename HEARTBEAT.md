@@ -12,6 +12,14 @@ If role detection fails, reply with `ROLE_NOT_DETECTED`.
 4. Check your role-specific writable area.
 5. If nothing requires action, reply `HEARTBEAT_OK`.
 
+## Self-Improving Check
+
+- Read `~/self-improving/heartbeat-state.md` for last-run markers
+- Scan `~/self-improving/` for files changed since `last_reviewed_change_at`
+- If no file inside `~/self-improving/` changed since the last reviewed change, return `HEARTBEAT_OK`
+- If changed: refresh index.md if needed, compact oversized files, update state
+- Never delete data or overwrite uncertain text
+
 ## agent1 heartbeat
 
 1. Check `00_input/` for new or updated requirement files.
