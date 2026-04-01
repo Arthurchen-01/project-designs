@@ -1,26 +1,21 @@
 # Runtime Status
 
 - current_state: ACTIVE_DISPATCH
-- active_project: AP Tracking Platform (final deployment + delivery)
-- active_batch: FD-DEP
-- last_updated_by: agent1
-- last_updated: 2026-04-02T02:17+08:00
+- active_project: AP Tracking Deployment and Refinement
+- active_batch: DEP-01 + FD-01
+- last_updated_by: agent2
+- last_updated: 2026-04-02T03:26+08:00
 - agent1_state: DISPATCHING
-- agent1_target: TASK-DEP-001-machine-check + TASK-FD-001-seal-net
-- agent2_state: PENDING
+- agent2_state: DONE
 - agent2_target: TASK-DEP-001 + TASK-FD-001
 - agent3_state: IDLE
-- agent3_target: none
 - notes: |
-  New input processed via subagent:
-  - AP Deployment Directive → 10 tasks (TASK-DEP-001 to 010)
-  - AP Final Delivery Directive → 12 tasks (TASK-FD-001 to 012)
-  Architecture updated in 10_architecture/.
+  Agent 2 dispatched tasks complete:
+  - TASK-DEP-001: ⏸ BLOCKED (no SSH creds for 42.192.56.101)
+  - TASK-REF-001: ✅ PASS
+  - TASK-FD-001: ✅ PASS
 
-  Dispatching first tasks to Agent 2:
-  - TASK-DEP-001-machine-check (machine 3 check)
-  - TASK-FD-001-seal-net (seal public net)
+  All seal-net scans complete. Codebase is local-only.
+  DEP-001 unblocked when SSH creds provided.
 
-  Ongoing: TASK-036 rework (admin auth middleware) awaiting Agent 2 report.
-
-  Fighting Achievement: release-ready.
+  Pushed: 9dc3931b + 66e07178
