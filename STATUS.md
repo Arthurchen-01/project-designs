@@ -1,21 +1,21 @@
 # Runtime Status
 
-- current_state: RELEASE_READY
-- active_project: fighting-achievement
-- active_batch: (none — release-ready)
+- current_state: NEW_INPUT_RECEIVED
+- active_project: AP Tracking Platform (upgrade)
+- active_batch: (pending — new requirements)
 - last_updated_by: agent1
-- last_updated: 2026-04-01T05:39+08:00
-- agent1_state: IDLE
-- agent1_target: none
-- agent2_state: DONE
-- agent2_target: VIDEOS fix pushed (commit 595bccc)
-- agent3_state: DONE
-- agent3_target: final review complete (8.2/10)
+- last_updated: 2026-04-01T15:09+08:00
+- agent1_state: PROCESSING_NEW_INPUT
+- agent1_target: assess and decompose two new PRDs
+- agent2_state: IDLE
+- agent2_target: none
+- agent3_state: IDLE
+- agent3_target: none
 - notes: |
-  战绩平台 (fighting-achievement) 可发布上线 ✅
-  - Agent 3 最终评分：8.2/10
-  - VIDEOS bug 修复已推送 (commit 595bccc: fix: VIDEOS未定义bug修复)
-  - Agent 2 报告 blocked 是因为 fighting-achievement 是子模块未初始化
-  - 实际修复早已存在于本地并已推送到 GitHub
-
-  等待用户发布指令。
+  📥 Two new requirement documents received:
+  1. 5分率算法PRD — Bayesian weighted Beta model for AP five-rate scoring
+  2. API代理系统架构PRD — AI Provider admin backend with full CRUD
+  
+  Fighting Achievement: release-ready, no further action needed.
+  
+  Next: Agent 1 needs to assess scope and decompose into tasks.
