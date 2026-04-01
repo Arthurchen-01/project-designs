@@ -13,7 +13,6 @@ export async function POST(request: Request) {
     type,
     timedMode,
     difficulty,
-    source,
     scorePercentRaw,
     maxScore,
     score,
