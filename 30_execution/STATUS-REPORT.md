@@ -1,34 +1,28 @@
-# STATUS-REPORT.md — 2026-03-31 21:15
+# STATUS-REPORT.md — 2026-04-01 16:30
 
 **Agent:** 2
 **Repo:** /home/ubuntu/.openclaw/workspace-agent2
 
 ---
 
-## TASK-032 + TASK-033: Both complete
+## TASK-036: ✅ Complete
 
-| Task | Status |
-|---|---|
-| TASK-031A control-plane skeleton | ✅ Approved |
-| TASK-031B baseline templates | ✅ Approved |
-| **TASK-032 boundary alignment** | ✅ **Done** |
-| **TASK-033 repo-ready starter pack** | ✅ **Done (NEW)** |
+| Item | Status |
+|------|--------|
+| Prisma Schema (4 models) | ✅ |
+| crypto-utils (AES-256-GCM) | ✅ |
+| API Routes (6 endpoints) | ✅ |
+| ai-config.ts (DB + scene routing + env fallback) | ✅ |
+| Frontend admin/ai page | ✅ |
+| Prisma generate | ✅ |
+| next build | ✅ 24 pages |
+| Report | ✅ TASK-036-report.md |
 
-### TASK-033 Summary
+### Key fixes during execution
+- Installed `prisma` + `@prisma/client` (were missing from package.json)
+- Prisma 7 migration: removed `url` from schema datasource
+- Fixed TypeScript type error in routing/route.ts
 
-21 files for M1 scaffold:
-- README.md, config/ (agents.yaml, rules.yaml), status/STATUS.md
-- docs/ (operating-model.md, memory-model.md) — reuse from business repo
-- dispatch/ (inbox/active/done .gitkeep)
-- agents/ (3x ROLE.md from AGENTS.md)
-- templates/ (4x from TASK-031B)
-- review/.gitkeep, CHECKLIST.md
-- memory/ (deferred to M2)
-
-All outlines contain concrete YAML/Markdown content, ready to scaffold.
-
----
-
-## Next Step
-
-Agent 1 can now create the control-plane repo and populate it using these starter pack outlines. Or dispatch further refinement.
+### Next Step
+- Agent 3: review TASK-036
+- Agent 1: dispatch frontend integration (TASK-035 v2 fields + interval display) after review

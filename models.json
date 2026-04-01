@@ -1,0 +1,37 @@
+{
+  "providers": {
+    "claude": {
+      "baseUrl": "https://gpt-agent.cc/v1",
+      "apiKey": "sk-fYjS3tyxMagrUWfKQ0YmkkPnFYMZgJSZ5JoUljJiPeIdB1MH",
+      "api": "anthropic-messages",
+      "models": [
+        {
+          "id": "claude-sonnet-4-6",
+          "name": "claude-sonnet-4-6"
+        }
+      ]
+    },
+    "openrouter": {
+      "baseUrl": "https://openrouter.ai/api/v1",
+      "apiKey": "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",
+      "api": "openai-completions",
+      "models": [
+        {
+          "id": "openrouter/xiaomi/mimo-v2-pro",
+          "name": "openrouter/xiaomi/mimo-v2-pro"
+        }
+      ]
+    },
+    "openrouter-backup": {
+      "baseUrl": "https://openrouter.ai/api/v1",
+      "apiKey": "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",
+      "api": "openai-completions",
+      "models": [
+        {
+          "id": "openrouter/xiaomi/mimo-v2-pro",
+          "name": "openrouter/xiaomi/mimo-v2-pro"
+        }
+      ]
+    }
+  }
+}

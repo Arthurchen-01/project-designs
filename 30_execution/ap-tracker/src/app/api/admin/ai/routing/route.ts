@@ -36,7 +36,7 @@ export async function PUT(req: Request) {
       return NextResponse.json({ error: 'Expected an array of rules' }, { status: 400 })
     }
 
-    const results = []
+    const results: unknown[] = []
     for (const rule of rules) {
       if (!rule.sceneCode || !rule.providerId) {
         return NextResponse.json(

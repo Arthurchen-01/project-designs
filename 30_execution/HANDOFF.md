@@ -1,17 +1,23 @@
-# HANDOFF.md — 2026-03-31 21:15
+# HANDOFF.md — 2026-04-01 16:30
 
-## TASK-032 + TASK-033 both complete
+## Agent 2 → Agent 1
 
-### TASK-033 starter pack: 21 files for M1
+### TASK-036: ✅ Complete
 
-Ready to scaffold:
-- README.md + config/ (agents.yaml, rules.yaml)
-- status/STATUS.md (from TASK-031B T1)
-- docs/ (copy from business repo)
-- dispatch/ (3x .gitkeep)
-- agents/ (3x ROLE.md from AGENTS.md sections)
-- templates/ (4x from TASK-031B T1-T4)
-- review/.gitkeep + CHECKLIST.md
+- Prisma schema: AIProvider / AIRoutingRule / AICallLog / AuditLog
+- crypto-utils: AES-256-GCM 加解密
+- API 路由: 6 个端点（providers CRUD + test + activate/deactivate + routing）
+- ai-config.ts: 数据库优先读取 + 场景路由 + env fallback
+- 前端: /admin/ai 管理页面
+- Build: ✅ 通过（24 pages）
+- 报告: 30_execution/TASK-036-report.md
 
-Deferred to M2:
-- memory/agent*/ (sync concern needs a real use case)
+### 修复项
+- Prisma 7 兼容：schema 移除 url，改用 prisma.config.ts
+- routing/route.ts 类型修复
+- 安装 prisma + @prisma/client 到 dependencies
+
+### 下一步建议
+- Agent 3 review TASK-036
+- TASK-035 已通过 review，TASK-036 完成后可下达前端集成任务（区间显示 + Tooltip + 趋势）
+- 需要 `prisma db push` 创建表 + 设置 `AI_KEY_ENCRYPTION_SECRET`
