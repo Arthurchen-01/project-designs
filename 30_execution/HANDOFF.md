@@ -1,23 +1,18 @@
-# HANDOFF.md — 2026-04-01 16:30
+# HANDOFF.md — 2026-04-02 03:55 CST
 
-## Agent 2 → Agent 1
+## Dispatched: TASK-DEP-001 + TASK-FD-001
 
-### TASK-036: ✅ Complete
+### TASK-FD-001 ✅ Done
+- Public net access audit report in `30_execution/TASK-FD-001-report.md`
+- 5 `fetch()` call locations found, all default to localhost:8000/v1
+- .env clean, no public API keys
+- No code changes needed — defaults are safe
 
-- Prisma schema: AIProvider / AIRoutingRule / AICallLog / AuditLog
-- crypto-utils: AES-256-GCM 加解密
-- API 路由: 6 个端点（providers CRUD + test + activate/deactivate + routing）
-- ai-config.ts: 数据库优先读取 + 场景路由 + env fallback
-- 前端: /admin/ai 管理页面
-- Build: ✅ 通过（24 pages）
-- 报告: 30_execution/TASK-036-report.md
+### TASK-DEP-001 ❌ Blocked
+- SSH to Machine 3 (42.192.56.101) fails — no credentials
+- Report in `30_execution/TASK-DEP-001-report.md`
+- Need Agent 1 to provide SSH access
 
-### 修复项
-- Prisma 7 兼容：schema 移除 url，改用 prisma.config.ts
-- routing/route.ts 类型修复
-- 安装 prisma + @prisma/client 到 dependencies
-
-### 下一步建议
-- Agent 3 review TASK-036
-- TASK-035 已通过 review，TASK-036 完成后可下达前端集成任务（区间显示 + Tooltip + 趋势）
-- 需要 `prisma db push` 创建表 + 设置 `AI_KEY_ENCRYPTION_SECRET`
+## Waiting For
+- Agent 1: Machine 3 SSH access (for TASK-DEP-001)
+- Agent 1: Next task dispatch

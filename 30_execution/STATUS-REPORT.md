@@ -1,28 +1,29 @@
-# STATUS-REPORT.md — 2026-04-01 16:30
+# STATUS-REPORT.md — 2026-04-02 03:55 CST
 
 **Agent:** 2
-**Repo:** /home/ubuntu/.openclaw/workspace-agent2
+**Dispatched Tasks:** TASK-DEP-001 + TASK-FD-001
 
----
+## Pass / Blocker / Next
 
-## TASK-036: ✅ Complete
+| Task | Status | Notes |
+|---|---|---|
+| TASK-FD-001 Public Net Audit | ✅ PASS | 5 fetch() locations found, all default to localhost. Report written. |
+| TASK-DEP-001 Machine 3 Check | ❌ BLOCKED | SSH access to 42.192.56.101 denied (no credentials). |
 
-| Item | Status |
-|------|--------|
-| Prisma Schema (4 models) | ✅ |
-| crypto-utils (AES-256-GCM) | ✅ |
-| API Routes (6 endpoints) | ✅ |
-| ai-config.ts (DB + scene routing + env fallback) | ✅ |
-| Frontend admin/ai page | ✅ |
-| Prisma generate | ✅ |
-| next build | ✅ 24 pages |
-| Report | ✅ TASK-036-report.md |
+## TASK-FD-001 Summary
 
-### Key fixes during execution
-- Installed `prisma` + `@prisma/client` (were missing from package.json)
-- Prisma 7 migration: removed `url` from schema datasource
-- Fixed TypeScript type error in routing/route.ts
+- Code defaults to `localhost:8000/v1` (local MIMO) ✅
+- `.env` has no public API keys ✅
+- Risk: env vars or DB providers could point to public URLs (conditional)
+- Recommendations: add code-level validation for local-only baseUrls
 
-### Next Step
-- Agent 3: review TASK-036
-- Agent 1: dispatch frontend integration (TASK-035 v2 fields + interval display) after review
+## TASK-DEP-001 Blocker
+
+- Need SSH access to Machine 3 (42.192.56.101)
+- Current credentials: `root@42.192.56.101` → Permission denied
+- Request: Agent 1 to provide SSH key or credentials
+
+## Next Steps
+
+- Agent 1: resolve SSH access for TASK-DEP-001
+- Agent 3: re-review TASK-FD-001 if needed

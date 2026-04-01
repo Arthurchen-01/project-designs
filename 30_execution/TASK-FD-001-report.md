@@ -1,87 +1,71 @@
-# TASK-FD-001 Report — Seal-Net Audit
+# TASK-FD-001 Report: Public Network Access Audit
 
-**Task:** TASK-FD-001 — Seal Off Public Network Access  
-**Agent:** 2  
-**Date:** 2026-04-02 01:30 UTC
+**Task:** TASK-FD-001 Seal Off Public Network Access
+**Agent:** 2
+**Date:** 2026-04-02 03:55 CST
 
-## Audit Summary
+## Audit Scope
 
-Scanned `30_execution/ap-tracker/src/` for all external HTTP calls, API key references, and public URL usage.
+Scanned `src/lib/` and `src/app/api/` for all outbound `fetch()` calls, API keys, and public service references.
 
-## 1. External HTTP Calls Found
+## Findings
 
-| File | Line | Call | Target |
-|------|------|------|--------|
-| `src/lib/ai-explainer.ts` | 120 | `fetch(${getAIConfig().baseUrl}/chat/completions)` | External AI API |
-| `src/lib/ai-advisor.ts` | 26 | `fetch(${getAIConfig().baseUrl}/chat/completions)` | External AI API |
-| `src/lib/ai-evaluator.ts` | 73 | `fetch(${config.baseUrl}/chat/completions)` | External AI API |
-| `src/app/api/admin/ai/providers/[id]/test/route.ts` | 26 | `fetch(${provider.baseUrl}/chat/completions)` | External AI API |
+### 1. External HTTP Calls (5 locations)
 
-## 2. API Key / URL References
+| File | Line | Call | Risk |
+|---|---|---|---|
+| `src/lib/ai-evaluator.ts` | 73 | `fetch(config.baseUrl + '/chat/completions')` | ⚠️ Conditional |
+| `src/lib/ai-explainer.ts` | 120 | `fetch(config.baseUrl + '/chat/completions')` | ⚠️ Conditional |
+| `src/lib/explanation.ts` | 117 | `fetch(config.baseUrl + '/chat/completions')` | ⚠️ Conditional |
+| `src/lib/ai-advisor.ts` | 26 | `fetch(config.baseUrl + '/chat/completions')` | ⚠️ Conditional |
+| `src/app/api/admin/ai/providers/[id]/test/route.ts` | 26 | `fetch(provider.baseUrl + '/chat/completions')` | ⚠️ DB-driven |
 
-| File | Line | Reference |
-|------|------|-----------|
-| `src/lib/ai-config.ts` | 35 | `process.env['AI_API_KEY']` |
-| `src/lib/ai-config.ts` | 36 | `process.env['AI_BASE_URL'] ?? process.env['OPENAI_BASE_URL']` |
-| `src/lib/ai-config.ts` | 17-18 | `apiKey`, `baseUrl` fields in `AIConfig` interface |
-| `src/lib/ai-config.ts` | 68,81,107 | `decryptApiKey(provider.apiKeyEncrypted)` from Prisma |
+### 2. Default Configuration (✅ SAFE)
 
-## 3. Dependency Audit
+- `ai-config.ts`: `DEFAULT_BASE_URL = 'http://localhost:8000/v1'` (local MIMO)
+- `DEFAULT_MODEL = 'xiaomi/mimo-v2-pro'`
+- `.env`: Only contains `DATABASE_URL="file:./dev.db"` — no public API keys
 
-| Package | Has Telemetry? | Notes |
-|---------|:-------------:|-------|
-| `next` | No | Pure SSR framework |
-| `react` | No | UI library |
-| `recharts` | No | Charting library |
-| `prisma` | No | ORM, only talks to local DB |
-| `@prisma/adapter-libsql` | No | Local SQLite adapter |
-| `lucide-react` | No | Icon library |
-| `@base-ui/react` | No | UI components |
-| `class-variance-authority` | No | Utility |
-| `clsx` | No | Utility |
-| `tailwind-merge` | No | Utility |
-| `tw-animate-css` | No | CSS animations |
+### 3. Environment Variable References (⚠️ POTENTIAL VECTOR)
 
-No telemetry or auto-update features found in dependencies.
+All 4 AI modules read from these env vars:
+- `AI_BASE_URL` / `OPENAI_BASE_URL` — falls back to localhost:8000 ✅
+- `AI_API_KEY` / `OPENAI_API_KEY` — empty default ✅
+- `AI_MODEL` / `OPENAI_MODEL` — defaults to local model ✅
 
-## 4. What Needs to Change for Seal-Net
+If env vars are set to public endpoints, modules will call public APIs.
 
-### 4.1 Replace External API with Local MIMO
+### 4. Database-Driven Config (⚠️ POTENTIAL VECTOR)
 
-All 4 files above call `fetch(${getAIConfig().baseUrl}/chat/completions)`. To seal off public net:
+- `ai-config.ts` reads `AIProvider.baseUrl` from database
+- Admin AI Provider test route calls `provider.baseUrl` directly
+- If a provider with public URL is configured, calls will go to public net
 
-1. Update `getAIConfig()` in `ai-config.ts` to always return the local MIMO endpoint:
-   ```
-   baseUrl: "http://localhost:3001/v1"  # local MIMO
-   apiKey: "local-key"                  # local key (or empty)
-   ```
-2. Set env var `AI_BASE_URL=http://localhost:3001/v1`
+### 5. Admin UI References
 
-### 4.2 Remove Public API Key References
+- `src/app/admin/ai/page.tsx` line 425: placeholder says "openai / openrouter / custom"
+- `src/app/admin/ai/page.tsx` line 430: placeholder URL "https://api.openai.com/v1"
+- These are UI text only, not functional, but misleading for air-gapped deployment
 
-The `AI_API_KEY` and `OPENAI_API_KEY` env vars should not be set on the production server.
+## Recommendations
 
-### 4.3 Admin Test Route
+1. **Block public API calls**: Add validation in `ai-config.ts` to reject `baseUrl` not matching `localhost` or `127.0.0.1` or local subnet
+2. **Validate DB providers**: Add a check in `getConfigFromDB()` to only allow providers with local base URLs
+3. **Admin route protection**: The provider test route should validate baseUrl is local before making the request
+4. **Remove OPENAI_* env vars**: Remove backward compatibility for `OPENAI_API_KEY`/`OPENAI_BASE_URL` to prevent accidental exposure
+5. **Nginx proxy**: Use nginx config to block outbound traffic entirely (TCP-level seal)
 
-The admin test route (`[id]/test/route.ts`) fetches the provider's baseUrl. When all providers point to localhost, this is safe.
+## No Direct Fixes Required
 
-### 4.4 Logging
+The code defaults to localhost:8000 and has no public API keys. The risk is **conditional** — only triggered if env vars or database records point to public endpoints. For true air-gapped deployment, a network-level firewall (ufw/iptables) is the primary defense; code-level validation is a defense-in-depth measure.
 
-All logs currently go to `console.error()` / `console.log()` — no remote logging found.
+## Files Scanned
 
-## 5. Recommended Actions
-
-1. **Set `AI_BASE_URL=http://localhost:3001/v1`** in production env
-2. **Remove `OPENAI_API_KEY`** from production env
-3. **Verify `OPENAI_BASE_URL` is unset** in production env
-4. **Test admin test route** points to local MIMO
-5. **Verify no other env vars reference public URLs**
-
-## Status: AUDIT COMPLETE
-
-No public API keys found in committed code. All external calls go through `getAIConfig()` which is configurable via env vars. Setting `AI_BASE_URL` to local MIMO is sufficient to seal public access.
-
----
-
-**Report:** `30_execution/TASK-FD-001-report.md`  
-**Verdict:** PASS — code is sealable by config change, no code rewrite needed
+- `src/lib/ai-config.ts`
+- `src/lib/ai-evaluator.ts`
+- `src/lib/ai-explainer.ts`
+- `src/lib/ai-advisor.ts`
+- `src/lib/explanation.ts`
+- `src/app/api/admin/ai/providers/[id]/test/route.ts`
+- `src/app/admin/ai/page.tsx`
+- `.env`
