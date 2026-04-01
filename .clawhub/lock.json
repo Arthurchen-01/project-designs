@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "skills": {
+    "tutorial-video-maker": {
+      "version": "2.0.1",
+      "installedAt": 1775024708832
+    },
+    "video-bearbeiten": {
+      "version": "1.0.8",
+      "installedAt": 1775024784682
+    },
+    "ffmpeg-cli": {
+      "version": "1.0.0",
+      "installedAt": 1775024827280
+    }
+  }
+}
