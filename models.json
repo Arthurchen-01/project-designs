@@ -13,7 +13,7 @@
     },
     "openrouter": {
       "baseUrl": "https://openrouter.ai/api/v1",
-      "apiKey": "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",
+      "apiKey": "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",
       "api": "openai-completions",
       "models": [
         {

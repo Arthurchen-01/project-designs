@@ -1,2 +1,8 @@
 30_execution/ap-tracker/next-env.d.ts
 30_execution/ap-tracker/package-lock.json
+
+# Protect API keys and secrets
+**/models.json
+**/auth-profiles.json
+**/.env
+**/openclaw.json

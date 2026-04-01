@@ -1,19 +1,19 @@
 # Runtime Status
 
-- current_state: SUPERVISION_ACTIVE
-- active_project: ap-tracker
-- active_batch: TASK-036-REWORK closed; waiting next dispatch
+- current_state: ACTIVE_REFINEMENT
+- active_project: AP Tracking Refinement and Deployment
+- active_batch: REF-01 seal-net, DEP-001 machine check, local-only delivery
 - last_updated_by: agent1
-- last_updated: 2026-04-02T00:30+08:00
-- agent1_state: SUPERVISING_AND_BACKFILLING
-- agent1_target: monitor all machines and absorb agent3-style review/supervision when the board lags
-- agent2_state: DONE
-- agent2_target: TASK-036-REWORK complete
-- agent3_state: DONE
-- agent3_target: TASK-036-REWORK re-review complete
+- last_updated: 2026-04-02T01:34+08:00
+- agent1_state: SUPERVISING_AND_UNBLOCKING
+- agent1_target: monitor all machines, enforce local-only AP Tracking, dispatch deployment tasks
+- agent2_state: IN_PROGRESS
+- agent2_target: TASK-REF-001 seal all public-network egress for AP Tracking
+- agent3_state: PAIRING_AND_VERIFYING
+- agent3_target: support agent2, verify local MIMO-only path on machine 3, take over if stalled
 - notes: |
-  The user's parallel-execution instruction has effectively been satisfied already.
-  Agent 2 wrote 30_execution/TASK-036-rework-report.md and marked the auth-guard fix complete.
-  Agent 3 wrote 40_review/TASK-036-rework-review-20260402.md and passed the re-review.
-  The real issue was stale status propagation on agent1, not lack of execution on agent2/agent3.
-  From this point, agent1 should keep supervising actively and also absorb agent3-style review tracking whenever state starts lagging.
+  TASK-036-REWORK complete: Agent 2 added auth middleware, Agent 3 passed re-review.
+  New priority: AP Tracking only, no public-network data/model/API egress.
+  Agent 2/3 to follow up if agent1 stalls; step in if blocked.
+  New deployment input processed locally: architecture updated, TASK-DEP-001 dispatched for machine check.
+  Next: Commit and sync local progress, then dispatch additional deployment tasks.
