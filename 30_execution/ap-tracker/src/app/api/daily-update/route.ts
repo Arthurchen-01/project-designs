@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { calculateFiveRate } from '@/lib/scoring-engine'
+import { calculateFiveRateV2 } from '@/lib/scoring-engine-v2'
 import { generateExplanation, generateExplanationWithAI } from '@/lib/explanation'
 import { evaluateDailyUpdate } from '@/lib/ai-evaluator'
 
@@ -99,15 +99,16 @@ export async function POST(req: NextRequest) {
   const prevRate = prevSnapshot?.rate ?? null
 
   let scoringResult: {
-    rate: number; confidence: string; trend: string
+    rate: number; lower: number; upper: number; confidence: string; trend: string
+    effectiveSampleSize: number
     prevRate: number | null; delta: number | null
     explanation: string; explanationSource: 'ai' | 'rule'
   } | null = null
 
   try {
     const result = aiResult
-      ? await calculateFiveRate({ studentId, subjectCode, aiQualityScore: aiResult.qualityScore })
-      : await calculateFiveRate(studentId, subjectCode)
+      ? await calculateFiveRateV2({ studentId, subjectCode, aiQualityScore: aiResult.qualityScore })
+      : await calculateFiveRateV2(studentId, subjectCode)
 
     // 获取最近 5 条活动摘要（用于 AI 解释上下文）
     const recentUpdates = await prisma.dailyUpdate.findMany({

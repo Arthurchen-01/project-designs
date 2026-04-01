@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { calculateFiveRate } from '@/lib/scoring-engine'
+import { calculateFiveRateV2 } from '@/lib/scoring-engine-v2'
 
 export async function POST(req: Request) {
   try {
@@ -11,7 +11,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'studentId and subjectCode are required' }, { status: 400 })
     }
 
-    const result = await calculateFiveRate(studentId, subjectCode)
+    const result = await calculateFiveRateV2(studentId, subjectCode)
 
     // Persist snapshot
     await prisma.probabilitySnapshot.create({
@@ -20,8 +20,8 @@ export async function POST(req: Request) {
         subjectCode,
         snapshotDate: new Date(),
         fiveRate: result.rate,
-        stabilityScore: result.stabilityScore,
-        trendScore: result.trendScore,
+        stabilityScore: 0,
+        trendScore: 0,
         decayScore: result.forgettingDecay,
         confidenceLevel: result.confidence,
       },
