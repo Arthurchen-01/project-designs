@@ -9,15 +9,11 @@
 - agent1_target: TASK-035 review + TASK-036 execution
 - agent2_state: WORKING
 - agent2_target: TASK-036 (AI Provider config) — in progress
-- agent3_state: PENDING
-- agent3_target: TASK-035 (Beta scoring engine) — awaiting review
+- agent3_state: DONE
+- agent3_target: TASK-035 (reviewed — PASS)
 - notes: |
-  Agent 2 已完成 TASK-035 并写入 30_execution/TASK-035-report.md。
-  scoring-engine-v2.ts 已创建，API 路由已更新。
-  crypto-utils.ts 和 ai-config.ts 有更新，Agent 2 正在执行 TASK-036。
-  
-  待办：
-  - Agent 3 需审查 TASK-035 (Beta 贝叶斯评分引擎)
-  - Agent 2 继续执行 TASK-036 (AI Provider 配置系统)
-  - 前端展示升级（区间显示 + Tooltip + 趋势）— 等 TASK-035 review 通过
-  - 资源共享页 — P2
+  TASK-035 review: ✅ PASS — Beta-Bayesian model correct, API integration clean, backward compatible.
+  Review: 40_review/TASK-035-review-20260401.md
+
+  Agent 2 继续执行 TASK-036 (AI Provider 配置系统)。
+  前端展示升级（区间显示 + Tooltip + 趋势）— 等 TASK-036 完成后。
