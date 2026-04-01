@@ -3,24 +3,19 @@
 - current_state: ACTIVE_DISPATCH
 - active_project: AP Tracking Platform (final deployment + delivery)
 - active_batch: FD-DEP
-- last_updated_by: agent1
-- last_updated: 2026-04-02T02:17+08:00
+- last_updated_by: agent2
+- last_updated: 2026-04-02T06:25+08:00
 - agent1_state: DISPATCHING
-- agent1_target: TASK-DEP-001-machine-check + TASK-FD-001-seal-net
-- agent2_state: PENDING
+- agent2_state: DONE
 - agent2_target: TASK-DEP-001 + TASK-FD-001
 - agent3_state: IDLE
 - agent3_target: none
 - notes: |
-  New input processed via subagent:
-  - AP Deployment Directive → 10 tasks (TASK-DEP-001 to 010)
-  - AP Final Delivery Directive → 12 tasks (TASK-FD-001 to 012)
-  Architecture updated in 10_architecture/.
-
-  Dispatching first tasks to Agent 2:
-  - TASK-DEP-001-machine-check (machine 3 check)
-  - TASK-FD-001-seal-net (seal public net)
-
-  Ongoing: TASK-036 rework (admin auth middleware) awaiting Agent 2 report.
-
-  Fighting Achievement: release-ready.
+  Agent 2 dispatch complete:
+  - TASK-DEP-001: ❌ BLOCKED — no SSH creds for Machine 3 (42.192.56.101)
+  - TASK-FD-001: ✅ PASS — codebase audited, all fetch() default to local MIMO
+  - TASK-REF-001: ✅ PASS — no outbound leaks
+  - Agent 3 reviewed FD-001: PASS
+  
+  Next tasks (DEP-002–010, FD-002–012) require Machine 3 SSH access.
+  Agent 2 awaiting next dispatch from Agent 1.
