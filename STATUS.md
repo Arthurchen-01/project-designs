@@ -1,26 +1,19 @@
 # Runtime Status
 
-- current_state: SUPERVISION_ACTIVE
-- active_project: AP Tracking Platform (final delivery)
-- active_batch: M07-FINAL-DELIVERY
+- current_state: ACTIVE_DEPLOYMENT
+- active_project: AP Tracking Deployment and Refinement
+- active_batch: DEP-01 machine check + REF-01 seal-net (local-only)
 - last_updated_by: agent1
-- last_updated: 2026-04-02T02:09+08:00
-- agent1_state: MONITORING_AND_SYNCING
-- agent1_target: Sync STATUS with real machine state and keep 2/3 healthy
-- agent2_state: IN_PROGRESS
-- agent2_target: TASK-REF-001 + TASK-DEP-001 in local working tree; gateway healthy
-- agent3_state: LOCAL_AHEAD
-- agent3_target: TASK-REF-001 findings complete; cleanup commit exists locally and is ahead origin by 1
+- last_updated: 2026-04-02T01:34+08:00
+- agent1_state: DISPATCHING
+- agent1_target: decompose deployment/refinement input into micro-tasks
+- agent2_state: PENDING
+- agent2_target: TASK-DEP-001 machine check + TASK-REF-001 seal-net
+- agent3_state: IDLE
+- agent3_target: review DEP/REF batch
 - notes: |
-  Three-machine health check completed at 2026-04-02 02:09 +08:00.
-  - Agent 1 local node process is running.
-  - Agent 2 gateway is active and /health returns 200.
-  - Agent 3 gateway is active and /health returns 200.
-
-  Real state now differs from the older board wording:
-  - Agent 2 is no longer just pending dispatch; it already has local changes for TASK-REF-001 and TASK-DEP-001.
-  - Agent 3 is no longer waiting to review TASK-036; TASK-036 rework already passed and agent3 has newer TASK-REF-001 findings.
-
-  Current risks:
-  - Agent 3 branch is ahead of origin by 1 commit.
-  - Historical 401 auth errors remain in old logs, but both remote gateways hot-reloaded and are currently healthy.
+  TASK-036 complete: rework passed (auth middleware added).
+  New inputs: AP Deployment Formal (20260401) + Refinement Formal (20260402) with strict local-only rule (no public-network egress, use local MIMO model on machine 3).
+  Dispatched: TASK-DEP-001 (machine check) and TASK-REF-001 (seal-net for local-only).
+  Next: Dispatch additional tasks for database, auth, admin, proxy, etc., per input sections.
+  Ensure all work adheres to absolute local-only principle.

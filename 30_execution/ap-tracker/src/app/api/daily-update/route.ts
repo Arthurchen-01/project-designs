@@ -8,7 +8,7 @@ import { evaluateDailyUpdate } from '@/lib/ai-evaluator'
 // GET /api/daily-update — 获取历史记录
 // ---------------------------------------------------------------------------
 export async function GET(req: NextRequest) {
-  const studentId = req.cookies.get('ap_student_id')?.value
+  const studentId = req.cookies.get('studentId')?.value
   if (!studentId) return NextResponse.json({ updates: [], error: '未登录' }, { status: 401 })
 
   const updates = await prisma.dailyUpdate.findMany({
@@ -27,7 +27,7 @@ export async function GET(req: NextRequest) {
 // POST /api/daily-update — 提交每日更新 → AI评估 → 计算5分率 → 生成解释
 // ---------------------------------------------------------------------------
 export async function POST(req: NextRequest) {
-  const studentId = req.cookies.get('ap_student_id')?.value
+  const studentId = req.cookies.get('studentId')?.value
   if (!studentId) return NextResponse.json({ error: '未登录' }, { status: 401 })
 
   const body = await req.json()

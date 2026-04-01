@@ -4,9 +4,11 @@
  * V2: 优先从数据库读取 AI Provider 配置，无配置时 fallback 到环境变量（向后兼容）。
  *
  * 环境变量（fallback）：
- *   OPENAI_API_KEY    — API 密钥
- *   OPENAI_BASE_URL   — API 基础地址（默认 https://api.openai.com/v1）
- *   OPENAI_MODEL      — 模型名称（默认 gpt-4o-mini）
+ *   AI_API_KEY    — API 密钥
+ *   AI_BASE_URL   — API 基础地址（默认 http://localhost:8000/v1，即本地小米 MIMO）
+ *   AI_MODEL      — 模型名称（默认 xiaomi/mimo-v2-pro）
+ *
+ * ⚠️ 封网原则：绝不能调用公网模型 API（OpenRouter / OpenAI 等）。
  */
 
 import { decryptApiKey } from './crypto-utils'
@@ -23,14 +25,16 @@ export interface AIConfig {
   source: 'database' | 'env'
 }
 
-const DEFAULT_BASE_URL = 'https://api.openai.com/v1'
-const DEFAULT_MODEL = 'gpt-4o-mini'
+// ⚠️ 封网：只走本地小米 MIMO，禁止公网 API
+const DEFAULT_BASE_URL = 'http://localhost:8000/v1'
+const DEFAULT_MODEL = 'xiaomi/mimo-v2-pro'
 
 // ── 环境变量 fallback ────────────────────────────────
 function getConfigFromEnv(): AIConfig {
-  const apiKey = process.env['OPENAI_API_KEY'] ?? ''
-  const baseUrl = process.env['OPENAI_BASE_URL'] ?? DEFAULT_BASE_URL
-  const model = process.env['OPENAI_MODEL'] ?? DEFAULT_MODEL
+  // 兼容旧变量名（OPENAI_*）和新变量名（AI_*）
+  const apiKey = process.env['AI_API_KEY'] ?? process.env['OPENAI_API_KEY'] ?? ''
+  const baseUrl = process.env['AI_BASE_URL'] ?? process.env['OPENAI_BASE_URL'] ?? DEFAULT_BASE_URL
+  const model = process.env['AI_MODEL'] ?? process.env['OPENAI_MODEL'] ?? DEFAULT_MODEL
   return {
     apiKey,
     baseUrl,
