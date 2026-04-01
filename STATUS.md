@@ -4,7 +4,7 @@
 - active_project: AP Tracking Platform (final deployment + delivery)
 - active_batch: FD-DEP
 - last_updated_by: agent2
-- last_updated: 2026-04-02T04:15+08:00
+- last_updated: 2026-04-02T05:15+08:00
 - agent1_state: DISPATCHING
 - agent2_state: DONE
 - agent2_target: TASK-DEP-001 + TASK-FD-001
@@ -17,7 +17,7 @@
   - TASK-REF-001: ✅ PASS — no outbound leaks
   - Agent 3 reviewed: FD-001 PASS, DEP-001 noted blocked
   
-  Next tasks (DEP-002–010, FD-002–012) require Machine 3 access.
+  Next tasks (DEP-002–010, FD-002–012) require Machine 3 SSH access.
   Agent 2 awaiting next dispatch from Agent 1.
   
-  Previous batch: TASK-036 admin auth middleware rework — already reviewed PASS by Agent 3 (commit 48dc08c).
+  TASK-036 admin auth middleware — already reviewed PASS by Agent 3.
