@@ -56,8 +56,14 @@ export interface ScoringInputV2 {
 // 配置常量
 // ---------------------------------------------------------------------------
 
-/** 科目 5 分线中心值 c（百分制） */
+/** 科目 5 分线中心值 c（百分制）— 使用数据库中的 subjectCode 格式 */
 const CUTOFF_CENTERS: Record<string, number> = {
+  'AP-MACRO': 60,
+  'AP-MICRO': 60,
+  'AP-CALC-AB': 58,
+  'AP-STAT': 62,
+  'AP-PHYS-1': 60,
+  // 兼容旧格式
   'AP Macro': 60,
   'AP Stats': 62,
   'AP Biology': 64,
@@ -205,10 +211,30 @@ interface DailyUpdateRecord {
   date: string
   score?: number | null
   totalCount?: number | null
+  correctCount?: number | null
+  timedMode?: string | null
 }
 
 interface SnapshotRecord {
   rate: number
+}
+
+/**
+ * 将 DailyUpdate 转换为 AssessmentRecord 格式，用于 scoring 计算
+ */
+function dailyUpdatesToAssessments(updates: DailyUpdateRecord[]): AssessmentRecord[] {
+  return updates
+    .filter(u => u.totalCount != null && u.totalCount > 0)
+    .map(u => {
+      const correct = u.correctCount ?? u.score ?? 0
+      return {
+        score: correct,
+        maxScore: u.totalCount!,
+        type: (u.taskType ?? 'mcq').toLowerCase(),
+        timedMode: u.timedMode ?? 'timed',
+        date: u.date,
+      }
+    })
 }
 
 async function fetchData(studentId: string, subjectCode: string) {
@@ -219,8 +245,8 @@ async function fetchData(studentId: string, subjectCode: string) {
     }) as Promise<AssessmentRecord[]>,
     prisma.dailyUpdate.findMany({
       where: { studentId, subjectCode },
-      orderBy: { date: 'desc' },
-      take: 10,
+      orderBy: { date: 'asc' },
+      take: 30,
     }) as Promise<DailyUpdateRecord[]>,
     prisma.probabilitySnapshot.findMany({
       where: { studentId, subjectCode },
@@ -228,7 +254,12 @@ async function fetchData(studentId: string, subjectCode: string) {
       take: 1,
     }) as Promise<SnapshotRecord[]>,
   ])
-  return { records, updates, snapshots }
+
+  // 合并 assessmentRecord 和 dailyUpdate（后者转为 assessment 格式）
+  const dailyAssessments = dailyUpdatesToAssessments(updates)
+  const allRecords = [...records, ...dailyAssessments]
+
+  return { records: allRecords, updates, snapshots }
 }
 
 // ---------------------------------------------------------------------------
