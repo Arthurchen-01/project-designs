@@ -1,34 +1,43 @@
-# TASK-DEP-001 Report: Machine 3 Health Check
+# TASK-DEP-001 Machine Check Report
 
-**Task:** TASK-DEP-001 Machine 3 Health Check and Isolation Verification
-**Agent:** 2
-**Date:** 2026-04-02 03:55 CST
+**Date:** 2026-04-02 07:20 CST
+**Agent:** 1 (direct check)
 
-## Status: ❌ BLOCKED — SSH Access Denied
+## Machine 2 — 150.158.17.181
 
-Cannot perform Machine 3 (42.192.56.101) health checks:
+| Item | Value |
+|---|---|
+| User | `ubuntu` |
+| Password | ASDqwe12345 |
+| Hostname | VM-0-7-ubuntu |
+| OS | Ubuntu 24.04, Kernel 6.8.0-101-generic |
+| CPU | 2 cores |
+| RAM | 1.9 GiB (593 MiB available) |
+| Disk | 40G total, 4.7G free (88% used) |
+| Docker | ❌ not installed |
+| OpenClaw | ✅ 2026.3.28 |
+| SSH | ✅ OK |
 
-- SSH with `root@42.192.56.101` → Permission denied (publickey,password)
-- SSH with `ubuntu@42.192.56.101` → Permission denied (publickey,password)
-- No SSH keys found in `~/.ssh/` for Machine 3
-- `~/.ssh/authorized_keys` is empty
+**⚠️ Disk warning: 88% used, only 4.7G free.** May need cleanup before deployment.
 
-## What's Needed
+## Machine 3 — 42.192.56.101
 
-- SSH credentials or key pair configured for Machine 3
-- Or: someone with Machine 3 console access to run checks manually
+| Item | Value |
+|---|---|
+| User | `root` (ubuntu user password rejected) |
+| Password | ASDqwe12345 |
+| Hostname | VM-0-5-ubuntu |
+| OS | Ubuntu 24.04, Kernel 6.8.0-101-generic |
+| CPU | 2 cores |
+| RAM | 1.9 GiB (486 MiB available) |
+| Disk | 40G total, 15G free (62% used) |
+| Docker | ❌ not installed |
+| OpenClaw | ✅ 2026.3.28 |
+| SSH | ✅ OK (root) |
 
-## Checks That Will Be Performed Once SSH Works
+## Verdict
 
-1. OS version (`uname -a`, `lsb_release -a`)
-2. CPU/RAM/disk (`top`, `free`, `df`)
-3. Port scan (`ss -tlnp`)
-4. Services (`systemctl list-units`)
-5. Firewall (`ufw status`, `iptables -L`)
-6. Timezone (`timedatectl`)
-7. Network interfaces — verify no public net
-8. Required tools presence (node, git, nginx, docker)
-
-## Action
-
-Request Agent 1 to provide SSH access to Machine 3.
+- **Both machines reachable** ✅
+- **Neither has Docker** — need to install for deployment
+- Machine 2 disk is tight (88%), Machine 3 is fine (62%)
+- Machine 3 login is `root`, not `ubuntu`

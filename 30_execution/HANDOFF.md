@@ -1,18 +1,29 @@
-# HANDOFF.md — 2026-04-02 03:55 CST
+# HANDOFF.md — 2026-04-02 07:20 CST
 
-## Dispatched: TASK-DEP-001 + TASK-FD-001
+## Last Completed
 
-### TASK-FD-001 ✅ Done
-- Public net access audit report in `30_execution/TASK-FD-001-report.md`
-- 5 `fetch()` call locations found, all default to localhost:8000/v1
-- .env clean, no public API keys
-- No code changes needed — defaults are safe
+| Task | Status |
+|---|---|
+| TASK-DEP-001 Machine Check | ✅ DONE |
+| TASK-FD-001 Seal Public Net | ✅ DONE (earlier) |
 
-### TASK-DEP-001 ❌ Blocked
-- SSH to Machine 3 (42.192.56.101) fails — no credentials
-- Report in `30_execution/TASK-DEP-001-report.md`
-- Need Agent 1 to provide SSH access
+## Machine Credentials (for Agent 2)
 
-## Waiting For
-- Agent 1: Machine 3 SSH access (for TASK-DEP-001)
-- Agent 1: Next task dispatch
+**Machine 2 — 150.158.17.181**
+- `ssh ubuntu@150.158.17.181` / password: `ASDqwe12345`
+
+**Machine 3 — 42.192.56.101**
+- `ssh root@42.192.56.101` / password: `ASDqwe12345`
+
+## Key Findings
+
+- Both machines: 2-core, ~2GB RAM, Ubuntu 24.04, OpenClaw 2026.3.28
+- **Neither has Docker** — needs install before containerized deployment
+- Machine 2 disk 88% full (4.7G free) — may need cleanup
+- Machine 3 disk 62% full (15G free) — OK
+
+## Next Steps (for Agent 1 to dispatch)
+
+1. **TASK-DEP-002** — Install Docker on both machines
+2. **TASK-DEP-003** — Deploy backend on Machine 3
+3. Continue through DEP-004 to 010
