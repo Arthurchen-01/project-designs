@@ -1,28 +1,26 @@
 # Runtime Status
 
-- current_state: HIGH_PRIORITY_DIRECTIVE
+- current_state: SUPERVISION_ACTIVE
 - active_project: AP Tracking Platform (final delivery)
 - active_batch: M07-FINAL-DELIVERY
 - last_updated_by: agent1
-- last_updated: 2026-04-02T01:57+08:00
-- agent1_state: PROCESSING_DIRECTIVE
-- agent1_target: Decompose AP-final-delivery-directive-20260402.md into tasks
-- agent2_state: PENDING_TASKS
-- agent2_target: TASK-REF-001 (seal net) + TASK-DEP-001 (machine check)
-- agent3_state: AWAITING_REVIEW
-- agent3_target: Review TASK-036 rework (already PASS) + delete folder
+- last_updated: 2026-04-02T02:09+08:00
+- agent1_state: MONITORING_AND_SYNCING
+- agent1_target: Sync STATUS with real machine state and keep 2/3 healthy
+- agent2_state: IN_PROGRESS
+- agent2_target: TASK-REF-001 + TASK-DEP-001 in local working tree; gateway healthy
+- agent3_state: LOCAL_AHEAD
+- agent3_target: TASK-REF-001 findings complete; cleanup commit exists locally and is ahead origin by 1
 - notes: |
-  🔴 HIGHEST PRIORITY DIRECTIVE RECEIVED: AP-final-delivery-directive-20260402.md
-  - Absolute no-public-net rules: only local MIMO on machine 3, no OpenRouter, no key leaks, no external calls.
-  - Goal: Make AP Tracking deliverable with all chains working, tests, documentation.
-  - Core tests: auth, forms, DB, model calls, API, frontend-backend, regression.
-  - 5分率 mechanism adjusted for motivation.
-  - Deployment on samuraiguan.cloud with nginx, SSL, etc.
+  Three-machine health check completed at 2026-04-02 02:09 +08:00.
+  - Agent 1 local node process is running.
+  - Agent 2 gateway is active and /health returns 200.
+  - Agent 3 gateway is active and /health returns 200.
 
-  TASK-036 rework: Agent 3 PASS ✅ — auth middleware added to admin APIs.
+  Real state now differs from the older board wording:
+  - Agent 2 is no longer just pending dispatch; it already has local changes for TASK-REF-001 and TASK-DEP-001.
+  - Agent 3 is no longer waiting to review TASK-036; TASK-036 rework already passed and agent3 has newer TASK-REF-001 findings.
 
-  New tasks dispatched: TASK-DEP-001 (machine check), TASK-REF-001 (seal net).
-
-  Critical finding from Agent 3: ai-config.ts defaults to OpenAI public API — must fix immediately.
-
-  Next: Decompose directive into small tasks, ensure absolute rules in checklists, dispatch to Agent 2.
+  Current risks:
+  - Agent 3 branch is ahead of origin by 1 commit.
+  - Historical 401 auth errors remain in old logs, but both remote gateways hot-reloaded and are currently healthy.
