@@ -47,6 +47,51 @@ export { Prisma }
  */
 export type User = Prisma.UserModel
 /**
+ * Model Class
+ * 
+ */
+export type Class = Prisma.ClassModel
+/**
+ * Model Student
+ * 
+ */
+export type Student = Prisma.StudentModel
+/**
+ * Model Subject
+ * 
+ */
+export type Subject = Prisma.SubjectModel
+/**
+ * Model StudentSubject
+ * 
+ */
+export type StudentSubject = Prisma.StudentSubjectModel
+/**
+ * Model ExamDate
+ * 
+ */
+export type ExamDate = Prisma.ExamDateModel
+/**
+ * Model AssessmentRecord
+ * 
+ */
+export type AssessmentRecord = Prisma.AssessmentRecordModel
+/**
+ * Model ProbabilitySnapshot
+ * 
+ */
+export type ProbabilitySnapshot = Prisma.ProbabilitySnapshotModel
+/**
+ * Model DailyUpdate
+ * 
+ */
+export type DailyUpdate = Prisma.DailyUpdateModel
+/**
+ * Model Resource
+ * 
+ */
+export type Resource = Prisma.ResourceModel
+/**
  * Model AIProvider
  * 
  */

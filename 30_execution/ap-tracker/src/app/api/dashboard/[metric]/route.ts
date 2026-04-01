@@ -26,10 +26,10 @@ export async function GET(
     include: {
       subjects: true,
       assessments: {
-        orderBy: { takenAt: "desc" },
+        orderBy: { date: "desc" },
       },
       snapshots: {
-        orderBy: { snapshotDate: "desc" },
+        orderBy: { updatedAt: "desc" },
       },
     },
     orderBy: { name: "asc" },
@@ -57,7 +57,7 @@ export async function GET(
       const latestSnapshots = new Map<string, number>();
       for (const snap of s.snapshots) {
         if (!latestSnapshots.has(snap.subjectCode)) {
-          latestSnapshots.set(snap.subjectCode, snap.fiveRate);
+          latestSnapshots.set(snap.subjectCode, snap.rate);
         }
       }
       const rates = Array.from(latestSnapshots.values());
@@ -97,15 +97,15 @@ export async function GET(
 
   if (metricType === "mcq") {
     const rows = students.map((s) => {
-      const mcqRecords = s.assessments.filter((a) => a.recordType === "MCQ" && a.scorePercent != null);
-      const scores = mcqRecords.map((r) => r.scorePercent!);
+      const mcqRecords = s.assessments.filter((a) => a.type === "MCQ" && a.score != null);
+      const scores = mcqRecords.map((r) => r.score!);
       const avg = scores.length > 0 ? scores.reduce((a, b) => a + b, 0) / scores.length : 0;
 
       // Group by subject for latest
       const bySubject = new Map<string, number[]>();
       for (const r of mcqRecords) {
         if (!bySubject.has(r.subjectCode)) bySubject.set(r.subjectCode, []);
-        bySubject.get(r.subjectCode)!.push(r.scorePercent!);
+        bySubject.get(r.subjectCode)!.push(r.score!);
       }
       const latestPerSubject = Array.from(bySubject.values()).map((arr) => arr[0]);
 
@@ -130,14 +130,14 @@ export async function GET(
 
   if (metricType === "frq") {
     const rows = students.map((s) => {
-      const frqRecords = s.assessments.filter((a) => a.recordType === "FRQ" && a.scorePercent != null);
-      const scores = frqRecords.map((r) => r.scorePercent!);
+      const frqRecords = s.assessments.filter((a) => a.type === "FRQ" && a.score != null);
+      const scores = frqRecords.map((r) => r.score!);
       const avg = scores.length > 0 ? scores.reduce((a, b) => a + b, 0) / scores.length : 0;
 
       const bySubject = new Map<string, number[]>();
       for (const r of frqRecords) {
         if (!bySubject.has(r.subjectCode)) bySubject.set(r.subjectCode, []);
-        bySubject.get(r.subjectCode)!.push(r.scorePercent!);
+        bySubject.get(r.subjectCode)!.push(r.score!);
       }
       const latestPerSubject = Array.from(bySubject.values()).map((arr) => arr[0]);
 

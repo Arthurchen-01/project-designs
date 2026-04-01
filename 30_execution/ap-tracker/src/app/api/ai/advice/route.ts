@@ -13,47 +13,31 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: '未指定学生' }, { status: 400 })
   }
 
-  // Fetch student with subjects and snapshots
   const student = await prisma.student.findUnique({
     where: { id: sid },
-    include: {
-      subjects: true,
-    },
+    include: { enrollments: { include: { subject: true } } },
   })
 
   if (!student) {
     return NextResponse.json({ error: '学生不存在' }, { status: 404 })
   }
 
-  // Build subject briefs from snapshots
   const subjects: StudentContext['subjects'] = []
-  for (const sub of student.subjects) {
+  for (const enrollment of student.enrollments) {
     const snapshots = await prisma.probabilitySnapshot.findMany({
-      where: { studentId: sid, subjectCode: sub.subjectCode },
-      orderBy: { snapshotDate: 'desc' },
+      where: { studentId: sid, subjectCode: enrollment.subjectCode },
+      orderBy: { updatedAt: 'desc' },
       take: 5,
     })
 
-    const latestRate =
-      snapshots.length > 0 ? Math.round(snapshots[0].fiveRate * 100) : 0
+    const latestRate = snapshots.length > 0 ? Math.round(snapshots[0].rate * 100) : 0
 
-    // Simple trend: compare latest to oldest
     let trend = 0
     if (snapshots.length >= 2) {
-      trend =
-        Math.round(snapshots[0].fiveRate * 100) -
-        Math.round(snapshots[snapshots.length - 1].fiveRate * 100)
+      trend = Math.round(snapshots[0].rate * 100) - Math.round(snapshots[snapshots.length - 1].rate * 100)
     }
 
-    const confidenceLevel =
-      latestRate >= 75 ? '高' : latestRate >= 55 ? '中' : '低'
-
-    // Find weakest units (from assessment records)
-    const recentRecords = await prisma.assessmentRecord.findMany({
-      where: { studentId: sid, subjectCode: sub.subjectCode },
-      orderBy: { takenAt: 'desc' },
-      take: 10,
-    })
+    const confidenceLevel = latestRate >= 75 ? '高' : latestRate >= 55 ? '中' : '低'
 
     const weakestUnits: string[] = []
     if (latestRate < 60) {
@@ -61,7 +45,7 @@ export async function GET(request: Request) {
     }
 
     subjects.push({
-      code: sub.subjectCode,
+      code: enrollment.subjectCode,
       fiveRate: latestRate,
       confidenceLevel,
       trend,
@@ -69,38 +53,33 @@ export async function GET(request: Request) {
     })
   }
 
-  // Check recent activity
   const lastUpdate = await prisma.dailyUpdate.findFirst({
     where: { studentId: sid },
-    orderBy: { updateDate: 'desc' },
-    select: { updateDate: true },
+    orderBy: { date: 'desc' },
+    select: { date: true },
   })
 
   let recentActivity = 'active'
   if (lastUpdate) {
-    const daysSince = Math.floor(
-      (Date.now() - lastUpdate.updateDate.getTime()) / (1000 * 60 * 60 * 24),
-    )
+    const today = new Date().toISOString().slice(0, 10)
+    const daysSince = Math.floor((new Date(today).getTime() - new Date(lastUpdate.date).getTime()) / 86400000)
     if (daysSince > 3) recentActivity = 'inactive'
   } else {
     recentActivity = 'inactive'
   }
 
-  // Nearest exam
-  const classInfo = await prisma.class.findUnique({
-    where: { id: student.classId },
-    include: { examDates: true },
+  // Find nearest exam from all subjects the student is enrolled in
+  const subjectCodes = student.enrollments.map(e => e.subjectCode)
+  const examDates = await prisma.examDate.findMany({
+    where: { subjectCode: { in: subjectCodes } },
   })
 
   let daysUntilNearestExam = 999
-  if (classInfo) {
-    for (const exam of classInfo.examDates) {
-      const days = Math.floor(
-        (exam.examDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24),
-      )
-      if (days >= 0 && days < daysUntilNearestExam) {
-        daysUntilNearestExam = days
-      }
+  const today = new Date()
+  for (const exam of examDates) {
+    const days = Math.floor((new Date(exam.date).getTime() - today.getTime()) / 86400000)
+    if (days >= 0 && days < daysUntilNearestExam) {
+      daysUntilNearestExam = days
     }
   }
 

@@ -10,20 +10,20 @@ export async function POST(request: Request) {
   const {
     studentId,
     subjectCode,
-    recordType,
+    type,
     timedMode,
     difficulty,
     source,
     scoreRaw,
-    scorePercent,
-    takenAt,
+    score,
+    date,
   } = body;
 
   const sid = studentId || currentStudentId;
   if (!sid) {
     return NextResponse.json({ error: "未指定学生" }, { status: 400 });
   }
-  if (!subjectCode || !recordType) {
+  if (!subjectCode || !type) {
     return NextResponse.json({ error: "缺少必填字段" }, { status: 400 });
   }
 
@@ -31,13 +31,13 @@ export async function POST(request: Request) {
     data: {
       studentId: sid,
       subjectCode,
-      recordType,
+      type,
       timedMode: timedMode || "timed",
       difficulty: difficulty || "medium",
       source: source || null,
       scoreRaw: scoreRaw !== "" && scoreRaw != null ? parseFloat(scoreRaw) : null,
-      scorePercent: scorePercent !== "" && scorePercent != null ? parseFloat(scorePercent) : null,
-      takenAt: takenAt ? new Date(takenAt) : new Date(),
+      score: score !== "" && score != null ? parseFloat(score) : null,
+      date: date ? new Date(date) : new Date(),
     },
   });
 
@@ -56,7 +56,7 @@ export async function GET(request: Request) {
 
   const records = await prisma.assessmentRecord.findMany({
     where: { studentId: sid },
-    orderBy: { takenAt: "desc" },
+    orderBy: { date: "desc" },
     take: 50,
   });
 

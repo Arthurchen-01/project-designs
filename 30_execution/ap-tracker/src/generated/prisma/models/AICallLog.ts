@@ -513,14 +513,6 @@ export type AICallLogUncheckedUpdateManyWithoutProviderNestedInput = {
   deleteMany?: Prisma.AICallLogScalarWhereInput | Prisma.AICallLogScalarWhereInput[]
 }
 
-export type NullableIntFieldUpdateOperationsInput = {
-  set?: number | null
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
 export type AICallLogCreateWithoutProviderInput = {
   id?: string
   sceneCode: string

@@ -52,6 +52,15 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   User: 'User',
+  Class: 'Class',
+  Student: 'Student',
+  Subject: 'Subject',
+  StudentSubject: 'StudentSubject',
+  ExamDate: 'ExamDate',
+  AssessmentRecord: 'AssessmentRecord',
+  ProbabilitySnapshot: 'ProbabilitySnapshot',
+  DailyUpdate: 'DailyUpdate',
+  Resource: 'Resource',
   AIProvider: 'AIProvider',
   AIRoutingRule: 'AIRoutingRule',
   AICallLog: 'AICallLog',
@@ -84,6 +93,115 @@ export const UserScalarFieldEnum = {
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const ClassScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  season: 'season'
+} as const
+
+export type ClassScalarFieldEnum = (typeof ClassScalarFieldEnum)[keyof typeof ClassScalarFieldEnum]
+
+
+export const StudentScalarFieldEnum = {
+  id: 'id',
+  classId: 'classId',
+  name: 'name',
+  gender: 'gender'
+} as const
+
+export type StudentScalarFieldEnum = (typeof StudentScalarFieldEnum)[keyof typeof StudentScalarFieldEnum]
+
+
+export const SubjectScalarFieldEnum = {
+  code: 'code',
+  name: 'name',
+  color: 'color'
+} as const
+
+export type SubjectScalarFieldEnum = (typeof SubjectScalarFieldEnum)[keyof typeof SubjectScalarFieldEnum]
+
+
+export const StudentSubjectScalarFieldEnum = {
+  id: 'id',
+  studentId: 'studentId',
+  subjectCode: 'subjectCode'
+} as const
+
+export type StudentSubjectScalarFieldEnum = (typeof StudentSubjectScalarFieldEnum)[keyof typeof StudentSubjectScalarFieldEnum]
+
+
+export const ExamDateScalarFieldEnum = {
+  id: 'id',
+  date: 'date',
+  subjectCode: 'subjectCode'
+} as const
+
+export type ExamDateScalarFieldEnum = (typeof ExamDateScalarFieldEnum)[keyof typeof ExamDateScalarFieldEnum]
+
+
+export const AssessmentRecordScalarFieldEnum = {
+  id: 'id',
+  studentId: 'studentId',
+  subjectCode: 'subjectCode',
+  type: 'type',
+  timedMode: 'timedMode',
+  score: 'score',
+  maxScore: 'maxScore',
+  date: 'date',
+  difficulty: 'difficulty'
+} as const
+
+export type AssessmentRecordScalarFieldEnum = (typeof AssessmentRecordScalarFieldEnum)[keyof typeof AssessmentRecordScalarFieldEnum]
+
+
+export const ProbabilitySnapshotScalarFieldEnum = {
+  id: 'id',
+  studentId: 'studentId',
+  subjectCode: 'subjectCode',
+  rate: 'rate',
+  confidence: 'confidence',
+  trend: 'trend',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ProbabilitySnapshotScalarFieldEnum = (typeof ProbabilitySnapshotScalarFieldEnum)[keyof typeof ProbabilitySnapshotScalarFieldEnum]
+
+
+export const DailyUpdateScalarFieldEnum = {
+  id: 'id',
+  studentId: 'studentId',
+  subjectCode: 'subjectCode',
+  date: 'date',
+  taskType: 'taskType',
+  timedMode: 'timedMode',
+  score: 'score',
+  totalCount: 'totalCount',
+  correctCount: 'correctCount',
+  timeMinutes: 'timeMinutes',
+  unit: 'unit',
+  notes: 'notes',
+  createdAt: 'createdAt'
+} as const
+
+export type DailyUpdateScalarFieldEnum = (typeof DailyUpdateScalarFieldEnum)[keyof typeof DailyUpdateScalarFieldEnum]
+
+
+export const ResourceScalarFieldEnum = {
+  id: 'id',
+  uploaderId: 'uploaderId',
+  subjectCode: 'subjectCode',
+  title: 'title',
+  type: 'type',
+  unit: 'unit',
+  description: 'description',
+  url: 'url',
+  likes: 'likes',
+  createdAt: 'createdAt'
+} as const
+
+export type ResourceScalarFieldEnum = (typeof ResourceScalarFieldEnum)[keyof typeof ResourceScalarFieldEnum]
 
 
 export const AIProviderScalarFieldEnum = {

@@ -9,6 +9,15 @@
  * 🟢 You can import this file directly.
  */
 export type * from './models/User'
+export type * from './models/Class'
+export type * from './models/Student'
+export type * from './models/Subject'
+export type * from './models/StudentSubject'
+export type * from './models/ExamDate'
+export type * from './models/AssessmentRecord'
+export type * from './models/ProbabilitySnapshot'
+export type * from './models/DailyUpdate'
+export type * from './models/Resource'
 export type * from './models/AIProvider'
 export type * from './models/AIRoutingRule'
 export type * from './models/AICallLog'

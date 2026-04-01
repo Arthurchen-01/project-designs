@@ -20,7 +20,7 @@ export async function GET(request: Request) {
   // Average five-rate from ProbabilitySnapshot (latest snapshot per student-subject)
   const snapshots = await prisma.probabilitySnapshot.findMany({
     where: { student: { classId } },
-    orderBy: { snapshotDate: "desc" },
+    orderBy: { updatedAt: "desc" },
   });
 
   // Deduplicate: keep only the latest snapshot per (studentId, subjectCode)
@@ -28,14 +28,14 @@ export async function GET(request: Request) {
   for (const snap of snapshots) {
     const key = `${snap.studentId}-${snap.subjectCode}`;
     if (!latestSnapshots.has(key)) {
-      latestSnapshots.set(key, snap.fiveRate);
+      latestSnapshots.set(key, snap.rate);
     }
   }
-  const fiveRates = Array.from(latestSnapshots.values());
+  const rates = Array.from(latestSnapshots.values());
   const avgFiveRate =
-    fiveRates.length > 0
+    rates.length > 0
       ? Math.round(
-          (fiveRates.reduce((a, b) => a + b, 0) / fiveRates.length) * 100
+          (rates.reduce((a, b) => a + b, 0) / rates.length) * 100
         )
       : 0;
 
