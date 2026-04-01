@@ -37,7 +37,7 @@ export async function GET(req: NextRequest) {
     for (const e of enrollments) {
       const recs = records.filter(r => r.studentId === e.studentId && r.subjectCode === e.subjectCode).slice(0, 5)
       if (recs.length < 3) continue
-      const vals = recs.map(r => r.score / r.maxScore)
+      const vals = recs.map(r => (r.score ?? 0) / (r.maxScore ?? 1))
       const mean = vals.reduce((a, b) => a + b, 0) / vals.length
       const variance = vals.reduce((s, v) => s + (v - mean) ** 2, 0) / vals.length
       const std = Math.sqrt(variance)

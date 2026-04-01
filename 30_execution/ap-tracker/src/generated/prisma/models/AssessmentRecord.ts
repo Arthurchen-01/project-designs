@@ -213,8 +213,8 @@ export type AssessmentRecordGroupByOutputType = {
   subjectCode: string
   type: string
   timedMode: string
-  score: number
-  maxScore: number
+  score: number | null
+  maxScore: number | null
   date: string
   difficulty: string | null
   _count: AssessmentRecordCountAggregateOutputType | null
@@ -248,8 +248,8 @@ export type AssessmentRecordWhereInput = {
   subjectCode?: Prisma.StringFilter<"AssessmentRecord"> | string
   type?: Prisma.StringFilter<"AssessmentRecord"> | string
   timedMode?: Prisma.StringFilter<"AssessmentRecord"> | string
-  score?: Prisma.IntFilter<"AssessmentRecord"> | number
-  maxScore?: Prisma.IntFilter<"AssessmentRecord"> | number
+  score?: Prisma.IntNullableFilter<"AssessmentRecord"> | number | null
+  maxScore?: Prisma.IntNullableFilter<"AssessmentRecord"> | number | null
   date?: Prisma.StringFilter<"AssessmentRecord"> | string
   difficulty?: Prisma.StringNullableFilter<"AssessmentRecord"> | string | null
   student?: Prisma.XOR<Prisma.StudentScalarRelationFilter, Prisma.StudentWhereInput>
@@ -262,8 +262,8 @@ export type AssessmentRecordOrderByWithRelationInput = {
   subjectCode?: Prisma.SortOrder
   type?: Prisma.SortOrder
   timedMode?: Prisma.SortOrder
-  score?: Prisma.SortOrder
-  maxScore?: Prisma.SortOrder
+  score?: Prisma.SortOrderInput | Prisma.SortOrder
+  maxScore?: Prisma.SortOrderInput | Prisma.SortOrder
   date?: Prisma.SortOrder
   difficulty?: Prisma.SortOrderInput | Prisma.SortOrder
   student?: Prisma.StudentOrderByWithRelationInput
@@ -279,8 +279,8 @@ export type AssessmentRecordWhereUniqueInput = Prisma.AtLeast<{
   subjectCode?: Prisma.StringFilter<"AssessmentRecord"> | string
   type?: Prisma.StringFilter<"AssessmentRecord"> | string
   timedMode?: Prisma.StringFilter<"AssessmentRecord"> | string
-  score?: Prisma.IntFilter<"AssessmentRecord"> | number
-  maxScore?: Prisma.IntFilter<"AssessmentRecord"> | number
+  score?: Prisma.IntNullableFilter<"AssessmentRecord"> | number | null
+  maxScore?: Prisma.IntNullableFilter<"AssessmentRecord"> | number | null
   date?: Prisma.StringFilter<"AssessmentRecord"> | string
   difficulty?: Prisma.StringNullableFilter<"AssessmentRecord"> | string | null
   student?: Prisma.XOR<Prisma.StudentScalarRelationFilter, Prisma.StudentWhereInput>
@@ -293,8 +293,8 @@ export type AssessmentRecordOrderByWithAggregationInput = {
   subjectCode?: Prisma.SortOrder
   type?: Prisma.SortOrder
   timedMode?: Prisma.SortOrder
-  score?: Prisma.SortOrder
-  maxScore?: Prisma.SortOrder
+  score?: Prisma.SortOrderInput | Prisma.SortOrder
+  maxScore?: Prisma.SortOrderInput | Prisma.SortOrder
   date?: Prisma.SortOrder
   difficulty?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.AssessmentRecordCountOrderByAggregateInput
@@ -313,8 +313,8 @@ export type AssessmentRecordScalarWhereWithAggregatesInput = {
   subjectCode?: Prisma.StringWithAggregatesFilter<"AssessmentRecord"> | string
   type?: Prisma.StringWithAggregatesFilter<"AssessmentRecord"> | string
   timedMode?: Prisma.StringWithAggregatesFilter<"AssessmentRecord"> | string
-  score?: Prisma.IntWithAggregatesFilter<"AssessmentRecord"> | number
-  maxScore?: Prisma.IntWithAggregatesFilter<"AssessmentRecord"> | number
+  score?: Prisma.IntNullableWithAggregatesFilter<"AssessmentRecord"> | number | null
+  maxScore?: Prisma.IntNullableWithAggregatesFilter<"AssessmentRecord"> | number | null
   date?: Prisma.StringWithAggregatesFilter<"AssessmentRecord"> | string
   difficulty?: Prisma.StringNullableWithAggregatesFilter<"AssessmentRecord"> | string | null
 }
@@ -323,8 +323,8 @@ export type AssessmentRecordCreateInput = {
   id?: string
   type: string
   timedMode: string
-  score: number
-  maxScore: number
+  score?: number | null
+  maxScore?: number | null
   date: string
   difficulty?: string | null
   student: Prisma.StudentCreateNestedOneWithoutScoresInput
@@ -337,8 +337,8 @@ export type AssessmentRecordUncheckedCreateInput = {
   subjectCode: string
   type: string
   timedMode: string
-  score: number
-  maxScore: number
+  score?: number | null
+  maxScore?: number | null
   date: string
   difficulty?: string | null
 }
@@ -347,8 +347,8 @@ export type AssessmentRecordUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
   timedMode?: Prisma.StringFieldUpdateOperationsInput | string
-  score?: Prisma.IntFieldUpdateOperationsInput | number
-  maxScore?: Prisma.IntFieldUpdateOperationsInput | number
+  score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   date?: Prisma.StringFieldUpdateOperationsInput | string
   difficulty?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   student?: Prisma.StudentUpdateOneRequiredWithoutScoresNestedInput
@@ -361,8 +361,8 @@ export type AssessmentRecordUncheckedUpdateInput = {
   subjectCode?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
   timedMode?: Prisma.StringFieldUpdateOperationsInput | string
-  score?: Prisma.IntFieldUpdateOperationsInput | number
-  maxScore?: Prisma.IntFieldUpdateOperationsInput | number
+  score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   date?: Prisma.StringFieldUpdateOperationsInput | string
   difficulty?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
@@ -373,8 +373,8 @@ export type AssessmentRecordCreateManyInput = {
   subjectCode: string
   type: string
   timedMode: string
-  score: number
-  maxScore: number
+  score?: number | null
+  maxScore?: number | null
   date: string
   difficulty?: string | null
 }
@@ -383,8 +383,8 @@ export type AssessmentRecordUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
   timedMode?: Prisma.StringFieldUpdateOperationsInput | string
-  score?: Prisma.IntFieldUpdateOperationsInput | number
-  maxScore?: Prisma.IntFieldUpdateOperationsInput | number
+  score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   date?: Prisma.StringFieldUpdateOperationsInput | string
   difficulty?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
@@ -395,8 +395,8 @@ export type AssessmentRecordUncheckedUpdateManyInput = {
   subjectCode?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
   timedMode?: Prisma.StringFieldUpdateOperationsInput | string
-  score?: Prisma.IntFieldUpdateOperationsInput | number
-  maxScore?: Prisma.IntFieldUpdateOperationsInput | number
+  score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   date?: Prisma.StringFieldUpdateOperationsInput | string
   difficulty?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
@@ -541,8 +541,8 @@ export type AssessmentRecordUncheckedUpdateManyWithoutSubjectNestedInput = {
   deleteMany?: Prisma.AssessmentRecordScalarWhereInput | Prisma.AssessmentRecordScalarWhereInput[]
 }
 
-export type IntFieldUpdateOperationsInput = {
-  set?: number
+export type NullableIntFieldUpdateOperationsInput = {
+  set?: number | null
   increment?: number
   decrement?: number
   multiply?: number
@@ -553,8 +553,8 @@ export type AssessmentRecordCreateWithoutStudentInput = {
   id?: string
   type: string
   timedMode: string
-  score: number
-  maxScore: number
+  score?: number | null
+  maxScore?: number | null
   date: string
   difficulty?: string | null
   subject: Prisma.SubjectCreateNestedOneWithoutScoresInput
@@ -565,8 +565,8 @@ export type AssessmentRecordUncheckedCreateWithoutStudentInput = {
   subjectCode: string
   type: string
   timedMode: string
-  score: number
-  maxScore: number
+  score?: number | null
+  maxScore?: number | null
   date: string
   difficulty?: string | null
 }
@@ -605,8 +605,8 @@ export type AssessmentRecordScalarWhereInput = {
   subjectCode?: Prisma.StringFilter<"AssessmentRecord"> | string
   type?: Prisma.StringFilter<"AssessmentRecord"> | string
   timedMode?: Prisma.StringFilter<"AssessmentRecord"> | string
-  score?: Prisma.IntFilter<"AssessmentRecord"> | number
-  maxScore?: Prisma.IntFilter<"AssessmentRecord"> | number
+  score?: Prisma.IntNullableFilter<"AssessmentRecord"> | number | null
+  maxScore?: Prisma.IntNullableFilter<"AssessmentRecord"> | number | null
   date?: Prisma.StringFilter<"AssessmentRecord"> | string
   difficulty?: Prisma.StringNullableFilter<"AssessmentRecord"> | string | null
 }
@@ -615,8 +615,8 @@ export type AssessmentRecordCreateWithoutSubjectInput = {
   id?: string
   type: string
   timedMode: string
-  score: number
-  maxScore: number
+  score?: number | null
+  maxScore?: number | null
   date: string
   difficulty?: string | null
   student: Prisma.StudentCreateNestedOneWithoutScoresInput
@@ -627,8 +627,8 @@ export type AssessmentRecordUncheckedCreateWithoutSubjectInput = {
   studentId: string
   type: string
   timedMode: string
-  score: number
-  maxScore: number
+  score?: number | null
+  maxScore?: number | null
   date: string
   difficulty?: string | null
 }
@@ -663,8 +663,8 @@ export type AssessmentRecordCreateManyStudentInput = {
   subjectCode: string
   type: string
   timedMode: string
-  score: number
-  maxScore: number
+  score?: number | null
+  maxScore?: number | null
   date: string
   difficulty?: string | null
 }
@@ -673,8 +673,8 @@ export type AssessmentRecordUpdateWithoutStudentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
   timedMode?: Prisma.StringFieldUpdateOperationsInput | string
-  score?: Prisma.IntFieldUpdateOperationsInput | number
-  maxScore?: Prisma.IntFieldUpdateOperationsInput | number
+  score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   date?: Prisma.StringFieldUpdateOperationsInput | string
   difficulty?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   subject?: Prisma.SubjectUpdateOneRequiredWithoutScoresNestedInput
@@ -685,8 +685,8 @@ export type AssessmentRecordUncheckedUpdateWithoutStudentInput = {
   subjectCode?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
   timedMode?: Prisma.StringFieldUpdateOperationsInput | string
-  score?: Prisma.IntFieldUpdateOperationsInput | number
-  maxScore?: Prisma.IntFieldUpdateOperationsInput | number
+  score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   date?: Prisma.StringFieldUpdateOperationsInput | string
   difficulty?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
@@ -696,8 +696,8 @@ export type AssessmentRecordUncheckedUpdateManyWithoutStudentInput = {
   subjectCode?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
   timedMode?: Prisma.StringFieldUpdateOperationsInput | string
-  score?: Prisma.IntFieldUpdateOperationsInput | number
-  maxScore?: Prisma.IntFieldUpdateOperationsInput | number
+  score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   date?: Prisma.StringFieldUpdateOperationsInput | string
   difficulty?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
@@ -707,8 +707,8 @@ export type AssessmentRecordCreateManySubjectInput = {
   studentId: string
   type: string
   timedMode: string
-  score: number
-  maxScore: number
+  score?: number | null
+  maxScore?: number | null
   date: string
   difficulty?: string | null
 }
@@ -717,8 +717,8 @@ export type AssessmentRecordUpdateWithoutSubjectInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
   timedMode?: Prisma.StringFieldUpdateOperationsInput | string
-  score?: Prisma.IntFieldUpdateOperationsInput | number
-  maxScore?: Prisma.IntFieldUpdateOperationsInput | number
+  score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   date?: Prisma.StringFieldUpdateOperationsInput | string
   difficulty?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   student?: Prisma.StudentUpdateOneRequiredWithoutScoresNestedInput
@@ -729,8 +729,8 @@ export type AssessmentRecordUncheckedUpdateWithoutSubjectInput = {
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
   timedMode?: Prisma.StringFieldUpdateOperationsInput | string
-  score?: Prisma.IntFieldUpdateOperationsInput | number
-  maxScore?: Prisma.IntFieldUpdateOperationsInput | number
+  score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   date?: Prisma.StringFieldUpdateOperationsInput | string
   difficulty?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
@@ -740,8 +740,8 @@ export type AssessmentRecordUncheckedUpdateManyWithoutSubjectInput = {
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   type?: Prisma.StringFieldUpdateOperationsInput | string
   timedMode?: Prisma.StringFieldUpdateOperationsInput | string
-  score?: Prisma.IntFieldUpdateOperationsInput | number
-  maxScore?: Prisma.IntFieldUpdateOperationsInput | number
+  score?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  maxScore?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   date?: Prisma.StringFieldUpdateOperationsInput | string
   difficulty?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
@@ -828,8 +828,8 @@ export type $AssessmentRecordPayload<ExtArgs extends runtime.Types.Extensions.In
     subjectCode: string
     type: string
     timedMode: string
-    score: number
-    maxScore: number
+    score: number | null
+    maxScore: number | null
     date: string
     difficulty: string | null
   }, ExtArgs["result"]["assessmentRecord"]>

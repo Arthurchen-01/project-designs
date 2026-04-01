@@ -179,7 +179,7 @@ function applyReviewAdjustment(rate: number, aiQualityScore: number | undefined,
 
 function estimateTrend(records: { score: number; maxScore: number }[]): 'rising' | 'stable' | 'falling' {
   if (records.length < 3) return 'stable'
-  const vals = records.slice(-5).map(r => r.score / r.maxScore)
+  const vals = records.slice(-5).map(r => (r.score ?? 0) / (r.maxScore ?? 1))
   const n = vals.length
   const xm = (n - 1) / 2
   const ym = vals.reduce((a, b) => a + b, 0) / n
@@ -286,7 +286,7 @@ export async function calculateFiveRateV2(
   let failEvidence = 0
 
   for (const r of records) {
-    const scoreRate = r.maxScore > 0 ? r.score / r.maxScore : 0
+    const scoreRate = r.maxScore > 0 ? (r.score ?? 0) / (r.maxScore ?? 1) : 0
     const q = logisticSupport(scoreRate, cutoff)
     const w = calcWeight(r.type, r.timedMode)
     const m = calcInfo(r.type)

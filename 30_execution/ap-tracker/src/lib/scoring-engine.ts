@@ -42,14 +42,14 @@ function testPerformance(records: { score: number; maxScore: number; type: strin
     const w = (TYPE_WEIGHTS[r.type as keyof typeof TYPE_WEIGHTS] ?? 1.0)
              * (TIMED_MULT[r.timedMode as keyof typeof TIMED_MULT] ?? 0.7)
              * (DIFF_WEIGHTS[r.difficulty as keyof typeof DIFF_WEIGHTS] ?? 1.0)
-    sum += (r.score / r.maxScore) * w; weight += w
+    sum += ((r.score ?? 0) / (r.maxScore ?? 1)) * w; weight += w
   }
   return { score: weight > 0 ? sum / weight : 0, count: recent.length }
 }
 
 function trendScore(records: { score: number; maxScore: number }[]): number {
   if (records.length < 3) return 0.5
-  const vals = records.slice(-5).map(r => r.score / r.maxScore)
+  const vals = records.slice(-5).map(r => (r.score ?? 0) / (r.maxScore ?? 1))
   const n = vals.length, xm = (n - 1) / 2, ym = vals.reduce((a, b) => a + b, 0) / n
   let num = 0, den = 0
   for (let i = 0; i < n; i++) { num += (i - xm) * (vals[i] - ym); den += (i - xm) ** 2 }
@@ -59,7 +59,7 @@ function trendScore(records: { score: number; maxScore: number }[]): number {
 
 function stabilityScore(records: { score: number; maxScore: number }[]): number {
   if (records.length < 2) return 0.5
-  const vals = records.slice(-10).map(r => r.score / r.maxScore)
+  const vals = records.slice(-10).map(r => (r.score ?? 0) / (r.maxScore ?? 1))
   const mean = vals.reduce((a, b) => a + b, 0) / vals.length
   const variance = vals.reduce((s, v) => s + (v - mean) ** 2, 0) / vals.length
   return Math.max(0, 1 - Math.sqrt(variance) * 3)
@@ -109,11 +109,12 @@ export async function calculateFiveRate(
 
   const { studentId, subjectCode: sc, aiQualityScore } = input
   const { records, updates, snapshots } = await fetchData(studentId, sc)
-  const tp   = testPerformance(records)
-  const ts   = trendScore(records)
-  const ss   = stabilityScore(records)
+  const validRecords = records.filter(r => r.score != null && r.maxScore != null).map(r => ({ ...r, score: r.score!, maxScore: r.maxScore! }))
+  const tp   = testPerformance(validRecords)
+  const ts   = trendScore(validRecords)
+  const ss   = stabilityScore(validRecords)
   const rq   = aiQualityScore != null ? aiQualityScore : reviewQuality(updates)
-  const decay = forgettingDecay(records, updates)
+  const decay = forgettingDecay(validRecords, updates)
   const histMax = snapshots.length ? Math.max(...snapshots.map(s => s.rate)) : 1.0
   // Compute days since last record for recency-aware confidence
   const lastRecordDate = records.length > 0 ? records[records.length - 1].date : null
