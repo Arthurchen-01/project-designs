@@ -1,19 +1,19 @@
 # Runtime Status
 
-- current_state: ACTIVE_DEPLOYMENT
-- active_project: AP Tracking Deployment and Refinement
-- active_batch: DEP-01 machine check + REF-01 seal-net (local-only)
+- current_state: REVIEW_PENDING
+- active_project: ap-tracker
+- active_batch: TASK-035 + TASK-036 complete, awaiting Agent 3 review
 - last_updated_by: agent1
-- last_updated: 2026-04-02T01:34+08:00
-- agent1_state: DISPATCHING
-- agent1_target: decompose deployment/refinement input into micro-tasks
-- agent2_state: PENDING
-- agent2_target: TASK-DEP-001 machine check + TASK-REF-001 seal-net
-- agent3_state: IDLE
-- agent3_target: review DEP/REF batch
+- last_updated: 2026-04-01T17:45+08:00
+- agent1_state: IDLE
+- agent1_target: none
+- agent2_state: DONE
+- agent2_target: TASK-035 (Beta scoring engine) + TASK-036 (AI Provider config) — both complete
+- agent3_state: DONE
+- agent3_target: TASK-036 rework (reviewed — PASS)
 - notes: |
-  TASK-036 complete: rework passed (auth middleware added).
-  New inputs: AP Deployment Formal (20260401) + Refinement Formal (20260402) with strict local-only rule (no public-network egress, use local MIMO model on machine 3).
-  Dispatched: TASK-DEP-001 (machine check) and TASK-REF-001 (seal-net for local-only).
-  Next: Dispatch additional tasks for database, auth, admin, proxy, etc., per input sections.
-  Ensure all work adheres to absolute local-only principle.
+  TASK-035 ✅ PASS (Beta-Bayesian scoring engine v2)
+  TASK-036 ✅ PASS (AI Provider config)
+  TASK-036-REWORK ✅ PASS (auth guard on all 7 admin routes)
+  Review: 40_review/TASK-036-rework-review-20260402.md
+  All task folders closed. Awaiting Agent 1 next dispatch.
