@@ -9,9 +9,10 @@ import { getAIConfig } from './ai-config'
 // 类型
 // ---------------------------------------------------------------------------
 
+import type { ScoringOutputV2 } from './scoring-engine-v2'
 export interface ExplanationContext {
   prevRate: number | null
-  curr: ScoringOutput
+  curr: ScoringOutputV2 | ScoringOutput
   studentName?: string
   subjectName?: string
   recentActivities?: string[]
@@ -28,7 +29,10 @@ interface ExplanationResult {
 
 export function generateExplanation(ctx: ExplanationContext): string {
   const { prevRate, curr } = ctx
-  const { rate, trend, testPerformance, stabilityScore, reviewQualityScore, confidence } = curr
+  const { rate, trend, confidence } = curr
+  const testPerformance = (curr as any).testPerformance ?? 0.5
+  const stabilityScore = (curr as any).stabilityScore ?? 0.5
+  const reviewQualityScore = (curr as any).reviewQualityScore ?? 0.5
   const pct = (r: number) => `${Math.round(r * 100)}%`
   const delta = prevRate != null ? rate - prevRate : null
   const parts: string[] = []
@@ -76,7 +80,10 @@ export async function generateExplanationWithAI(
   }
 
   const { prevRate, curr, studentName, subjectName, recentActivities } = ctx
-  const { rate, trend, testPerformance, stabilityScore, reviewQualityScore, confidence } = curr
+  const { rate, trend, confidence } = curr
+  const testPerformance = (curr as any).testPerformance ?? 0.5
+  const stabilityScore = (curr as any).stabilityScore ?? 0.5
+  const reviewQualityScore = (curr as any).reviewQualityScore ?? 0.5
   const pct = (r: number) => `${Math.round(r * 100)}%`
 
   const delta = prevRate != null ? rate - prevRate : null
