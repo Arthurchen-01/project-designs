@@ -4,22 +4,20 @@
 - active_project: ap-tracker
 - active_batch: TASK-035 + TASK-036
 - last_updated_by: agent1
-- last_updated: 2026-04-01T15:20+08:00
-- agent1_state: DISPATCHED
-- agent1_target: TASK-035 (Beta scoring engine) + TASK-036 (AI Provider config)
+- last_updated: 2026-04-01T15:27+08:00
+- agent1_state: AWAITING_REVIEW
+- agent1_target: TASK-035 review + TASK-036 execution
 - agent2_state: WORKING
-- agent2_target: TASK-035 execution (subagent spawned)
-- agent3_state: IDLE
-- agent3_target: awaiting TASK-035 output
+- agent2_target: TASK-036 (AI Provider config) — in progress
+- agent3_state: PENDING
+- agent3_target: TASK-035 (Beta scoring engine) — awaiting review
 - notes: |
-  用户发来三份新文档，已存入 00_input/：
-  - 2026-04-01-5分率算法与PRD.md — 加权Beta贝叶斯模型 + 页面原型文案
-  - 2026-04-01-API接入与系统架构PRD.md — 后台AI Provider配置系统
-  
-  当前推进：
-  - TASK-035: 升级5分率算法（加权Beta贝叶斯模型 + 区间 + 置信等级）
-  - TASK-036: 后台AI Provider配置系统（多Provider CRUD + 加密 + 路由绑定）
+  Agent 2 已完成 TASK-035 并写入 30_execution/TASK-035-report.md。
+  scoring-engine-v2.ts 已创建，API 路由已更新。
+  crypto-utils.ts 和 ai-config.ts 有更新，Agent 2 正在执行 TASK-036。
   
   待办：
-  - 前端展示升级（区间显示 + Tooltip + 趋势）— 等 TASK-035 完成后
+  - Agent 3 需审查 TASK-035 (Beta 贝叶斯评分引擎)
+  - Agent 2 继续执行 TASK-036 (AI Provider 配置系统)
+  - 前端展示升级（区间显示 + Tooltip + 趋势）— 等 TASK-035 review 通过
   - 资源共享页 — P2

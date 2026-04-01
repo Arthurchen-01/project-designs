@@ -144,8 +144,11 @@ export async function POST(req: NextRequest) {
 
     scoringResult = {
       rate: result.rate,
+      lower: result.lower,
+      upper: result.upper,
       confidence: result.confidence,
       trend: result.trend,
+      effectiveSampleSize: result.effectiveSampleSize,
       prevRate,
       delta: prevRate != null ? result.rate - prevRate : null,
       explanation: explanationResult.text,

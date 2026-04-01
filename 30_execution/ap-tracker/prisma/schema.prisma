@@ -1,0 +1,91 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ── 用户 ──────────────────────────────────────────────
+model User {
+  id                String   @id @default(cuid())
+  name              String
+  email             String   @unique
+  passwordHash      String
+  role              String   @default("student") // student | teacher | admin
+  classId           String?
+  status            String   @default("active")
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+// ── AI Provider ──────────────────────────────────────
+model AIProvider {
+  id                  String   @id @default(cuid())
+  provider            String   // openai, openrouter, custom
+  displayName         String?
+  baseUrl             String
+  apiProtocol         String   @default("openai_compatible")
+  apiKeyEncrypted     String   // AES-256-GCM 加密存储
+  modelId             String
+  modelName           String
+  timeoutSeconds      Int      @default(30)
+  retryCount          Int      @default(2)
+  defaultTemperature  Float    @default(0.3)
+  defaultMaxTokens    Int      @default(2000)
+  allowScoring        Boolean  @default(true)
+  allowRecommendation Boolean  @default(true)
+  allowExplanation    Boolean  @default(true)
+  isDefault           Boolean  @default(false)
+  status              String   @default("active") // active | inactive | error
+  createdBy           String?
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  routingRules        AIRoutingRule[]
+  callLogs            AICallLog[]
+}
+
+// ── 路由规则 ──────────────────────────────────────────
+model AIRoutingRule {
+  id                 String     @id @default(cuid())
+  sceneCode          String     // daily_update_analysis, probability_explanation, etc.
+  providerId         String
+  provider           AIProvider @relation(fields: [providerId], references: [id])
+  enabled            Boolean    @default(true)
+  fallbackEnabled    Boolean    @default(false)
+  fallbackProviderId String?
+  priority           Int        @default(0)
+  createdAt          DateTime   @default(now())
+  updatedAt          DateTime   @updatedAt
+
+  @@unique([sceneCode])
+}
+
+// ── AI 调用日志 ───────────────────────────────────────
+model AICallLog {
+  id              String     @id @default(cuid())
+  sceneCode       String
+  providerId      String?
+  provider        AIProvider? @relation(fields: [providerId], references: [id])
+  userId          String?
+  requestSummary  String?
+  responseSummary String?
+  status          String     // success | failed
+  latencyMs       Int?
+  errorMessage    String?
+  createdAt       DateTime   @default(now())
+}
+
+// ── 审计日志 ──────────────────────────────────────────
+model AuditLog {
+  id             String   @id @default(cuid())
+  operatorUserId String?
+  actionType     String
+  targetType     String
+  targetId       String?
+  beforeData     String?  // JSON
+  afterData      String?  // JSON
+  createdAt      DateTime @default(now())
+}
