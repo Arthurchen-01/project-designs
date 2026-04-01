@@ -1,3 +1,4 @@
+import { requireAdmin, authGuardHandler } from '@/lib/auth-guard';
 /**
  * /api/admin/ai/providers/[id]/activate — POST 启用
  */
@@ -6,6 +7,7 @@ import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
 export async function POST(_req: Request, { params }: { params: Promise<{ id: string }> }) {
+    const auth = await requireAdmin(); if (!auth.success) return authGuardHandler(auth);
   const { id } = await params
   try {
     const existing = await prisma.aIProvider.findUnique({ where: { id } })

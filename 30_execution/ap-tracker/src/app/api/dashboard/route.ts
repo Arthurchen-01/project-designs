@@ -39,28 +39,28 @@ export async function GET(request: Request) {
         )
       : 0;
 
-  // Average MCQ scorePercent
+  // Average MCQ score
   const mcqRecords = await prisma.assessmentRecord.findMany({
-    where: { student: { classId }, recordType: "MCQ", scorePercent: { not: null } },
-    select: { scorePercent: true },
+    where: { student: { classId }, type: "MCQ", score: { gt: 0 } },
+    select: { score: true },
   });
   const avgMcq =
     mcqRecords.length > 0
       ? Math.round(
-          mcqRecords.reduce((sum, r) => sum + (r.scorePercent ?? 0), 0) /
+          mcqRecords.reduce((sum, r) => sum + (r.score ?? 0), 0) /
             mcqRecords.length
         )
       : 0;
 
-  // Average FRQ scorePercent
+  // Average FRQ score
   const frqRecords = await prisma.assessmentRecord.findMany({
-    where: { student: { classId }, recordType: "FRQ", scorePercent: { not: null } },
-    select: { scorePercent: true },
+    where: { student: { classId }, type: "FRQ", score: { gt: 0 } },
+    select: { score: true },
   });
   const avgFrq =
     frqRecords.length > 0
       ? Math.round(
-          frqRecords.reduce((sum, r) => sum + (r.scorePercent ?? 0), 0) /
+          frqRecords.reduce((sum, r) => sum + (r.score ?? 0), 0) /
             frqRecords.length
         )
       : 0;

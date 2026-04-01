@@ -20,7 +20,7 @@ export async function GET(req: NextRequest) {
     // 风险：5分率 < 50%
     const risk = snapshots.filter(s => s.rate < RISK_THRESHOLD).map(s => {
       const stu = students.find(x => x.id === s.studentId)
-      return { studentId: s.studentId, studentName: stu?.name ?? s.studentId, fiveRate: s.rate, confidence: s.confidence, trend: s.trend, reason: '5分率低于50%' }
+      return { studentId: s.studentId, studentName: stu?.name ?? s.studentId, rate: s.rate, confidence: s.confidence, trend: s.trend, reason: '5分率低于50%' }
     })
 
     // 断更：连续3天未更新

@@ -19,62 +19,60 @@ export async function GET(
   // Get assessments for this subject
   const assessments = await prisma.assessmentRecord.findMany({
     where: { studentId, subjectCode: decodedSubject },
-    orderBy: { takenAt: "asc" },
+    orderBy: { date: "asc" },
   });
 
   // Get snapshots for trend
   const snapshots = await prisma.probabilitySnapshot.findMany({
     where: { studentId, subjectCode: decodedSubject },
-    orderBy: { snapshotDate: "asc" },
+    orderBy: { updatedAt: "asc" },
   });
 
   // Latest snapshot
   const latestSnap = snapshots.length > 0 ? snapshots[snapshots.length - 1] : null;
-  const fiveRate = latestSnap ? Math.round(latestSnap.fiveRate * 100) : 0;
+  const rate = latestSnap ? Math.round(latestSnap.rate * 100) : 0;
 
   // Exam date
   const examDate = await prisma.examDate.findFirst({
-    where: { classId: student.classId, subjectCode: decodedSubject },
+    where: { subjectCode: decodedSubject },
   });
 
   // MCQ records
-  const mcqRecords = assessments.filter((a) => a.recordType === "MCQ");
-  const frqRecords = assessments.filter((a) => a.recordType === "FRQ");
+  const mcqRecords = assessments.filter((a) => a.type === "MCQ");
+  const frqRecords = assessments.filter((a) => a.type === "FRQ");
 
   // Timed vs untimed comparison
-  const timedMcq = mcqRecords.filter((a) => a.timedMode === "timed" && a.scorePercent != null);
-  const untimedMcq = mcqRecords.filter((a) => a.timedMode !== "timed" && a.scorePercent != null);
-  const timedFrq = frqRecords.filter((a) => a.timedMode === "timed" && a.scorePercent != null);
-  const untimedFrq = frqRecords.filter((a) => a.timedMode !== "timed" && a.scorePercent != null);
+  const timedMcq = mcqRecords.filter((a) => a.timedMode === "timed" && a.score != null);
+  const untimedMcq = mcqRecords.filter((a) => a.timedMode !== "timed" && a.score != null);
+  const timedFrq = frqRecords.filter((a) => a.timedMode === "timed" && a.score != null);
+  const untimedFrq = frqRecords.filter((a) => a.timedMode !== "timed" && a.score != null);
 
-  const avg = (arr: { scorePercent: number | null }[]) => {
-    const vals = arr.map((r) => r.scorePercent!).filter((v) => v != null);
+  const avg = (arr: { score: number | null }[]) => {
+    const vals = arr.map((r) => r.score!).filter((v) => v != null);
     return vals.length > 0 ? Math.round(vals.reduce((a, b) => a + b, 0) / vals.length) : 0;
   };
 
   // Trend data from snapshots
   const trendData = snapshots.map((s) => ({
-    date: s.snapshotDate.toISOString().split("T")[0],
-    fiveRate: Math.round(s.fiveRate * 100),
+    date: s.updatedAt.toISOString().split("T")[0],
+    rate: Math.round(s.rate * 100),
   }));
 
   return NextResponse.json({
     studentId,
     studentName: student.name,
     subjectCode: decodedSubject,
-    fiveRate,
-    confidenceLevel: latestSnap?.confidenceLevel ?? "未知",
-    examDate: examDate ? examDate.examDate.toISOString().split("T")[0] : null,
+    rate,
+    confidence: latestSnap?.confidence ?? "未知",
+    examDate: examDate ? examDate.date.split("T")[0] : null,
     mcqScores: mcqRecords.map((r) => ({
-      date: r.takenAt.toISOString().split("T")[0],
-      label: r.source ?? `测试`,
-      score: r.scorePercent,
+      date: r.date.split("T")[0],
+      score: r.score,
       timed: r.timedMode === "timed",
     })),
     frqScores: frqRecords.map((r) => ({
-      date: r.takenAt.toISOString().split("T")[0],
-      label: r.source ?? `测试`,
-      score: r.scorePercent,
+      date: r.date.split("T")[0],
+      score: r.score,
       timed: r.timedMode === "timed",
     })),
     barData: [

@@ -14,7 +14,8 @@ export async function POST(request: Request) {
     timedMode,
     difficulty,
     source,
-    scoreRaw,
+    scorePercentRaw,
+    maxScore,
     score,
     date,
   } = body;
@@ -29,15 +30,14 @@ export async function POST(request: Request) {
 
   const record = await prisma.assessmentRecord.create({
     data: {
-      studentId: sid,
-      subjectCode,
+      student: { connect: { id: sid } },
+      subject: { connect: { code: subjectCode } },
       type,
       timedMode: timedMode || "timed",
       difficulty: difficulty || "medium",
-      source: source || null,
-      scoreRaw: scoreRaw !== "" && scoreRaw != null ? parseFloat(scoreRaw) : null,
-      score: score !== "" && score != null ? parseFloat(score) : null,
-      date: date ? new Date(date) : new Date(),
+      score: Number(scorePercentRaw) || 0,
+      maxScore: Number(maxScore) || 100,
+      date: date || new Date().toISOString().slice(0, 10),
     },
   });
 

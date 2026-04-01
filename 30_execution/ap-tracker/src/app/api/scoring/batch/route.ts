@@ -13,7 +13,7 @@ export async function POST(req: Request) {
 
     const students = await prisma.student.findMany({
       where: { classId },
-      include: { subjects: true },
+      include: { enrollments: true },
     })
 
     const subjects = await prisma.subject.findMany({ select: { code: true } })
@@ -21,8 +21,9 @@ export async function POST(req: Request) {
     const results: {
       studentId: string
       subjectCode: string
-      fiveRate: number
-      confidenceLevel: string
+      rate: number
+      confidence: string
+      trend: string
     }[] = []
 
     for (const student of students) {
@@ -33,20 +34,18 @@ export async function POST(req: Request) {
           data: {
             studentId: student.id,
             subjectCode: subject.code,
-            snapshotDate: new Date(),
-            fiveRate: result.rate,
-            stabilityScore: result.stabilityScore,
-            trendScore: result.trendScore,
-            decayScore: result.forgettingDecay,
-            confidenceLevel: result.confidence,
+            rate: result.rate,
+            confidence: result.confidence,
+            trend: result.trend,
           },
         })
 
         results.push({
           studentId: student.id,
           subjectCode: subject.code,
-          fiveRate: result.rate,
-          confidenceLevel: result.confidence,
+          rate: result.rate,
+          confidence: result.confidence,
+            trend: result.trend,
         })
       }
     }

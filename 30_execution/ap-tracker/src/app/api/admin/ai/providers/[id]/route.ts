@@ -1,3 +1,4 @@
+import { requireAdmin, authGuardHandler } from '@/lib/auth-guard';
 /**
  * /api/admin/ai/providers/[id] — GET (详情) | PUT (更新) | DELETE (删除)
  */
@@ -8,6 +9,7 @@ import { encryptApiKey, maskApiKey } from '@/lib/crypto-utils'
 
 // GET — 单个 Provider 详情（apiKey 掩码）
 export async function GET(_req: Request, { params }: { params: Promise<{ id: string }> }) {
+    const auth = await requireAdmin(); if (!auth.success) return authGuardHandler(auth);
   const { id } = await params
   try {
     const provider = await prisma.aIProvider.findUnique({ where: { id } })
@@ -28,6 +30,7 @@ export async function GET(_req: Request, { params }: { params: Promise<{ id: str
 
 // PUT — 更新 Provider
 export async function PUT(req: Request, { params }: { params: Promise<{ id: string }> }) {
+    const auth = await requireAdmin(); if (!auth.success) return authGuardHandler(auth);
   const { id } = await params
   try {
     const body = await req.json()
@@ -78,6 +81,7 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
 
 // DELETE — 删除 Provider
 export async function DELETE(_req: Request, { params }: { params: Promise<{ id: string }> }) {
+    const auth = await requireAdmin(); if (!auth.success) return authGuardHandler(auth);
   const { id } = await params
   try {
     const existing = await prisma.aIProvider.findUnique({ where: { id } })

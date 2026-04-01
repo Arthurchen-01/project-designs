@@ -24,11 +24,11 @@ export async function GET(
   const students = await prisma.student.findMany({
     where: { classId },
     include: {
-      subjects: true,
-      assessments: {
+      enrollments: { include: { subject: true } },
+      scores: {
         orderBy: { date: "desc" },
       },
-      snapshots: {
+      fiveRates: {
         orderBy: { updatedAt: "desc" },
       },
     },
@@ -38,12 +38,12 @@ export async function GET(
   const metricType = metric as MetricType;
 
   if (metricType === "subjects") {
-    const totalSubjects = students.reduce((sum: number, s: { id: string; name: string; subjects: any[] }) => sum + s.subjects.length, 0);
+    const totalSubjects = students.reduce((sum: number, s: { id: string; name: string; enrollments: any[] }) => sum + s.enrollments.length, 0);
     const rows = students.map((s: any) => ({
       studentId: s.id,
       name: s.name,
-      count: s.subjects.length,
-      subjectList: s.subjects.map((sub) => sub.subjectCode).join("、"),
+      count: s.enrollments.length,
+      subjectList: s.enrollments.map((sub) => sub.subject?.code || sub.subjectCode).join("、"),
     }));
     return NextResponse.json({
       summaryText: `${totalSubjects}科 / ${students.length}人 / 人均${(totalSubjects / students.length).toFixed(1)}科`,
@@ -55,7 +55,7 @@ export async function GET(
     // Latest snapshot per student-subject
     const rows = students.map((s) => {
       const latestSnapshots = new Map<string, number>();
-      for (const snap of s.snapshots) {
+      for (const snap of s.fiveRates) {
         if (!latestSnapshots.has(snap.subjectCode)) {
           latestSnapshots.set(snap.subjectCode, snap.rate);
         }
@@ -97,7 +97,7 @@ export async function GET(
 
   if (metricType === "mcq") {
     const rows = students.map((s) => {
-      const mcqRecords = s.assessments.filter((a) => a.type === "MCQ" && a.score != null);
+      const mcqRecords = s.scores.filter((a) => a.type === "MCQ" && a.score != null);
       const scores = mcqRecords.map((r) => r.score!);
       const avg = scores.length > 0 ? scores.reduce((a, b) => a + b, 0) / scores.length : 0;
 
@@ -130,7 +130,7 @@ export async function GET(
 
   if (metricType === "frq") {
     const rows = students.map((s) => {
-      const frqRecords = s.assessments.filter((a) => a.type === "FRQ" && a.score != null);
+      const frqRecords = s.scores.filter((a) => a.type === "FRQ" && a.score != null);
       const scores = frqRecords.map((r) => r.score!);
       const avg = scores.length > 0 ? scores.reduce((a, b) => a + b, 0) / scores.length : 0;
 

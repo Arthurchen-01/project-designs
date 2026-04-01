@@ -96,8 +96,8 @@ model AssessmentRecord {
   subjectCode String
   type        String  // "mcq" | "frq" | "full-mock"
   timedMode   String  // "timed" | "untimed"
-  score       Int
-  maxScore    Int
+  score       Int?
+  maxScore    Int?
   date        String  // "2026-01-10"
   difficulty  String? // "basic" | "medium" | "hard"
 

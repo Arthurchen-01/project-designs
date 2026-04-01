@@ -4,7 +4,7 @@ import { evaluateDailyUpdate } from '@/lib/ai-evaluator'
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json()
-    const { description, subjectCode, activityType, scorePercent, timedMode } = body
+    const { description, subjectCode, activityType, score: scorePercent, timedMode } = body
 
     if (!subjectCode || !activityType) {
       return NextResponse.json(

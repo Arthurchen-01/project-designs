@@ -1,3 +1,4 @@
+import { requireAdmin, authGuardHandler } from '@/lib/auth-guard';
 /**
  * /api/admin/ai/providers/[id]/test — POST 测试连接
  */
@@ -7,6 +8,7 @@ import { prisma } from '@/lib/prisma'
 import { decryptApiKey } from '@/lib/crypto-utils'
 
 export async function POST(_req: Request, { params }: { params: Promise<{ id: string }> }) {
+    const auth = await requireAdmin(); if (!auth.success) return authGuardHandler(auth);
   const { id } = await params
   const startTime = Date.now()
 

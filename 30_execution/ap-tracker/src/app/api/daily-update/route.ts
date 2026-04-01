@@ -83,9 +83,6 @@ export async function POST(req: NextRequest) {
     await prisma.dailyUpdate.update({
       where: { id: update.id },
       data: {
-        aiEvidenceLevel: evalResult.evidenceLevel,
-        aiDeltaScore:    evalResult.qualityScore,
-        aiExplanation:   evalResult.explanation,
       },
     })
   } catch (err) {
@@ -115,10 +112,9 @@ export async function POST(req: NextRequest) {
       where: { studentId, subjectCode },
       orderBy: { date: 'desc' },
       take: 5,
-      select: { taskType: true, date: true, aiEvidenceLevel: true },
     })
     const recentActivities = recentUpdates.map(u =>
-      `${u.date}的${u.taskType}${u.aiEvidenceLevel ? `(${u.aiEvidenceLevel}证据)` : ''}`
+      `${u.date}的${u.taskType}`
     )
 
     // 优先使用 AI 生成解释（Task 025）
@@ -134,7 +130,7 @@ export async function POST(req: NextRequest) {
       where: { studentId_subjectCode: { studentId, subjectCode } },
       update: {
         rate: result.rate, confidence: result.confidence,
-        trend: result.trend, updatedAt: new Date(),
+        trend: result.trend,
       },
       create: {
         studentId, subjectCode,
@@ -161,9 +157,6 @@ export async function POST(req: NextRequest) {
   return NextResponse.json({
     update: {
       ...update,
-      aiEvidenceLevel: aiResult?.evidenceLevel ?? null,
-      aiDeltaScore:    aiResult?.qualityScore ?? null,
-      aiExplanation:   aiResult?.explanation ?? null,
     },
     scoring: scoringResult,
     ai: aiResult

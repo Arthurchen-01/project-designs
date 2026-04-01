@@ -18,12 +18,9 @@ export async function POST(req: Request) {
       data: {
         studentId,
         subjectCode,
-        snapshotDate: new Date(),
-        fiveRate: result.rate,
-        stabilityScore: 0,
-        trendScore: 0,
-        decayScore: result.forgettingDecay,
-        confidenceLevel: result.confidence,
+        rate: result.rate,
+        confidence: result.confidence,
+        trend: result.trend,
       },
     })
 

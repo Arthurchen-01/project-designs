@@ -1,3 +1,4 @@
+import { requireAdmin, authGuardHandler } from '@/lib/auth-guard';
 /**
  * /api/admin/ai/providers — GET (列表) | POST (新增)
  */
@@ -8,6 +9,7 @@ import { encryptApiKey, maskApiKey } from '@/lib/crypto-utils'
 
 // GET — 返回所有 Provider，apiKeyEncrypted 返回掩码
 export async function GET() {
+    const auth = await requireAdmin(); if (!auth.success) return authGuardHandler(auth);
   try {
     const providers = await prisma.aIProvider.findMany({
       orderBy: { createdAt: 'desc' },
@@ -29,6 +31,7 @@ export async function GET() {
 
 // POST — 新增 Provider，加密存储 apiKey
 export async function POST(req: Request) {
+    const auth = await requireAdmin(); if (!auth.success) return authGuardHandler(auth);
   try {
     const body = await req.json()
     const {

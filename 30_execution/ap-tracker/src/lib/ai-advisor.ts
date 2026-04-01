@@ -3,7 +3,7 @@ import { getAIConfig, isAIEnabled } from './ai-config'
 export interface SubjectBrief {
   code: string
   fiveRate: number
-  confidenceLevel: string
+  confidence: string
   trend: number
   weakestUnits: string[]
 }

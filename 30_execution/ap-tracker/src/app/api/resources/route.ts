@@ -9,7 +9,7 @@ export async function GET(request: Request) {
     where: subjectCode ? { subjectCode } : {},
     orderBy: { createdAt: "desc" },
     include: {
-      student: { select: { id: true, name: true } },
+      uploader: { select: { id: true, name: true } },
     },
   });
 
@@ -18,9 +18,9 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   const body = await request.json();
-  const { uploaderId, subjectCode, title, resourceType, description, url } = body;
+  const { uploaderId, subjectCode, title, type, description, url } = body;
 
-  if (!uploaderId || !subjectCode || !title || !resourceType) {
+  if (!uploaderId || !subjectCode || !title || !type) {
     return NextResponse.json({ error: "缺少必填字段" }, { status: 400 });
   }
 
@@ -29,7 +29,7 @@ export async function POST(request: Request) {
       uploaderId,
       subjectCode,
       title,
-      resourceType,
+      type,
       description: description || null,
       url: url || null,
     },

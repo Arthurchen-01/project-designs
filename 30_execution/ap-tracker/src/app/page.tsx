@@ -14,7 +14,7 @@ export default async function Home() {
     include: {
       students: {
         include: {
-          subjects: true,
+          enrollments: true,
         },
       },
     },
@@ -35,7 +35,7 @@ export default async function Home() {
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {classes.map((cls) => {
             const totalSubjects = cls.students.reduce(
-              (sum, s) => sum + s.subjects.length,
+              (sum, s) => sum + s.enrollments.length,
               0
             );
             return (

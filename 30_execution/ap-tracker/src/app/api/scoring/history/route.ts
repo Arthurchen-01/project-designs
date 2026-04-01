@@ -13,16 +13,12 @@ export async function GET(req: Request) {
 
     const snapshots = await prisma.probabilitySnapshot.findMany({
       where: { studentId, subjectCode },
-      orderBy: { snapshotDate: 'asc' },
+      orderBy: { updatedAt: 'asc' },
       select: {
         id: true,
-        snapshotDate: true,
-        fiveRate: true,
-        stabilityScore: true,
-        trendScore: true,
-        decayScore: true,
-        confidenceLevel: true,
-        explanation: true,
+        updatedAt: true,
+        rate: true,
+        confidence: true,
       },
     })
 

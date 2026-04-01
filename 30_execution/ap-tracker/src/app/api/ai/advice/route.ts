@@ -37,7 +37,7 @@ export async function GET(request: Request) {
       trend = Math.round(snapshots[0].rate * 100) - Math.round(snapshots[snapshots.length - 1].rate * 100)
     }
 
-    const confidenceLevel = latestRate >= 75 ? '高' : latestRate >= 55 ? '中' : '低'
+    const confidence = latestRate >= 75 ? '高' : latestRate >= 55 ? '中' : '低'
 
     const weakestUnits: string[] = []
     if (latestRate < 60) {
@@ -47,7 +47,7 @@ export async function GET(request: Request) {
     subjects.push({
       code: enrollment.subjectCode,
       fiveRate: latestRate,
-      confidenceLevel,
+      confidence,
       trend,
       weakestUnits,
     })

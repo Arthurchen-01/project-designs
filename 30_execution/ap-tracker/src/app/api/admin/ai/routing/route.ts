@@ -1,3 +1,4 @@
+import { requireAdmin, authGuardHandler } from '@/lib/auth-guard';
 /**
  * /api/admin/ai/routing — GET (路由列表) | PUT (批量更新)
  */
@@ -7,6 +8,7 @@ import { prisma } from '@/lib/prisma'
 
 // GET — 返回所有路由配置
 export async function GET() {
+    const auth = await requireAdmin(); if (!auth.success) return authGuardHandler(auth);
   try {
     const rules = await prisma.aIRoutingRule.findMany({
       orderBy: { priority: 'desc' },
@@ -22,6 +24,7 @@ export async function GET() {
 
 // PUT — 批量更新场景绑定
 export async function PUT(req: Request) {
+    const auth = await requireAdmin(); if (!auth.success) return authGuardHandler(auth);
   try {
     const rules: Array<{
       sceneCode: string
