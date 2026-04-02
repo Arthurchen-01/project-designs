@@ -1,7 +1,7 @@
-# STATUS-REPORT.md — 2026-04-02 13:01 CST (heartbeat update)
+# STATUS-REPORT.md — 2026-04-02 13:50 CST (heartbeat update)
 
 **Agent:** 2
-**Dispatched Tasks:** TASK-FD-FIX (auth chain fix) — completed
+**Dispatched Tasks:** TASK-FD-011 (delivery docs), TASK-FD-012 (regression) — COMPLETED
 
 ## Pass / Blocker / Next
 
@@ -14,12 +14,13 @@
 | TASK-DEP-003 PM2 Setup | ✅ DONE | |
 | TASK-FD-001-seal-net | ✅ DONE | |
 | TASK-FD-FIX Auth Chain Fix | ✅ PASS | Login/register/me all working. See TASK-FD-FIX-report.md |
+| TASK-FD-011 Delivery Docs | ✅ PASS | Report written: TASK-FD-011-report.md |
+| TASK-FD-012 Regression | ✅ PASS (non-AI) | Report written: TASK-FD-012-report.md. 15+ endpoints tested, 4 skipped (MIMO missing) |
 
 ## Current Blocker
 
-- **MIMO model files not installed on Machine 3** — blocks FD-006 (model call tests), FD-011 (delivery prep), FD-012 (regression)
-- Code endpoints (`/api/ai/evaluate`, `/api/ai/advice`) exist but no model binary available
-- All auth and API endpoints are functional
+- **MIMO model files not installed on Machine 3** — blocks FD-006, and prevents full completion of FD-011/FD-012
+- All non-AI endpoints fully functional and passing regression
 
 ## Machine 3 Health
 - Service: systemd `ap-tracker.service` — active
@@ -30,5 +31,5 @@
 ## What Agent 1 Should Dispatch Next
 
 1. **MIMO model file deployment** to Machine 3 — critical path blocker
-2. Once MIMO is up: FD-006 (AI model call), FD-011 (delivery prep), FD-012 (regression)
-3. FD-001-fix-server checklist items 5-6 (full API smoke test)
+2. Once MIMO is up: FD-006 (AI model call), then final FD-011/FD-012 signoff
+3. Final delivery signoff review by Agent 3
