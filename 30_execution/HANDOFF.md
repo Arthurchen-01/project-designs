@@ -1,41 +1,28 @@
-# HANDOFF.md — 2026-04-02 07:36 CST
+# HANDOFF.md — 2026-04-02 13:01 CST
 
-## Agent 2 Status
+## Agent 2 State: READY FOR DISPATCH
+- **Completed:** TASK-DEP-001 ✅, TASK-FD-001 ✅, TASK-REF-001 ✅, TASK-DEP-002 ✅, TASK-FD-001-seal-net ✅, TASK-DEP-003 ✅, TASK-FD-FIX (auth chain) ✅
+- **Blocked on:** MIMO model files not installed on Machine 3
+- **AP Tracker Auth Chain Status:** ALL PASS — register, login (email+pw + studentId), /api/health, /api/auth/me, dashboard all working
 
-- **State:** ACTIVE — continuing deployment tasks
-- **Completed:** TASK-DEP-001 ✅, TASK-FD-001 ✅, TASK-REF-001 ✅, TASK-DEP-002 ✅
-- **Current:** TASK-DEP-002 done, moving to next deployment task
+## Full API Test Results (13:01 CST)
+- GET /api/health → 200 ✅
+- POST /api/auth/register → creates user + student ✅
+- POST /api/auth/login (email+pw) → returns studentId/name/role ✅
+- POST /api/auth/login (studentId) → legacy mode ✅
+- GET /class1/dashboard → 200 ✅
+- GET /api/daily-update → 200 (no cookie = empty list, correct) ✅
+- https://samuraiguan.cloud/ → 200 (Nginx HTTPS proxy) ✅
+- systemd ap-tracker.service → active ✅
+- `next build` → clean, 27 dynamic routes ✅
 
-## TASK-DEP-002 Summary
-
-- Machine 3 (42.192.56.101) accessible via SSH
-- AP Tracker code deployed to `/home/ubuntu/ap-tracker/`
-- npm install done, Prisma DB initialized, Next.js running on port 3000
-- External HTTP 200 confirmed
+## Critical Blocker
+**MIMO model not installed on Machine 3.** Code endpoints (`/api/ai/evaluate`, `/api/ai/advice`) exist but no model binary. This blocks FD-006, FD-011, and FD-012.
 
 ## What Agent 1 Should Dispatch Next
-
-- TASK-DEP-003: Setup PM2/systemd for persistent process management
-- TASK-DEP-007: Nginx reverse proxy (port 80/443 → 3000) for samuraiguan.cloud
-- FD tasks: Auth chain, form submit, model integration (once deployment stable)
-
-## Known Issues
-
-- Nginx not installed on Machine 3
-- No SSL certificates yet
-- Next.js running in dev mode (not production build)
+1. MIMO model file deployment to Machine 3
+2. Then task FD-006 (model call verification), FD-011/012 (delivery + regression)
 
 ## Machine Credentials
-
-**Machine 2 — 150.158.17.181**
-- `ssh ubuntu@150.158.17.181` / password: `ASDqwe12345`
-
-**Machine 3 — 42.192.56.101**
-- `ssh root@42.192.56.101` / password: `ASDqwe12345`
-
-## Key Machine Specs
-
-- Both: 2-core, ~2GB RAM, Ubuntu 24.04, OpenClaw 2026.3.28
-- **Neither has Docker** — needs install before containerized deployment
-- Machine 2 disk 88% full (4.7G free) — may need cleanup
-- Machine 3 disk 62% full (15G free) — OK
+**Machine 2 — 150.158.17.181**: `ssh ubuntu@...` / `ASDqwe12345`
+**Machine 3 — 42.192.56.101**: `ssh root@...` / `ASDqwe12345`
