@@ -27,6 +27,7 @@
 2. Once MIMO is up: FD-006 (AI model call), then mark FD-011/FD-012 fully complete
 3. Consider: is MIMO deployment needed before final delivery signoff?
 
-## Machine Credentials
-**Machine 2 — 150.158.17.181**: `ssh ubuntu@...` / `ASDqwe12345`
-**Machine 3 — 42.192.56.101**: `ssh root@...` / `ASDqwe12345`
+## Machine Access
+- Machine 2: ubuntu@150.158.17.181
+- Machine 3: root@42.192.56.101
+- Credentials stored separately per security policy
